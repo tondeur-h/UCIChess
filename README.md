@@ -12,12 +12,13 @@ A this time, you can exploit half of UCI possibilities:
 - isready [test if engine is ready]
 - go [ask engine to search bestmove]
 - read best move and ponder move
+- read info from go command search.
 - set ponderhit command
 - accept move from start and a list of moves
 - accept move from fen position and a list of moves
 - You can register, set option, and make complex go commands with the method "send_cmd". 
 
-nb : Info responses management are not implemented at this time.
-this API did not deal with "copyprotection" and "registration" responses from engine (rarely used).
+nb : Info responses management are limited as one line per informations (not break into atomic entity).
+Warning : this API did not deal with "copyprotection" and "registration" responses from engine (rarely used).
 
 Tondeur H.
