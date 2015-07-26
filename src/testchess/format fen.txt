@@ -1,0 +1,52 @@
+Un enregistrement FEN définit une position particulière, il est écrit sur une seule ligne en utilisant seulement les caractères ASCII. 
+Un fichier texte contenant de tels enregistrements devrait avoir l'extension « .fen ».
+
+Cette notation origine de l'anglais, où les pièces sont nommées rook (tour), knight (cavalier), bishop (fou), queen (dame), king (roi) et pawn (pion). 
+Pour cette raison, leur nom est souvent abrégé par « RNBQKP » en anglais. De plus, en anglais, blanc se dit white (w), alors que noir se dit black (b).
+
+Un enregistrement contient 6 champs. Le séparateur est un espace. Les champs sont :
+
+    Position des pièces vue selon du côté des blancs. 
+	Chaque rangée est décrite de la rangée 8 à la rangée 1. 
+	Dans chaque rangée, le contenu est décrit de la colonne a à la colonne h. 
+	Les pièces blanches sont symbolisées par des lettres en majuscules (« KQRBNP »), les noires par des lettres en minuscule (« kqrbnp »).
+	Le nombre de cases vides est noté par un nombre allant de 1 à 8, et une barre oblique « / » sépare les rangées.
+    La Couleur qui joue. « w » signifie que les blancs jouent, alors que « b » signifie que c'est le tour des noirs.
+    roque possible. Si aucun des adversaires ne peut roquer, alors inscrire « - ». 
+	Sinon, utiliser une combinaison de plusieurs lettres : « K » (les blancs peuvent du côté roi, c'est-à-dire le petit roque), « Q » (les blancs peuvent du côté dame, grand roque), « k » (les noirs peuvent du côté roi) et « q » (les noirs peuvent du côté dame).
+    Case d'une prise en passant en notation algébrique. S'il n'y en a pas, alors inscrire « - ». Si un pion vient juste de se déplacer de 2 pas, alors c'est la position « derrière » le pion.
+    Demi-coups : le nombre de demi-coups depuis la dernière capture ou le dernier mouvement de pion. Cela permet de savoir si la partie est nulle selon la règle des 50 coups.
+    Coups : le nombre de coups complets. Il commence à 1 et est incrémenté de 1 après le coup des noirs.
+
+Exemples
+========
+
+En partant de la position initiale du jeu traditionnel :
+
+    rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+
+Ceci est une figuration des 8 rangées de l'échiquier en commençant par le haut, séparées par des « / » :
+
+    les pièces noires (« rnbqkbnr »)
+    les pions noirs (« pppppppp »)
+    4 rangées vides donc avec le nombre 8 pour 8 cases vides (« 8/8/8/8 »)
+    pions blancs (« PPPPPPPP »)
+    pièces blanches (« RNBQKBNR »)
+    tour aux blancs (« w »)
+    roques possibles (« KQkq »)
+    case en passant (« - »)
+    comptage des coups (« 0 1 »)
+
+Après le coup 1. e4 :
+
+    rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1
+
+les deux champs des noirs ne sont pas modifiés, les deux rangées suivantes non plus, la rangée 4 devient 4P3 : horizontalement 4 cases vides, un pion blanc P, 3 cases vides. PPPP1PPP : la case quittée du pion est vide donc à 1. C'est aux noirs de jouer donc b.
+
+Après le coup 1. ... c5 :
+
+    rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2
+
+Après le coup 2. Cf3 :
+
+    rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2 
