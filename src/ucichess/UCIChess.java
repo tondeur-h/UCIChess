@@ -1,5 +1,6 @@
 package ucichess;
 
+import ucichess.testUCIChess.TestChess;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,8 +12,99 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*********************
- * UCIChess API
- * @author tondeur-h
+ * UCIChess API<br>
+ * This API help you to communicate
+ * with Chess Engine than respect Universal Chess Interface
+ * protocol communication.<br>
+ * You can with this API, run a chess engine, send him
+ * some uci commands et read responses from this engine.<br>
+ * 
+ * Example of use : <br><br>
+ *      //test with protector chess engine<br>
+ *       UCIChess uci=new UCIChess("C:\\Users\\tondeur-h.CHV\\Downloads\\Protector_1_6_0\\bin\\Protector_Win32.exe");<br>
+ *   <br>
+ *           //ask uci infos<br>
+ *           System.out.println("======================TEST UCI COMMAND======================");<br>
+ *          //is uci ok ?<br>
+ *           System.out.println("uciok = "+uci.get_uciOk(false));<br>
+ *           //engine name and author(s)<br>
+ *           System.out.println("Engine Name = "+uci.getEngineName());<br>
+ *           System.out.println("Engine Author(s) = "+uci.getEngineAuthor());<br>
+ *           System.out.println("==================TEST UCI OPTIONS RETRIEVE=================");<br>
+ *           //number of options in uci engine<br>
+ *           System.out.println("Numbers of options = "+uci.get_number_options());<br>
+ *           //list all uci options (names, type, values)<br>
+ *           System.out.format("%-30s %-10s %-20s\n","Name(id)","type","values");<br>
+ *           System.out.println("------------------------------------------------------------");<br>
+ *           for (int i=0;i&lt;uci.get_number_options();i++)<br>
+ *           {<br>
+ *               System.out.format("%-30s %-10s %-20s\n",uci.get_option(i).getId(),uci.get_option(i).getType(),uci.get_option(i).getValues() );<br>
+ *           }<br>
+ *           System.out.println("=====================PLAY A SMALL GAME=====================");<br>
+ *           //is engine ready?<br>
+ *           System.out.println("isready = "+uci.get_readyOk(false));<br>
+ *          <br>
+ *           //white play e2e4<br>
+ *           System.out.println("White play = e2e4");<br>
+ *           uci.move_FromSTART("e2e4 ",false); <br>
+ *           System.out.println("-------------------------------------------------------");<br>
+ *           //is engine ready for next move?<br>
+ *           System.out.println("isready = "+uci.get_readyOk(false));<br>
+ *           <br>
+ *           //black move (engine play)<br>
+ *           uci.send_cmd(UCIChess.GOTHINK); //think for best move<br>
+ *           String rep=uci.get_bestMove(false);  //read response<br>
+ *           System.out.println("---------------info on best move-----------------------");<br>
+ *           System.out.println("Number of infos lines = "+uci.get_number_infos());<br>
+ *           System.out.format("%-50s\n","Info lines");<br>
+ *           System.out.println("-------------------------------------------------------");<br>
+ *           for (int i=0;i&lt;uci.get_number_infos();i++)<br>
+ *           {<br>
+ *               System.out.format("%-50s\n",uci.get_info(i).getInfo());<br>
+ *           }<br>
+ *           System.out.println("-------------------------------------------------------");<br>
+ *           System.out.println("Black play = "+rep); //draw best move<br>
+ *           System.out.println("Black ponder = "+uci.getPonder()); //best white next move<br>
+ *           uci.move_FromSTART("e2e4 "+rep,false); //make move<br>
+ *           System.out.println("-------------------------------------------------------");<br>
+ *           <br>
+ *           //is engine ready for next move?<br>
+ *           System.out.println("isready = "+uci.get_readyOk(false));<br>
+ *           <br>
+ *           //white play g1f3<br>
+ *           System.out.println("White play = g1f3");<br>
+ *           uci.move_FromSTART("e2e4 "+rep+" g1f3 ",false);<br>
+ *           System.out.println("-------------------------------------------------------");<br>
+ *           //is engine ready for next move?<br>
+ *           System.out.println("isready = "+uci.get_readyOk(false));<br>
+ *           <br>
+ *           //black play<br>
+ *           uci.send_cmd(UCIChess.GOTHINK); //search next move<br>
+ *           String rep2=uci.get_bestMove(false);  //read best move<br>
+ *           System.out.println("---------------info on best move-----------------------");<br>
+ *           System.out.println("Number of infos lines = "+uci.get_number_infos());<br>
+ *           System.out.format("%-50s\n","Info lines");<br>
+ *           System.out.println("-------------------------------------------------------");<br>
+ *           for (int i=0;i&lt;uci.get_number_infos();i++)<br>
+ *           {<br>
+ *               System.out.format("%-50s\n",uci.get_info(i).getInfo());<br>
+ *           }<br>
+ *           System.out.println("-------------------------------------------------------");<br>
+ *           System.out.println("Black play = "+rep2); //draw black turn<br>
+ *           System.out.println("Black ponder = "+uci.getPonder()); //best white next move<br>
+ *           uci.move_FromSTART("e2e4 "+rep+" g1f3 "+rep2,false); //make move<br>
+ *           Square.convert("g1f3");<br>
+ *           System.out.println(Square.getColFrom());<br>
+ *           System.out.println(Square.getRowFrom());<br>
+ *           System.out.println(Square.getColTo());<br>
+ *           System.out.println(Square.getRowTo());<br>
+ *           System.out.println(Square.getPromote());<br>
+ *           System.out.println("-------------------------------------------------------");<br>
+ *           //bye bye...stop the chess engine<br>
+ *           System.out.println("Bye Bye!");<br>
+ *           uci.stop_Engine();<br>
+ * <br>
+ * @author Tondeur Herve GPL v3.0
  *********************/
 public class UCIChess {
     private OutputStream out; //to chess engine
@@ -24,7 +116,7 @@ public class UCIChess {
     private ArrayList<OptionName> listOfOptions;
     private ArrayList<Info> listInfos;
     
-    
+    //internal use only
     private boolean isUCICall=false;
     private boolean  isGOCall=false;
     private boolean  isREADYCall=false;
@@ -35,18 +127,21 @@ public class UCIChess {
     
     
     //list of SIMPLE COMMANDS
-    final static String UCI="uci";
-    final static String GOTHINK="go";
-    final static String MOVEFROMSTART="position startpos moves ";
-    final static String ISREADY="isready";
-    final static String STOP="stop";
-    final static String QUIT="quit";
-    final static String PONDERHIT="ponderhit";
+    final public static String UCI="uci"; //UCI COMMAND
+    final public static String GOTHINK="go";
+    final public static String MOVEFROMSTART="position startpos moves ";
+    final public static String ISREADY="isready";
+    final public static String STOP="stop";
+    final public static String QUIT="quit";
+    final public static String PONDERHIT="ponderhit";
     
     /***************************
-    * construct the API UCIChess
-    *
-    * @param engine 
+    * construct the API UCIChess<br>
+    * Start the chess engine in a ProcessBuilder
+    * and connect in and out stream communication
+    * with this process.<br>
+    * @param engine is the full absolute path of the chess engine<br>
+    * Make sure you are using a engine that implement an uci protocol.
     ***************************/
     public UCIChess(String engine) {
         try {
@@ -65,7 +160,7 @@ public class UCIChess {
 
     
     /******************************
-     * stop engine and clear datas
+     * stop the chess engine and close stream with the process.
      ******************************/
     public void stop_Engine(){
         try {
@@ -79,10 +174,12 @@ public class UCIChess {
     
     
      /*****************************************
-     * send cmd move FEN format to chess engine
-     * @param fen 
-     * @param moves 
-     * @param trace 
+     * Send some moves commands from a FEN format to chess engine<br>
+     * FEN format example : rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1<br>
+     * see Notation Forsyth-Edwards (FEN) format<br>
+     * @param fen A String that give the board state in fen format.
+     * @param moves A list of moves in Algebraic Notation format ie e2e4 separate by space.
+     * @param trace A boolean value that print the text command.
      ******************************************/
         public final void move_FromFEN(String fen, String moves, boolean trace){
         try {
@@ -98,9 +195,9 @@ public class UCIChess {
         
         
      /*****************************************
-     * send cmd move from start to chess engine
-     * @param moves 
-     * @param trace 
+     * Send moves commands from start position to chess engine.
+     * @param moves A list of moves in Algebraic Notation format ie e2e4 separate by space.
+     * @param trace A boolean value that print the text command.
      ******************************************/
         public final void move_FromSTART(String moves,boolean trace){
         try {
@@ -117,10 +214,10 @@ public class UCIChess {
         
         
     /*********************************
-     * send simple cmd to chess engine
-     * with no cmd parameter
-     * like go, uci, isready etc...
-     * @param cmd  
+     * Send simple command to chess engine<br>
+     * like go, uci, isready, position etc...<br>
+     * See uci commands documentations for more informations.
+     * @param cmd A String with the command to send to the chess engine.
      *********************************/
         public final void send_cmd(String cmd){
         try {
@@ -143,10 +240,9 @@ public class UCIChess {
  
  
  /******************************
-  * check if uci is ready
-  * break condition is "readyok"
-  * @param trace
-  * @return 
+  * Check if uci is ready for another command.
+  * @param trace A boolean value that print the responses engine.
+  * @return A boolean value, true if engine is ready otherwise false.
   ******************************/
     public final boolean get_readyOk(boolean trace){
         //call cmd isready before
@@ -169,11 +265,12 @@ public class UCIChess {
         
         
  /*****************************
-  * check if uci is ok
-  * and get name & author
-  * break condition is "uciok"
-  * @param trace
-  * @return 
+  * Check if uci engine is ok and ready<br>
+  * you must run this method before get name and author of the chess engine
+  * and get supported options<br>
+  * This method must be the first execute after instanciate the UCIChess object. 
+  * @param trace A boolean that print the full trace of the Chess engine Responses.
+  * @return A boolean value true when uci is ready otherwise false.
   *****************************/
     public final boolean get_uciOk(boolean trace){
         //call uci command before
@@ -206,10 +303,10 @@ public class UCIChess {
     
     
  /***********************************
-  * ask best move
-  * only use after GO command
-  * @param trace
-  * @return 
+  * Ask the best move calculate by the chess engine.<br>
+  * This method can only be uses after a GO command.
+  * @param trace A boolean values that print the full chess engine responses.
+  * @return A String values contains the best move in an Algebraic Notation.
   *************************************/
     
        public final String get_bestMove(boolean trace){
@@ -248,9 +345,9 @@ public class UCIChess {
  
 
        /***************************************
-        * return the ponder value
-        * must run go command before
-        * @return 
+        * Return the ponder value after a GO command.<br>
+        * This method must be run only after a GO command.
+        * @return A String contains the ponder values or "mate" word if a mate is reach.
         ***************************************/
        public String getPonder(){
            if (!isGOCall) ponder="0000";
@@ -260,9 +357,10 @@ public class UCIChess {
 
        
        /***************************************
-        * return the name of the running engine
-        * must run uci command before
-        * @return 
+        * Return the name of the running engine.<br>
+        * This method must be run only after the UCI command.<br>
+        * Instead of, this method return NoName or empty string.
+        * @return A String value containing the chess engine name.
         ***************************************/
        public String getEngineName(){
            if (!isUCICall) engineName="empty";
@@ -271,9 +369,9 @@ public class UCIChess {
        }
 
        /***************************************
-        * return the author of the running engine
-        * must run uci command before
-        * @return 
+        * Return the name(s) of the author(s) of the running chess engine
+        * you must execute the uci command before
+        * @return A String value containing the chess engine author(s) name(s).
         ***************************************/       
        public String getEngineAuthor(){
            if (!isUCICall) engineAuthor="empty";
@@ -282,11 +380,11 @@ public class UCIChess {
        }
 
        
-    /********************************************
-     * parse option response from Engine and
-     * construct a ArrayList<OptionName> objects
-     * @param line 
-     ********************************************/
+    /* ******************************************
+      parse option response from Engine and
+      construct a ArrayList<OptionName> objects
+      @param line 
+     ****************************************** */
     private void parse_option(String line) {
        String name="";
        String next;
@@ -320,8 +418,9 @@ public class UCIChess {
     }
     
     /***************************
-     * return max number options
-     * @return 
+     * Return the max number of options supported by the engine.<br>
+     * You must execute the uci command before used this method.
+     * @return An integer containing the count return.
      ***************************/
     public int get_number_options(){
         if (!isUCICall) return 0;
@@ -330,8 +429,9 @@ public class UCIChess {
     
     
       /***************************
-     * return max number infos
-     * @return 
+     * Return the max number of infos after a GO command.<br>
+     * You must execute the GO command before used this method.
+     * @return An integer containing the count return.
      ***************************/
     public int get_number_infos(){
         if (!isGOCall) return 0;
@@ -340,9 +440,17 @@ public class UCIChess {
     
     
     /**************************
-     * return option number X
-     * @param Number
-     * @return
+     * Return an option supported by the engine by is number.<br>
+     * OptionName class is a bean for manipulate Options.<br>
+     * This class contain 3 methods<br>
+     * String getId(); retrieve the name of the option<br>
+     * String getType(); retrieve the type of the option<br>
+     * String getValues(); retrieve the default and possibles values for this option<br>
+     * <br>
+     * This Method must be call only after a uci command.<br>
+     * <br>
+     * @param Number A integer identified the option number in the list of options.
+     * @return A OptionName object
      **************************/
     public OptionName get_option(int Number){
         if (!isUCICall) return null;
@@ -352,25 +460,28 @@ public class UCIChess {
 
     
     /**************************
-     * return info number X
-     * @param Number
-     * @return
+     * Return an info line by is number from the responses engine after a GO command.<br>
+     * Info class is a bean for manipulate Infos lines.<br>
+     * This class contain 1 method<br>
+     * String getInfo(); retrieve the String info<br>
+     * <br>
+     * This Method must be call only after a GO command.<br>
+     * <br>
+     * @param Number A integer identified the info line number in the list of infos.
+     * @return A Info object
      **************************/
     public Info get_info(int Number){
         if (!isGOCall) return null;
         if (Number>=listInfos.size()) return null; //number must begin from 0 to size-1
         return listInfos.get(Number);
     }
-
     
-} //end UCIChess
-
 
 /*******************************
  * class encapsulate option name
  * @author tondeur-h
  *******************************/
-final class OptionName{
+public final class OptionName{
     String id; //list of option id
     String type; //type of the option
     String values; //defaut and min and max values
@@ -414,7 +525,7 @@ final class OptionName{
  * class info moves
  * @author tondeur-h
  ********************/
-final class Info {
+public final class Info {
     String info; //string info to get
 
     public String getInfo() {
@@ -431,120 +542,4 @@ final class Info {
     
 } //end of info class
 
-/**************************
- * a square of a chessboard
- * @author tondeur-h
- **************************/
-final class Square{
-/**naming convention
- * ==================
- * an a normal chessboard
- * a=1;b=2;c=3;d=4;e=5;f=6;g=7;h=8
- * row is letters from a to h
- * col is numbers from 1 to 8
- ****************************/    
- private static int rowFrom;
- private static int colFrom;
- private static int rowTo;
- private static int colTo;
- private static String promote;
-
- 
- /*************************************
-  * convert moves list into fen String
-  * @param moves
-  * @return 
-  *************************************/
- public String movesToFen(String moves){
-     String fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
- return fen;
- }
- 
- 
- /*****************************************
-  * Convert a string chessboard coordinate
-  * into a numeric convention
-  * @param coord 
-  *****************************************/
-    public static void convert (String coord){
-        //example g1f3 give colFrom=7 rowFrom=1 colTo=6 rowTo=3
-            //default values
-            rowFrom=0;
-            rowTo=0;
-            colFrom=0;
-            colTo=0;
-            promote="";
-        if (coord.length()>=4){
-        try{
-            //translate coord
-            colFrom=coord.charAt(0)-96;
-            rowFrom=coord.charAt(1)-48;
-            colTo=coord.charAt(2)-96;
-            rowTo=coord.charAt(3)-48;
-            
-            if (coord.length()==5){promote=coord.substring(4);}
-            
-        }catch (Exception e){  
-            rowFrom=0;
-           rowTo=0;
-           colFrom=0;
-           colTo=0;
-           promote="";
-        }
-        
-        }
-    }
- 
-        /************************************
-         * get Row From coord
-         * using convention
-         * * a=1;b=2;c=3;d=4;e=5;f=6;g=7;h=8
-         * @return 
-         ***********************************/
-    public static int getRowFrom() {
-        return rowFrom;
-    }
-
-        /***********************************
-         * get col From coord
-         * using convention
-         * * 1=1;2=2;3=3;4=4;5=5;6=6;7=7;8=8
-         * @return 
-         ************************************/    
-    public static int getColFrom() {
-        return colFrom;
-    }
-
-        /************************************
-         * get Row To coord
-         * using convention
-         * * a=1;b=2;c=3;d=4;e=5;f=6;g=7;h=8
-         * @return 
-         ************************************/
-    public static int getRowTo() {
-        return rowTo;
-    }
-
-        /***********************************
-         * get col To coord
-         * using convention
-         * * 1=1;2=2;3=3;4=4;5=5;6=6;7=7;8=8
-         * @return 
-         ************************************/
-    public static int getColTo() {
-        return colTo;
-    }
-
-    /************************
-     * get promote value
-     * a chess piece letter
-     * or empty if no promote
-     * @return 
-     *************************/
-    public static String getPromote() {
-        return promote;
-    }
-    
-} //end of Square class
-
-
+} //end UCIChess

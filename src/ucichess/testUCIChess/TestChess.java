@@ -1,4 +1,7 @@
-package ucichess;
+package ucichess.testUCIChess;
+
+import ucichess.Square;
+import ucichess.UCIChess;
 
 /**
  *

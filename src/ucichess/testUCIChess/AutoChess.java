@@ -1,4 +1,6 @@
-package ucichess;
+package ucichess.testUCIChess;
+
+import ucichess.UCIChess;
 
 /**
  * UCIChess autochess between two engines
@@ -68,7 +70,7 @@ public class AutoChess {
     
     /***************************
      * All is in the constructor
-     * @param args 
+     * @param args not uses
      ***************************/
     public static void main(String[] args) {
         new AutoChess();
