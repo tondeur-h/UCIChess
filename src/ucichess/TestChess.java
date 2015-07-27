@@ -37,7 +37,7 @@ public class TestChess {
             
             //white play e2e4
             System.out.println("White play = e2e4");
-            uci.move_FromSTART("e2e4 "); 
+            uci.move_FromSTART("e2e4 ",false); 
             System.out.println("-------------------------------------------------------");
             //is engine ready for next move?
             System.out.println("isready = "+uci.get_readyOk(false));
@@ -56,7 +56,7 @@ public class TestChess {
             System.out.println("-------------------------------------------------------");
             System.out.println("Black play = "+rep); //draw best move
             System.out.println("Black ponder = "+uci.getPonder()); //best white next move
-            uci.move_FromSTART("e2e4 "+rep); //make move
+            uci.move_FromSTART("e2e4 "+rep,false); //make move
             System.out.println("-------------------------------------------------------");
             
             //is engine ready for next move?
@@ -64,7 +64,7 @@ public class TestChess {
             
             //white play g1f3
             System.out.println("White play = g1f3");
-            uci.move_FromSTART("e2e4 "+rep+" g1f3 ");
+            uci.move_FromSTART("e2e4 "+rep+" g1f3 ",false);
             System.out.println("-------------------------------------------------------");
             //is engine ready for next move?
             System.out.println("isready = "+uci.get_readyOk(false));
@@ -83,7 +83,13 @@ public class TestChess {
             System.out.println("-------------------------------------------------------");
             System.out.println("Black play = "+rep2); //draw black turn
             System.out.println("Black ponder = "+uci.getPonder()); //best white next move
-            uci.move_FromSTART("e2e4 "+rep+" g1f3 "+rep2); //make move
+            uci.move_FromSTART("e2e4 "+rep+" g1f3 "+rep2,false); //make move
+            Square.convert("g1f3");
+            System.out.println(Square.getColFrom());
+            System.out.println(Square.getRowFrom());
+            System.out.println(Square.getColTo());
+            System.out.println(Square.getRowTo());
+            System.out.println(Square.getPromote());
             System.out.println("-------------------------------------------------------");
             //bye bye...
             System.out.println("Bye Bye!");

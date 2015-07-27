@@ -82,11 +82,13 @@ public class UCIChess {
      * send cmd move FEN format to chess engine
      * @param fen 
      * @param moves 
+     * @param trace 
      ******************************************/
-        public final void move_FromFEN(String fen, String moves){
+        public final void move_FromFEN(String fen, String moves, boolean trace){
         try {
             String cmd="position fen "+fen+" moves "+moves+"\n"; //add crlf or cr
             //send command
+             if (trace) System.out.println(cmd);
             out.write(cmd.getBytes());
             out.flush();
         } catch (IOException ex) {
@@ -98,10 +100,12 @@ public class UCIChess {
      /*****************************************
      * send cmd move from start to chess engine
      * @param moves 
+     * @param trace 
      ******************************************/
-        public final void move_FromSTART(String moves){
+        public final void move_FromSTART(String moves,boolean trace){
         try {
             String cmd="position startpos moves "+moves+"\n"; //add crlf or cr
+            if (trace) System.out.println(cmd);
             //send command
             out.write(cmd.getBytes());
             out.flush();
@@ -199,6 +203,8 @@ public class UCIChess {
     }
     
     
+    
+    
  /***********************************
   * ask best move
   * only use after GO command
@@ -226,8 +232,10 @@ public class UCIChess {
                         sc.useDelimiter(" "); //space as delimiter
                         sc.next(); //read sttring bestmove
                         bestm=sc.next(); //read bestmove
+                        try{
                         sc.next(); //read ponder string
                         ponder=sc.next(); //read ponder value
+                        } catch (NoSuchElementException nse){ponder="mate";}
                     } 
                     return bestm; //return move
                 } //end if bestmove
@@ -404,6 +412,7 @@ final class OptionName{
 
 /********************
  * class info moves
+ * @author tondeur-h
  ********************/
 final class Info {
     String info; //string info to get
@@ -421,3 +430,121 @@ final class Info {
     }
     
 } //end of info class
+
+/**************************
+ * a square of a chessboard
+ * @author tondeur-h
+ **************************/
+final class Square{
+/**naming convention
+ * ==================
+ * an a normal chessboard
+ * a=1;b=2;c=3;d=4;e=5;f=6;g=7;h=8
+ * row is letters from a to h
+ * col is numbers from 1 to 8
+ ****************************/    
+ private static int rowFrom;
+ private static int colFrom;
+ private static int rowTo;
+ private static int colTo;
+ private static String promote;
+
+ 
+ /*************************************
+  * convert moves list into fen String
+  * @param moves
+  * @return 
+  *************************************/
+ public String movesToFen(String moves){
+     String fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+ return fen;
+ }
+ 
+ 
+ /*****************************************
+  * Convert a string chessboard coordinate
+  * into a numeric convention
+  * @param coord 
+  *****************************************/
+    public static void convert (String coord){
+        //example g1f3 give colFrom=7 rowFrom=1 colTo=6 rowTo=3
+            //default values
+            rowFrom=0;
+            rowTo=0;
+            colFrom=0;
+            colTo=0;
+            promote="";
+        if (coord.length()>=4){
+        try{
+            //translate coord
+            colFrom=coord.charAt(0)-96;
+            rowFrom=coord.charAt(1)-48;
+            colTo=coord.charAt(2)-96;
+            rowTo=coord.charAt(3)-48;
+            
+            if (coord.length()==5){promote=coord.substring(4);}
+            
+        }catch (Exception e){  
+            rowFrom=0;
+           rowTo=0;
+           colFrom=0;
+           colTo=0;
+           promote="";
+        }
+        
+        }
+    }
+ 
+        /************************************
+         * get Row From coord
+         * using convention
+         * * a=1;b=2;c=3;d=4;e=5;f=6;g=7;h=8
+         * @return 
+         ***********************************/
+    public static int getRowFrom() {
+        return rowFrom;
+    }
+
+        /***********************************
+         * get col From coord
+         * using convention
+         * * 1=1;2=2;3=3;4=4;5=5;6=6;7=7;8=8
+         * @return 
+         ************************************/    
+    public static int getColFrom() {
+        return colFrom;
+    }
+
+        /************************************
+         * get Row To coord
+         * using convention
+         * * a=1;b=2;c=3;d=4;e=5;f=6;g=7;h=8
+         * @return 
+         ************************************/
+    public static int getRowTo() {
+        return rowTo;
+    }
+
+        /***********************************
+         * get col To coord
+         * using convention
+         * * 1=1;2=2;3=3;4=4;5=5;6=6;7=7;8=8
+         * @return 
+         ************************************/
+    public static int getColTo() {
+        return colTo;
+    }
+
+    /************************
+     * get promote value
+     * a chess piece letter
+     * or empty if no promote
+     * @return 
+     *************************/
+    public static String getPromote() {
+        return promote;
+    }
+    
+} //end of Square class
+
+
