@@ -22,13 +22,13 @@ package ucichess;
  * @author tondeur herve GPL v3.0
  */
 /**************************
- * a square of a chessboard
- * @author tondeur-h
+ * A square of a chessboard
+ * @author tondeur herve 2015 GPL V3.0
  **************************/
 public final class Square{
 /**naming convention
  * ==================
- * an a normal chessboard
+ * On a normal chessboard
  * a=1;b=2;c=3;d=4;e=5;f=6;g=7;h=8
  * row is letters from a to h
  * col is numbers from 1 to 8
