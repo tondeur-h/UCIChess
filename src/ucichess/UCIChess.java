@@ -14,8 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 package ucichess;
 
 import ucichess.testUCIChess.TestChess;
@@ -124,6 +122,7 @@ import java.util.logging.Logger;
  * <br>
  * 
  * @author Tondeur Herve GPL v3.0
+ * @version 1.0
  *********************/
 public class UCIChess {
     private OutputStream out; //to chess engine
@@ -351,7 +350,7 @@ public class UCIChess {
                         try{
                         sc.next(); //read ponder string
                         ponder=sc.next(); //read ponder value
-                        } catch (NoSuchElementException nse){ponder="mate";}
+                        } catch (NoSuchElementException nse){ponder="0000";}
                     } 
                     return bestm; //return move
                 } //end if bestmove

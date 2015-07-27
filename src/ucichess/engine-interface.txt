@@ -45,7 +45,11 @@ Move format:
 
 The move format is in long algebraic notation.
 A nullmove from the Engine to the GUI should be sent as 0000.
+TH: An impossible move (for mate for example) should be sent as (none) string.
 Examples:  e2e4, e7e5, e1g1 (white short castling), e7e8q (for promotion)
+TH : promote is a letter represent the chess piece to get rnbq(black promote) RNBQ (white promote)
+     king and pawn are not allowed.
+
 
 
 GUI to engine:
@@ -53,7 +57,7 @@ GUI to engine:
 
 These are all the command the engine gets from the interface.
 
-* uci
+* uci (TH: must the first command tocall) 
 	tell engine to use the uci (universal chess interface),
 	this will be sent once as a first command after program boot
 	to tell the engine to switch to uci mode.
@@ -62,7 +66,7 @@ These are all the command the engine gets from the interface.
 	After that the engine should send "uciok" to acknowledge the uci mode.
 	If no uciok is sent within a certain time period, the engine task will be killed by the GUI.
 
-* debug [ on | off ]
+* debug [ on | off ] (TH: not supported by all engine)
 	switch the debug mode of the engine on and off.
 	In debug mode the engine should send additional infos to the GUI, e.g. with the "info string" command,
 	to help debugging, e.g. the commands that the engine has received etc.
@@ -94,7 +98,7 @@ These are all the command the engine gets from the interface.
 	   "setoption name Clear Hash\n"
 	   "setoption name NalimovPath value c:\chess\tb\4;c:\chess\tb\5\n"
 
-* register
+* register (TH: not supported by all engine)
 	this is the command to try to register an engine or to tell the engine that registration
 	will be done later. This command should always be sent if the engine	has sent "registration error"
 	at program startup.
@@ -137,7 +141,7 @@ These are all the command the engine gets from the interface.
 	* ponder
 		start searching in pondering mode.
 		Do not exit the search in ponder mode, even if it's mate!
-		This means that the last move sent in in the position string is the ponder move.
+		This means that the last move sent in the position string is the ponder move.
 		The engine can do what it wants to do, but after a "ponderhit" command
 		it should execute the suggested move to ponder on. This means that the ponder move sent by
 		the GUI can be interpreted as a recommendation about which move to ponder. However, if the
@@ -207,6 +211,7 @@ Engine to GUI:
 	"stop" command, so for every "go" command a "bestmove" command is needed!
 	Directly before that the engine should send a final "info" command with the final search information,
 	the the GUI has the complete statistics about the last search.
+        TH: If no best move is possible, the engine answer the String "(none)".
 
 * copyprotection
 	this is needed for copyprotected engines. After the uciok command the engine can tell the GUI,
@@ -435,8 +440,8 @@ GUI     engine
 uci
 
 // engine identify  
-      id name Shredder
-		id author Stefan MK
+                id name Shredder
+                id author Stefan MK
 
 // engine sends the options it can change
 // the engine can change the hash size from 1 to 128 MB
@@ -447,7 +452,7 @@ uci
 		option name NalimovCache type spin default 1 min 1 max 32
 
 // the engine can switch off Nullmove and set the playing style
-	   option name Nullmove type check default true
+	        option name Nullmove type check default true
   		option name Style type combo default Normal var Solid var Normal var Risky
 
 // the engine has sent all parameters and is ready
@@ -525,6 +530,7 @@ Whenever a Chess960 game is played, the GUI should set this engine option to 'tr
 Castling is different in Chess960 and the white king move when castling short is not always e1g1.
 A king move could both be the castling king move or just a normal king move.
 This is why castling moves are sent in the form king "takes" his own rook.
+
 Example: e1h1 for the white short castle move in the normal chess start position.
 
 In EPD and FEN position strings specifying the castle rights with w and q is not enough as

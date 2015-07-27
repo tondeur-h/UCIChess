@@ -38,7 +38,10 @@ public class AutoChess {
    engine2.get_uciOk(false);
    String nameEngine2=engine2.getEngineName();
    
-   //play max 500 turn
+        System.out.println(nameEngine1+" is white player.");
+        System.out.println(nameEngine2+" is black player.\n");
+   
+   //play max 500 turns per tournament
    int turn=1;
    while (turn<=500){
        
@@ -50,9 +53,9 @@ public class AutoChess {
             String repw=engine1.get_bestMove(true);  //read response
             if (moves==null){moves=repw;} //just the first move
             else {moves=moves+" "+repw;} //incruise moves list
-            System.out.println(nameEngine1+"=> White play (turn "+turn+") "+repw);
-            //test if is the winner
-            if (engine1.getPonder().compareTo("mate")==0){System.out.println("\nturn("+turn+")"+nameEngine1+" playing WHITE WIN\n"); break;}
+            System.out.println("\n"+nameEngine1+"=> White play (turn "+turn+") "+repw+"\n");
+            //if white bestmove is (none) then black win
+            if (repw.compareTo("(none)")==0){System.out.println("\nturn("+turn+")"+nameEngine2+" playing BLACK WIN\n");moves=moves+" white mate";break;}
             //apply moves to all engines
             engine1.move_FromSTART(moves,false); //make move
             engine2.move_FromSTART(moves,false); //make move
@@ -65,9 +68,9 @@ public class AutoChess {
             engine2.send_cmd(UCIChess.GOTHINK); //think for best move
             String repb=engine2.get_bestMove(true);  //read response
             moves=moves+" "+repb; //incruise moves list
-            System.out.println(nameEngine2+"=> Black play (turn "+turn+") "+repb);
-            //test if is the winner
-            if (engine2.getPonder().compareTo("mate")==0) {System.out.println("\nturn("+turn+")"+nameEngine2+" playing BLACK WIN\n");break;}
+            System.out.println("\n"+nameEngine2+"=> Black play (turn "+turn+") "+repb+"\n");
+            //if black bestmove is (none) then white win
+            if (repb.compareTo("(none)")==0) {System.out.println("\nturn("+turn+")"+nameEngine1+" playing WHITE WIN\n");moves=moves+" black mate";break;}
             System.out.println("moves : "+moves);
             //apply moves to all engines
             engine1.move_FromSTART(moves,false); //make move
@@ -75,9 +78,10 @@ public class AutoChess {
         
    turn++;
    }
-        //draw ending game et stop all engines
-        if (turn<500) {System.out.println("\nfull moves : "+moves+" mate\n");}
+        //draw end of tournament and stop all engines
+        if (turn<500) {System.out.println("\nfull moves : "+moves+"\n");}
         else {System.out.println("\nfull moves : "+moves+" stall\n");}
+        //bye
         System.out.println("End match!");
         engine1.stop_Engine();
         engine2.stop_Engine();
