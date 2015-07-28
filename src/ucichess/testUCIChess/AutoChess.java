@@ -35,10 +35,10 @@ public class AutoChess {
     //run engine2
     UCIChess engine2=new UCIChess("C:/perso/javafx/TP/stockfish-6-win/Windows/stockfish-6-32.exe");
    //get name of first one
-    engine1.get_uciOk(false);
+    engine1.get_UciOk(false);
    String nameEngine1=engine1.getEngineName();
    //get name of second's
-   engine2.get_uciOk(false);
+   engine2.get_UciOk(false);
    String nameEngine2=engine2.getEngineName();
    
         System.out.println(nameEngine1+" is white player.");
@@ -49,11 +49,11 @@ public class AutoChess {
    while (turn<=500){
        
        //wait engine1
-       engine1.get_readyOk(traceMode);
+       engine1.get_ReadyOk(traceMode);
        
             //play white for engine1
-            engine1.go_think(); //think for best move x seconds
-            String repw=engine1.get_bestMove(traceMode);  //read response
+            engine1.go_Think(); //think for best move x seconds
+            String repw=engine1.get_BestMove(traceMode);  //read response
             if (moves==null){moves=repw;} //just the first move
             else {moves=moves+" "+repw;} //incruise moves list
             System.out.println("\n"+nameEngine1+"=> White play (turn "+turn+") "+repw+"\n");
@@ -65,11 +65,11 @@ public class AutoChess {
        
           
             //wait for engine2
-            engine2.get_readyOk(traceMode);
+            engine2.get_ReadyOk(traceMode);
        
             //play black for engine2
-            engine2.go_think(); //think for best move
-            String repb=engine2.get_bestMove(traceMode);  //read response
+            engine2.go_Think(); //think for best move
+            String repb=engine2.get_BestMove(traceMode);  //read response
             moves=moves+" "+repb; //incruise moves list
             System.out.println("\n"+nameEngine2+"=> Black play (turn "+turn+") "+repb+"\n");
             //if black bestmove is (none) then white win

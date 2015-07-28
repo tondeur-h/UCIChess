@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (C) 2015 Tondeur Herve
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *//*
+ */ /*
  * Copyright (C) 2015 Tondeur Herve
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,34 +57,34 @@ import java.util.logging.Logger;
  *           //ask uci infos<br>
  *           System.out.println("======================TEST UCI COMMAND======================");<br>
  *          //is uci ok ?<br>
- *           System.out.println("uciok = "+uci.get_uciOk(false));<br>
+           System.out.println("uciok = "+uci.get_UciOk(false));<br>
  *           //engine name and author(s)<br>
  *           System.out.println("Engine Name = "+uci.getEngineName());<br>
- *           System.out.println("Engine Author(s) = "+uci.getEngineAuthor());<br>
+           System.out.println("Engine Author(s) = "+uci.get_EngineAuthor());<br>
  *           System.out.println("==================TEST UCI OPTIONS RETRIEVE=================");<br>
  *           //number of options in uci engine<br>
- *           System.out.println("Numbers of options = "+uci.get_number_options());<br>
+           System.out.println("Numbers of options = "+uci.get_Number_Options());<br>
  *           //list all uci options (names, type, values)<br>
  *           System.out.format("%-30s %-10s %-20s\n","Name(id)","type","values");<br>
  *           System.out.println("------------------------------------------------------------");<br>
- *           for (int i=0;i&lt;uci.get_number_options();i++)<br>
+ *           for (int i=0;i&lt;uci.get_Number_Options();i++)<br>
  *           {<br>
- *               System.out.format("%-30s %-10s %-20s\n",uci.get_option(i).getId(),uci.get_option(i).getType(),uci.get_option(i).getValues() );<br>
+               System.out.format("%-30s %-10s %-20s\n",uci.get_Option(i).getId(),uci.get_Option(i).getType(),uci.get_Option(i).getValues() );<br>
  *           }<br>
  *           System.out.println("=====================PLAY A SMALL GAME=====================");<br>
  *           //is engine ready?<br>
- *           System.out.println("isready = "+uci.get_readyOk(false));<br>
+           System.out.println("isready = "+uci.get_ReadyOk(false));<br>
  *          <br>
  *           //white play e2e4<br>
  *           System.out.println("White play = e2e4");<br>
  *           uci.move_FromSTART("e2e4 ",false); <br>
  *           System.out.println("-------------------------------------------------------");<br>
  *           //is engine ready for next move?<br>
- *           System.out.println("isready = "+uci.get_readyOk(false));<br>
+           System.out.println("isready = "+uci.get_ReadyOk(false));<br>
  *           <br>
  *           //black move (engine play)<br>
            uci.send_uci_cmd(UCIChess.GOTHINK); //think for best move<br>
- *           String rep=uci.get_bestMove(false);  //read response<br>
+           String rep=uci.get_BestMove(false);  //read response<br>
  *           System.out.println("---------------info on best move-----------------------");<br>
  *           System.out.println("Number of infos lines = "+uci.get_number_infos());<br>
  *           System.out.format("%-50s\n","Info lines");<br>
@@ -95,23 +95,23 @@ import java.util.logging.Logger;
  *           }<br>
  *           System.out.println("-------------------------------------------------------");<br>
  *           System.out.println("Black play = "+rep); //draw best move<br>
- *           System.out.println("Black ponder = "+uci.getPonder()); //best white next move<br>
+           System.out.println("Black ponder = "+uci.get_Ponder()); //best white next move<br>
  *           uci.move_FromSTART("e2e4 "+rep,false); //make move<br>
  *           System.out.println("-------------------------------------------------------");<br>
  *           <br>
  *           //is engine ready for next move?<br>
- *           System.out.println("isready = "+uci.get_readyOk(false));<br>
+           System.out.println("isready = "+uci.get_ReadyOk(false));<br>
  *           <br>
  *           //white play g1f3<br>
  *           System.out.println("White play = g1f3");<br>
  *           uci.move_FromSTART("e2e4 "+rep+" g1f3 ",false);<br>
  *           System.out.println("-------------------------------------------------------");<br>
  *           //is engine ready for next move?<br>
- *           System.out.println("isready = "+uci.get_readyOk(false));<br>
+           System.out.println("isready = "+uci.get_ReadyOk(false));<br>
  *           <br>
  *           //black play<br>
            uci.send_uci_cmd(UCIChess.GOTHINK); //search next move<br>
- *           String rep2=uci.get_bestMove(false);  //read best move<br>
+           String rep2=uci.get_BestMove(false);  //read best move<br>
  *           System.out.println("---------------info on best move-----------------------");<br>
  *           System.out.println("Number of infos lines = "+uci.get_number_infos());<br>
  *           System.out.format("%-50s\n","Info lines");<br>
@@ -122,7 +122,7 @@ import java.util.logging.Logger;
  *           }<br>
  *           System.out.println("-------------------------------------------------------");<br>
  *           System.out.println("Black play = "+rep2); //draw black turn<br>
- *           System.out.println("Black ponder = "+uci.getPonder()); //best white next move<br>
+           System.out.println("Black ponder = "+uci.get_Ponder()); //best white next move<br>
  *           uci.move_FromSTART("e2e4 "+rep+" g1f3 "+rep2,false); //make move<br>
  *           Square.convert("g1f3");<br>
  *           System.out.println(Square.getColFrom());<br>
@@ -150,7 +150,7 @@ public class UCIChess {
     private ArrayList<OptionName> listOfOptions;
     private ArrayList<InfoSimple> listInfoSimple;
     private ArrayList<InfoDetailed> listInfoDetail;
-    
+            
     //internal use only
     private boolean isUCICall=false;
     private boolean  isGOCall=false;
@@ -189,6 +189,10 @@ public class UCIChess {
             //prepare optionsList
             listOfOptions=new ArrayList<>();
             listInfoSimple=new ArrayList<>();
+        
+            //for info parser
+            listInfoDetail=new ArrayList<>();
+                  
         } catch (IOException ex) {
             Logger.getLogger(UCIChess.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -297,7 +301,7 @@ public class UCIChess {
   * @param trace A boolean value that print the responses engine.
   * @return A boolean value, true if engine is ready otherwise false.
   ******************************/
-    public final boolean get_readyOk(boolean trace){
+    public final boolean get_ReadyOk(boolean trace){
         //call cmd isready before
         send_uci_cmd(UCIChess.ISREADY);
         //test response
@@ -325,7 +329,7 @@ public class UCIChess {
   * @param trace A boolean that print the full trace of the Chess engine Responses.
   * @return A boolean value true when uci is ready otherwise false.
   *****************************/
-    public final boolean get_uciOk(boolean trace){
+    public final boolean get_UciOk(boolean trace){
         //call uci command before
         send_uci_cmd(UCIChess.UCI);
         isUCICall=true;
@@ -338,7 +342,7 @@ public class UCIChess {
                 try ( //parser ligne id
                         Scanner sc = new Scanner(line)) {
                         sc.useDelimiter(" ");
-                        parse_option(line);
+                        parse_Option(line);
                         // find name engine
                         if (sc.findInLine("id name")!=null){engineName=sc.nextLine();}
                         // find author engine
@@ -371,7 +375,7 @@ public class UCIChess {
         * you must execute the uci command before
         * @return A String value containing the chess engine author(s) name(s).
         ***************************************/       
-       public String getEngineAuthor(){
+       public String get_EngineAuthor(){
            if (!isUCICall) engineAuthor="empty";
            if (engineAuthor==null) engineAuthor="NoName";
            return engineAuthor;
@@ -383,7 +387,7 @@ public class UCIChess {
       construct a ArrayList<OptionName> objects
       @param line 
      ****************************************** */
-    private void parse_option(String line) {
+    private void parse_Option(String line) {
        String name="";
        String next;
        String type="";
@@ -403,7 +407,7 @@ public class UCIChess {
              { //treats type value
                  type=sc.next();
                //treats defaults
-                 sc.next(); //read default word
+                 sc.next(); //read default key
                  do{
                      values=values+" "+sc.next();
                  } while (sc.hasNext());
@@ -420,7 +424,7 @@ public class UCIChess {
      * You must execute the uci command before used this method.
      * @return An integer containing the count return.
      ***************************/
-    public int get_number_options(){
+    public int get_Number_Options(){
         if (!isUCICall) return 0;
         return listOfOptions.size();
     }
@@ -439,7 +443,7 @@ public class UCIChess {
      * @param Number A integer identified the option number in the list of options.
      * @return A OptionName object
      **************************/
-    public OptionName get_option(int Number){
+    public OptionName get_Option(int Number){
         if (!isUCICall) return null;
         if (Number>=listOfOptions.size()) return null; //number must begin from 0 to size-1
         return listOfOptions.get(Number);
@@ -452,7 +456,7 @@ public class UCIChess {
      * @param id Is the name of the option.
      * @return A boolean true if option name is sent otherwise false.
      *************************************/
-    public boolean send_option_name_noValue(String id){
+    public boolean send_Option_Name_NoValue(String id){
      if (id==null) return false;
         send_uci_cmd("setoption name "+id );
         return true;
@@ -466,7 +470,7 @@ public class UCIChess {
      * @param values Is the values to set for this option.
      * @return A boolean true if option name is sent otherwise false.
      **************************************/
-    public boolean send_option_name_withValue(String id, String values){
+    public boolean send_Option_Name_WithValue(String id, String values){
         if (id==null) return false;
         if (values==null) return false;
         send_uci_cmd("setoption name "+id+" value "+values);
@@ -477,7 +481,7 @@ public class UCIChess {
     /*****************************************
      * This Method, make the engine searching the bestmove and return it as soon as possible
      *****************************************/
-    public void go_think(){
+    public void go_Think(){
         send_uci_cmd(GOTHINK); //just thinking...
     }
    
@@ -487,7 +491,7 @@ public class UCIChess {
      * when the depth search is reaching.
      * @param depth This value must be between 1 and 32.
      *****************************************/   
-    public void go_think_depth(int depth){
+    public void go_Think_Depth(int depth){
          if (depth<1) depth=1; //min depth 1
          if (depth>32) depth=32; //max depth 32
         send_uci_cmd(GOTHINK+" depth "+depth);
@@ -498,7 +502,7 @@ public class UCIChess {
      * when the number of calculating nodes search is reach.
      * @param nodes This value must be between 1 and 100.000.000.
      *****************************************/   
-    public void go_think_nodes(long nodes){
+    public void go_Think_Nodes(long nodes){
           if (nodes<1) nodes=1; //min 1 nodes
           if (nodes>100000000) nodes=100000000; //max 100000000 nodes
         send_uci_cmd(GOTHINK+" nodes "+nodes);
@@ -509,7 +513,7 @@ public class UCIChess {
      * when the "mate in x turns" search is reaching.
      * @param mateIn This value must be between 1 and 500.
      *****************************************/   
-    public void go_think_mate_in(int mateIn){
+    public void go_Think_Mate_In(int mateIn){
         if (mateIn<1) mateIn=1; //min in one turns
         if (mateIn>500) mateIn=500; //max in 500 turns
         send_uci_cmd(GOTHINK+" mate "+mateIn);
@@ -520,7 +524,7 @@ public class UCIChess {
      * when the depth search is reaching.
      * @param miliSec This value must be between 1 and 12.000.000 (2 hours).
      *****************************************/   
-    public void go_think_moveTime(long miliSec){
+    public void go_Think_MoveTime(long miliSec){
         if (miliSec<1) miliSec=1; //min 1 milisecond
         if (miliSec>(120*60*1000)) miliSec=(120*60*1000); //max 2 hours
         send_uci_cmd(GOTHINK+" movetime "+miliSec);
@@ -529,14 +533,14 @@ public class UCIChess {
     /*****************************************
      * This Method, make the engine searching the bestmove and return it in a infinite time...
      *****************************************/   
-    public void go_think_infinite(){
+    public void go_Think_Infinite(){
         send_uci_cmd(GOTHINK+" infinite");
     }
    
     /*****************************************
      * This Method, make the engine searching in pondering mode and return it in a infinite time...
      *****************************************/   
-    public void go_think_ponder(){
+    public void go_Think_Ponder(){
         send_uci_cmd(GOTHINK+" ponder");
     }
     
@@ -547,7 +551,7 @@ public class UCIChess {
   * @return A String values contains the best move in an Algebraic Notation.
   *************************************/
     
-       public final String get_bestMove(boolean trace){
+       public final String get_BestMove(boolean trace){
          try {
              if (!isGOCall) return "0000";
              String line;
@@ -590,16 +594,100 @@ public class UCIChess {
         * parse infoline in small object.
         *******************************/
        private void parse_Info_Line(String line){
+           String key;
+           String value;
+       //the first key is "info" so 
+           InfoDetailed id=new InfoDetailed();
+           Scanner sc=new Scanner(line);
+           key=sc.next(); //read key "info"
+           value=sc.next(); //read next key the first
+           while (sc.hasNext()){
+               //test if value is a key
+               //if yes so key=value and read next value
+               if (value.compareTo("score")==0) {key="";value="";} //delete score key
+               if (isKey(value)){key=value;value=sc.next();}
+               //else do nothing keep key and value as before
+               
+               //test key and add value
+                if (key.startsWith("depth")){
+                    id.setDepth(id.getDepth()+" "+value);
+                }
+               if (key.startsWith("seldepth")){ 
+                    id.setSelDepth(id.getSelDepth()+" "+value);
+                }
+               if (key.startsWith("time")){
+                    id.setTime(id.getTime()+" "+value);
+                }
+               if (key.startsWith("nodes")){
+                    id.setNodes(id.getNodes()+" "+value);
+                }
+               if (key.startsWith("pv")){
+                    id.setPv(id.getPv()+" "+value);
+                }
+                if (key.startsWith("multipv")){
+                    id.setMultiPV(id.getMultiPV()+" "+value);
+                }
+               if (key.startsWith("cp")){
+                    id.setScoreCP(id.getScoreCP()+" "+value);
+                }
+               if (key.startsWith("mate")){
+                    id.setScoreMate(id.getScoreMate()+" "+value);
+                }
+               if (key.startsWith("lowerbound")){
+                    id.setScoreLowerBound(id.getScoreLowerBound()+" "+value);
+                }
+               if (key.startsWith("upperbound")){
+                    id.setScoreUpperBound(id.getScoreUpperBound()+" "+value);
+                }
+                if (key.startsWith("currmove")){
+                    id.setCurrmove(id.getCurrmove()+" "+value);
+                }
+               if (key.startsWith("currmovenumber")){
+                    id.setCurrmoveNumber(id.getCurrmoveNumber()+" "+value);
+                }
+               if (key.startsWith("hashfull")){
+                    id.setHashfull(id.getHashfull()+" "+value);
+                }
+               if (key.startsWith("nps")){
+                    id.setNps(id.getNps()+" "+value);
+                }
+               if (key.startsWith("tbhits")){
+                    id.setTbhits(id.getTbhits()+" "+value);
+                }
+                if (key.startsWith("sbhits")){
+                    id.setSbhits(id.getSbhits()+" "+value);
+                }
+               if (key.startsWith("cpuload")){
+                    id.setCpuLoad(id.getCpuLoad()+" "+value);
+                }
+               if (key.startsWith("string")){
+                    id.setStr(id.getStr()+" "+value);
+                }
+               if (key.startsWith("refutation")){
+                    id.setRefutation(id.getRefutation()+" "+value);
+                }
+               if (key.startsWith("currline")){
+                    id.setCurrLine(id.getCurrLine()+" "+value);
+                }
+               if (sc.hasNext()) value=sc.next(); //read next value
+           } //end while
+           listInfoDetail.add(id);
            
+           sc.close();
        }
        
 
+       private boolean isKey(String val){
+           String words="depth seldepth time nodes pv multipv cp mate lowerbound upperbound currmove currmovenumber hashfull nps tbhits sbhits cpuload string refutation currline";
+           return words.contains(val);
+       }
+       
        /***************************************
         * Return the ponder value after a GO command.<br>
         * This method must be run only after a GO command.
-        * @return A String contains the ponder values or "mate" word if a mate is reach.
+        * @return A String contains the ponder values or "mate" key if a mate is reach.
         ***************************************/
-       public String getPonder(){
+       public String get_Ponder(){
            if (!isGOCall) ponder="0000";
            if (ponder==null) ponder="0000";
            return ponder;
@@ -612,7 +700,7 @@ public class UCIChess {
      * You must execute the GO command before used this method.
      * @return An integer containing the count return.
      ***************************/
-    public int get_number_SimpleInfo(){
+    public int get_Number_SimpleInfo(){
         if (!isGOCall) return 0;
         return listInfoSimple.size();
     }
@@ -641,7 +729,7 @@ public class UCIChess {
      * You must execute the GO command before used this method.
      * @return An integer containing the count return.
      ***************************/
-    public int get_number_DetailedInfo(){
+    public int get_Number_DetailedInfo(){
         if (!isGOCall) return 0;
         return listInfoDetail.size();
     }
@@ -701,6 +789,7 @@ public final class OptionName{
  * @author tondeur-h
  ********************/
 public class InfoDetailed{
+
     String depth;
     String selDepth;
     String time;
@@ -722,6 +811,109 @@ public class InfoDetailed{
     String refutation;
     String currLine;
 
+        public InfoDetailed() {
+            depth="";
+            selDepth="";
+            time="";
+            nodes = "";
+            pv = "";
+            multiPV = "";
+            scoreCP = "";
+            scoreMate = "";
+            scoreLowerBound = "";
+            scoreUpperBound = "";
+            currmove = "";
+            currmoveNumber = "";
+            hashfull = "";
+            nps = "";
+            tbhits = "";
+            sbhits = "";
+            cpuLoad = "";
+            str = "";
+            refutation = "";
+            currLine = "";
+        }
+    
+        public void setDepth(String depth) {
+            this.depth = depth;
+        }
+
+        public void setSelDepth(String selDepth) {
+            this.selDepth = selDepth;
+        }
+
+        public void setTime(String time) {
+            this.time = time;
+        }
+
+        public void setNodes(String nodes) {
+            this.nodes = nodes;
+        }
+
+        public void setPv(String pv) {
+            this.pv = pv;
+        }
+
+        public void setMultiPV(String multiPV) {
+            this.multiPV = multiPV;
+        }
+
+        public void setScoreCP(String scoreCP) {
+            this.scoreCP = scoreCP;
+        }
+
+        public void setScoreMate(String scoreMate) {
+            this.scoreMate = scoreMate;
+        }
+
+        public void setScoreLowerBound(String scoreLowerBound) {
+            this.scoreLowerBound = scoreLowerBound;
+        }
+
+        public void setScoreUpperBound(String scoreUpperBound) {
+            this.scoreUpperBound = scoreUpperBound;
+        }
+
+        public void setCurrmove(String currmove) {
+            this.currmove = currmove;
+        }
+
+        public void setCurrmoveNumber(String currmoveNumber) {
+            this.currmoveNumber = currmoveNumber;
+        }
+
+        public void setHashfull(String hashfull) {
+            this.hashfull = hashfull;
+        }
+
+        public void setNps(String nps) {
+            this.nps = nps;
+        }
+
+        public void setTbhits(String tbhits) {
+            this.tbhits = tbhits;
+        }
+
+        public void setSbhits(String sbhits) {
+            this.sbhits = sbhits;
+        }
+
+        public void setCpuLoad(String cpuLoad) {
+            this.cpuLoad = cpuLoad;
+        }
+
+        public void setStr(String str) {
+            this.str = str;
+        }
+
+        public void setRefutation(String refutation) {
+            this.refutation = refutation;
+        }
+
+        public void setCurrLine(String currLine) {
+            this.currLine = currLine;
+        }
+   
         public String getDepth() {
             return depth;
         }
@@ -801,52 +993,7 @@ public class InfoDetailed{
         public String getCurrLine() {
             return currLine;
         }
-
-    /**
-     * 
-     * @param depth
-     * @param selDepth
-     * @param time
-     * @param nodes
-     * @param pv
-     * @param multiPV
-     * @param scoreCP
-     * @param scoreMate
-     * @param scoreLowerBound
-     * @param scoreUpperBound
-     * @param currmove
-     * @param currmoveNumber
-     * @param hashfull
-     * @param nps
-     * @param tbhits
-     * @param sbhits
-     * @param cpuLoad
-     * @param str
-     * @param refutation
-     * @param currLine 
-     */
-        public InfoDetailed(String depth, String selDepth, String time, String nodes, String pv, String multiPV, String scoreCP, String scoreMate, String scoreLowerBound, String scoreUpperBound, String currmove, String currmoveNumber, String hashfull, String nps, String tbhits, String sbhits, String cpuLoad, String str, String refutation, String currLine) {
-            this.depth = depth;
-            this.selDepth = selDepth;
-            this.time = time;
-            this.nodes = nodes;
-            this.pv = pv;
-            this.multiPV = multiPV;
-            this.scoreCP = scoreCP;
-            this.scoreMate = scoreMate;
-            this.scoreLowerBound = scoreLowerBound;
-            this.scoreUpperBound = scoreUpperBound;
-            this.currmove = currmove;
-            this.currmoveNumber = currmoveNumber;
-            this.hashfull = hashfull;
-            this.nps = nps;
-            this.tbhits = tbhits;
-            this.sbhits = sbhits;
-            this.cpuLoad = cpuLoad;
-            this.str = str;
-            this.refutation = refutation;
-            this.currLine = currLine;
-        }
+        
 } //end class Infos
 
 
