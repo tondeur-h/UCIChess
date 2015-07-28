@@ -26,7 +26,7 @@ import ucichess.UCIChess;
 public class AutoChess {
     String moves=null; //keep moves in a String
 
-    final boolean traceMode=true;
+    final boolean traceMode=false;
     final long timeThinking=500; //time thinking in miliseconds
     
     public AutoChess() {
@@ -52,7 +52,7 @@ public class AutoChess {
        engine1.get_readyOk(traceMode);
        
             //play white for engine1
-            engine1.go_think_moveTime(timeThinking); //think for best move x seconds
+            engine1.go_think(); //think for best move x seconds
             String repw=engine1.get_bestMove(traceMode);  //read response
             if (moves==null){moves=repw;} //just the first move
             else {moves=moves+" "+repw;} //incruise moves list
@@ -68,7 +68,7 @@ public class AutoChess {
             engine2.get_readyOk(traceMode);
        
             //play black for engine2
-            engine2.go_think_moveTime(timeThinking); //think for best move
+            engine2.go_think(); //think for best move
             String repb=engine2.get_bestMove(traceMode);  //read response
             moves=moves+" "+repb; //incruise moves list
             System.out.println("\n"+nameEngine2+"=> Black play (turn "+turn+") "+repb+"\n");

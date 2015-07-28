@@ -13,6 +13,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *//*
+ * Copyright (C) 2015 Tondeur Herve
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package ucichess;
 
@@ -125,6 +140,7 @@ import java.util.logging.Logger;
  * @version 1.0
  *********************/
 public class UCIChess {
+    //some variables for internal API uses
     private OutputStream out; //to chess engine
     private BufferedReader in; //from chess engine
     private Process p; //engine runnin Thread
@@ -132,7 +148,8 @@ public class UCIChess {
     private String engineAuthor;
     private String ponder;
     private ArrayList<OptionName> listOfOptions;
-    private ArrayList<Info> listInfos;
+    private ArrayList<InfoSimple> listInfoSimple;
+    private ArrayList<InfoDetailed> listInfoDetail;
     
     //internal use only
     private boolean isUCICall=false;
@@ -171,7 +188,7 @@ public class UCIChess {
             in = new BufferedReader(new InputStreamReader(p.getInputStream()));
             //prepare optionsList
             listOfOptions=new ArrayList<>();
-            listInfos=new ArrayList<>();
+            listInfoSimple=new ArrayList<>();
         } catch (IOException ex) {
             Logger.getLogger(UCIChess.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -542,7 +559,7 @@ public class UCIChess {
                 
                 //keep info into an ArrayList
                 if (line.startsWith("info")){
-                    listInfos.add(new Info(line.replaceFirst("info ", "")));
+                    listInfoSimple.add(new InfoSimple(line.replaceFirst("info ", "")));
                 }
                 //breaking condition "bestmove"
                 if (line.startsWith("bestmove")){
@@ -578,14 +595,14 @@ public class UCIChess {
 
     
     
-      /***************************
+    /***************************
      * Return the max number of infos after a GO command.<br>
      * You must execute the GO command before used this method.
      * @return An integer containing the count return.
      ***************************/
-    public int get_number_infos(){
+    public int get_number_SimpleInfo(){
         if (!isGOCall) return 0;
-        return listInfos.size();
+        return listInfoSimple.size();
     }
     
     
@@ -600,13 +617,41 @@ public class UCIChess {
      * @param Number A integer identified the info line number in the list of infos.
      * @return A Info object
      **************************/
-    public Info get_info(int Number){
+    public InfoSimple get_SimpleInfo(int Number){
         if (!isGOCall) return null;
-        if (Number>=listInfos.size()) return null; //number must begin from 0 to size-1
-        return listInfos.get(Number);
+        if (Number>=listInfoSimple.size()) return null; //number must begin from 0 to size-1
+        return listInfoSimple.get(Number);
     }
     
 
+    /***************************
+     * Return the max number of infos after a GO command.<br>
+     * You must execute the GO command before used this method.
+     * @return An integer containing the count return.
+     ***************************/
+    public int get_number_DetailedInfo(){
+        if (!isGOCall) return 0;
+        return listInfoDetail.size();
+    }
+    
+    
+    /**************************
+     * Return some detailed infos line by is number from the responses engine after a GO command.<br>
+     * InfoDetailed class is a bean for manipulate Infos structures.<br>
+     * <br>
+     * This Method must be call only after a GO command.<br>
+     * <br>
+     * @param Number A integer identified the info line number in the list of infos.
+     * @return A Detailed Info object with all posible return from the Engine
+     **************************/
+    public InfoDetailed get_DetailedInfo(int Number){
+        if (!isGOCall) return null;
+        if (Number>=listInfoDetail.size()) return null; //number must begin from 0 to size-1
+        return listInfoDetail.get(Number);
+    }
+    
+    
+//===============================BEANS CLASS DEFINITIONS==========================    
 /*******************************
  * class encapsulate option name
  * @author tondeur-h
@@ -628,34 +673,176 @@ public final class OptionName{
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getValues() {
         return values;
-    }
-
-    public void setValues(String values) {
-        this.values = values;
     }
    
 } //end of OptionName class
 
 
 /********************
+ * class Infos with details
+ * @author tondeur-h
+ ********************/
+public class InfoDetailed{
+    String depth;
+    String selDepth;
+    String time;
+    String nodes;
+    String pv;
+    String multiPV;
+    String scoreCP;
+    String scoreMate;
+    String scoreLowerBound;
+    String scoreUpperBound;
+    String currmove;
+    String currmoveNumber;
+    String hashfull;
+    String nps;
+    String tbhits;
+    String sbhits;
+    String cpuLoad;
+    String str;
+    String refutation;
+    String currLine;
+
+        public String getDepth() {
+            return depth;
+        }
+
+        public String getSelDepth() {
+            return selDepth;
+        }
+
+        public String getTime() {
+            return time;
+        }
+
+        public String getNodes() {
+            return nodes;
+        }
+
+        public String getPv() {
+            return pv;
+        }
+
+        public String getMultiPV() {
+            return multiPV;
+        }
+
+        public String getScoreCP() {
+            return scoreCP;
+        }
+
+        public String getScoreMate() {
+            return scoreMate;
+        }
+
+        public String getScoreLowerBound() {
+            return scoreLowerBound;
+        }
+
+        public String getScoreUpperBound() {
+            return scoreUpperBound;
+        }
+
+        public String getCurrmove() {
+            return currmove;
+        }
+
+        public String getCurrmoveNumber() {
+            return currmoveNumber;
+        }
+
+        public String getHashfull() {
+            return hashfull;
+        }
+
+        public String getNps() {
+            return nps;
+        }
+
+        public String getTbhits() {
+            return tbhits;
+        }
+
+        public String getSbhits() {
+            return sbhits;
+        }
+
+        public String getCpuLoad() {
+            return cpuLoad;
+        }
+
+        public String getStr() {
+            return str;
+        }
+
+        public String getRefutation() {
+            return refutation;
+        }
+
+        public String getCurrLine() {
+            return currLine;
+        }
+
+    /**
+     * 
+     * @param depth
+     * @param selDepth
+     * @param time
+     * @param nodes
+     * @param pv
+     * @param multiPV
+     * @param scoreCP
+     * @param scoreMate
+     * @param scoreLowerBound
+     * @param scoreUpperBound
+     * @param currmove
+     * @param currmoveNumber
+     * @param hashfull
+     * @param nps
+     * @param tbhits
+     * @param sbhits
+     * @param cpuLoad
+     * @param str
+     * @param refutation
+     * @param currLine 
+     */
+        public InfoDetailed(String depth, String selDepth, String time, String nodes, String pv, String multiPV, String scoreCP, String scoreMate, String scoreLowerBound, String scoreUpperBound, String currmove, String currmoveNumber, String hashfull, String nps, String tbhits, String sbhits, String cpuLoad, String str, String refutation, String currLine) {
+            this.depth = depth;
+            this.selDepth = selDepth;
+            this.time = time;
+            this.nodes = nodes;
+            this.pv = pv;
+            this.multiPV = multiPV;
+            this.scoreCP = scoreCP;
+            this.scoreMate = scoreMate;
+            this.scoreLowerBound = scoreLowerBound;
+            this.scoreUpperBound = scoreUpperBound;
+            this.currmove = currmove;
+            this.currmoveNumber = currmoveNumber;
+            this.hashfull = hashfull;
+            this.nps = nps;
+            this.tbhits = tbhits;
+            this.sbhits = sbhits;
+            this.cpuLoad = cpuLoad;
+            this.str = str;
+            this.refutation = refutation;
+            this.currLine = currLine;
+        }
+} //end class Infos
+
+
+/********************
  * class info moves
  * @author tondeur-h
  ********************/
-public final class Info {
+public final class InfoSimple {
     String info; //string info to get
 
     public String getInfo() {
@@ -666,7 +853,7 @@ public final class Info {
         this.info = info;
     }
 
-    public Info(String info) {
+    public InfoSimple(String info) {
         this.info = info;
     }
     

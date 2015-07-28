@@ -66,12 +66,12 @@ public class TestChess {
             uci.go_think(); //think for best move
             String rep=uci.get_bestMove(false);  //read response
             System.out.println("---------------info on best move-----------------------");
-            System.out.println("Number of infos lines = "+uci.get_number_infos());
+            System.out.println("Number of infos lines = "+uci.get_number_SimpleInfo());
             System.out.format("%-50s\n","Info lines");
             System.out.println("-------------------------------------------------------");
-            for (int i=0;i<uci.get_number_infos();i++)
+            for (int i=0;i<uci.get_number_SimpleInfo();i++)
             {
-                System.out.format("%-50s\n",uci.get_info(i).getInfo());
+                System.out.format("%-50s\n",uci.get_SimpleInfo(i).getInfo());
             }
             System.out.println("-------------------------------------------------------");
             System.out.println("Black play = "+rep); //draw best move
@@ -94,12 +94,12 @@ public class TestChess {
             uci.go_think_moveTime(5000); //search next move during 5 seconds
             String rep2=uci.get_bestMove(false);  //read best move
             System.out.println("---------------info on best move-----------------------");
-            System.out.println("Number of infos lines = "+uci.get_number_infos());
+            System.out.println("Number of infos lines = "+uci.get_number_SimpleInfo());
             System.out.format("%-50s\n","Info lines");
             System.out.println("-------------------------------------------------------");
-            for (int i=0;i<uci.get_number_infos();i++)
+            for (int i=0;i<uci.get_number_SimpleInfo();i++)
             {
-                System.out.format("%-50s\n",uci.get_info(i).getInfo());
+                System.out.format("%-50s\n",uci.get_SimpleInfo(i).getInfo());
             }
             System.out.println("-------------------------------------------------------");
             System.out.println("Black play = "+rep2); //draw black turn
