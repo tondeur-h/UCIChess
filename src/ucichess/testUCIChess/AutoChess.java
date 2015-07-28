@@ -26,6 +26,9 @@ import ucichess.UCIChess;
 public class AutoChess {
     String moves=null; //keep moves in a String
 
+    final boolean traceMode=true;
+    final long timeThinking=500; //time thinking in miliseconds
+    
     public AutoChess() {
     //run Engine1
     UCIChess engine1=new UCIChess("C:\\Users\\tondeur-h.CHV\\Downloads\\Protector_1_6_0\\bin\\Protector_Win32.exe");
@@ -46,35 +49,35 @@ public class AutoChess {
    while (turn<=500){
        
        //wait engine1
-       engine1.get_readyOk(false);
+       engine1.get_readyOk(traceMode);
        
             //play white for engine1
-            engine1.go_think_moveTime(1000); //think for best move 2 seconds
-            String repw=engine1.get_bestMove(true);  //read response
+            engine1.go_think_moveTime(timeThinking); //think for best move x seconds
+            String repw=engine1.get_bestMove(traceMode);  //read response
             if (moves==null){moves=repw;} //just the first move
             else {moves=moves+" "+repw;} //incruise moves list
             System.out.println("\n"+nameEngine1+"=> White play (turn "+turn+") "+repw+"\n");
             //if white bestmove is (none) then black win
             if (repw.compareTo("(none)")==0){System.out.println("\nturn("+turn+")"+nameEngine2+" playing BLACK WIN\n");moves=moves+" white mate";break;}
             //apply moves to all engines
-            engine1.move_FromSTART(moves,false); //make move
-            engine2.move_FromSTART(moves,false); //make move
+            engine1.move_FromSTART(moves,traceMode); //make move
+            engine2.move_FromSTART(moves,traceMode); //make move
        
           
             //wait for engine2
-            engine2.get_readyOk(false);
+            engine2.get_readyOk(traceMode);
        
             //play black for engine2
-            engine2.go_think_moveTime(1000); //think for best move
-            String repb=engine2.get_bestMove(true);  //read response
+            engine2.go_think_moveTime(timeThinking); //think for best move
+            String repb=engine2.get_bestMove(traceMode);  //read response
             moves=moves+" "+repb; //incruise moves list
             System.out.println("\n"+nameEngine2+"=> Black play (turn "+turn+") "+repb+"\n");
             //if black bestmove is (none) then white win
             if (repb.compareTo("(none)")==0) {System.out.println("\nturn("+turn+")"+nameEngine1+" playing WHITE WIN\n");moves=moves+" black mate";break;}
             System.out.println("moves : "+moves+"\n");
             //apply moves to all engines
-            engine1.move_FromSTART(moves,false); //make move
-            engine2.move_FromSTART(moves,false); //make move
+            engine1.move_FromSTART(moves,traceMode); //make move
+            engine2.move_FromSTART(moves,traceMode); //make move
         
    turn++;
    }
