@@ -63,7 +63,7 @@ public class TestChess {
             System.out.println("isready = "+uci.get_readyOk(false));
             
             //black move (engine play)
-            uci.send_cmd(UCIChess.GOTHINK); //think for best move
+            uci.go_think(); //think for best move
             String rep=uci.get_bestMove(false);  //read response
             System.out.println("---------------info on best move-----------------------");
             System.out.println("Number of infos lines = "+uci.get_number_infos());
@@ -90,7 +90,8 @@ public class TestChess {
             System.out.println("isready = "+uci.get_readyOk(false));
             
             //black play
-            uci.send_cmd(UCIChess.GOTHINK); //search next move
+            System.out.println("Black thinking 5 seconds wait please....");
+            uci.go_think_moveTime(5000); //search next move during 5 seconds
             String rep2=uci.get_bestMove(false);  //read best move
             System.out.println("---------------info on best move-----------------------");
             System.out.println("Number of infos lines = "+uci.get_number_infos());
@@ -104,7 +105,9 @@ public class TestChess {
             System.out.println("Black play = "+rep2); //draw black turn
             System.out.println("Black ponder = "+uci.getPonder()); //best white next move
             uci.move_FromSTART("e2e4 "+rep+" g1f3 "+rep2,false); //make move
-            Square.convert("g1f3");
+            System.out.println("============TEST Square class==========================");
+            System.out.println("Convert move : "+rep2);
+            Square.convert(rep2);
             System.out.println(Square.getColFrom());
             System.out.println(Square.getRowFrom());
             System.out.println(Square.getColTo());

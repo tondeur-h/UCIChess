@@ -49,7 +49,7 @@ public class AutoChess {
        engine1.get_readyOk(false);
        
             //play white for engine1
-            engine1.send_cmd(UCIChess.GOTHINK); //think for best move
+            engine1.go_think_moveTime(1000); //think for best move 2 seconds
             String repw=engine1.get_bestMove(true);  //read response
             if (moves==null){moves=repw;} //just the first move
             else {moves=moves+" "+repw;} //incruise moves list
@@ -65,13 +65,13 @@ public class AutoChess {
             engine2.get_readyOk(false);
        
             //play black for engine2
-            engine2.send_cmd(UCIChess.GOTHINK); //think for best move
+            engine2.go_think_moveTime(1000); //think for best move
             String repb=engine2.get_bestMove(true);  //read response
             moves=moves+" "+repb; //incruise moves list
             System.out.println("\n"+nameEngine2+"=> Black play (turn "+turn+") "+repb+"\n");
             //if black bestmove is (none) then white win
             if (repb.compareTo("(none)")==0) {System.out.println("\nturn("+turn+")"+nameEngine1+" playing WHITE WIN\n");moves=moves+" black mate";break;}
-            System.out.println("moves : "+moves);
+            System.out.println("moves : "+moves+"\n");
             //apply moves to all engines
             engine1.move_FromSTART(moves,false); //make move
             engine2.move_FromSTART(moves,false); //make move

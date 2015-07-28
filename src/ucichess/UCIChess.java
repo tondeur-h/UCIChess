@@ -13,6 +13,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *//*
+ * Copyright (C) 2015 tondeur herve
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package ucichess;
 
@@ -68,7 +83,7 @@ import java.util.logging.Logger;
  *           System.out.println("isready = "+uci.get_readyOk(false));<br>
  *           <br>
  *           //black move (engine play)<br>
- *           uci.send_cmd(UCIChess.GOTHINK); //think for best move<br>
+           uci.send_uci_cmd(UCIChess.GOTHINK); //think for best move<br>
  *           String rep=uci.get_bestMove(false);  //read response<br>
  *           System.out.println("---------------info on best move-----------------------");<br>
  *           System.out.println("Number of infos lines = "+uci.get_number_infos());<br>
@@ -95,7 +110,7 @@ import java.util.logging.Logger;
  *           System.out.println("isready = "+uci.get_readyOk(false));<br>
  *           <br>
  *           //black play<br>
- *           uci.send_cmd(UCIChess.GOTHINK); //search next move<br>
+           uci.send_uci_cmd(UCIChess.GOTHINK); //search next move<br>
  *           String rep2=uci.get_bestMove(false);  //read best move<br>
  *           System.out.println("---------------info on best move-----------------------");<br>
  *           System.out.println("Number of infos lines = "+uci.get_number_infos());<br>
@@ -152,6 +167,7 @@ public class UCIChess {
     final public static String STOP="stop";
     final public static String QUIT="quit";
     final public static String PONDERHIT="ponderhit";
+    final public static String UCINEWGAME="ucinewgame";
     
     /***************************
     * construct the API UCIChess<br>
@@ -190,6 +206,7 @@ public class UCIChess {
         }
     }
     
+    //===============================MOVES AND POSITIONS==============================
     
      /*****************************************
      * Send some moves commands from a FEN format to chess engine<br>
@@ -229,7 +246,22 @@ public class UCIChess {
         }
     }
     
+    /*****************************************
+     * This Method, make the engine the move is pondering
+     *****************************************/   
+    public void send_ponderhit(){
+        send_uci_cmd(PONDERHIT);
+    }
+
+    /*****************************************
+     * This Method, tell engine to think on a new game position.<br>
+     * see UCI protocol documentation.
+     *****************************************/   
+    public void send_uciNewGame(){
+        send_uci_cmd(UCINEWGAME);
+    }
         
+//======================SIMPLY SEND COMMANDS====================        
         
     /*********************************
      * Send simple command to chess engine<br>
@@ -237,7 +269,7 @@ public class UCIChess {
      * See uci commands documentations for more informations.
      * @param cmd A String with the command to send to the chess engine.
      *********************************/
-        public final void send_cmd(String cmd){
+        public final void send_uci_cmd(String cmd){
         try {
             cmd=cmd+"\n"; //add crlf or cr
             //send command
@@ -257,6 +289,7 @@ public class UCIChess {
     }
  
  
+//========================ENGINE STATES==============================
  /******************************
   * Check if uci is ready for another command.
   * @param trace A boolean value that print the responses engine.
@@ -264,7 +297,7 @@ public class UCIChess {
   ******************************/
     public final boolean get_readyOk(boolean trace){
         //call cmd isready before
-        send_cmd(UCIChess.ISREADY);
+        send_uci_cmd(UCIChess.ISREADY);
         //test response
         String line; //temp String
         try {
@@ -292,7 +325,7 @@ public class UCIChess {
   *****************************/
     public final boolean get_uciOk(boolean trace){
         //call uci command before
-        send_cmd(UCIChess.UCI);
+        send_uci_cmd(UCIChess.UCI);
         isUCICall=true;
         String line; //temp String
         try {
@@ -317,62 +350,6 @@ public class UCIChess {
         return false;
     }
     
-    
-    
-    
- /***********************************
-  * Ask the best move calculate by the chess engine.<br>
-  * This method can only be uses after a GO command.
-  * @param trace A boolean values that print the full chess engine responses.
-  * @return A String values contains the best move in an Algebraic Notation.
-  *************************************/
-    
-       public final String get_bestMove(boolean trace){
-         try {
-             if (!isGOCall) return "0000";
-             String line;
-             String bestm;
-            while ((line=in.readLine())!=null) {
-                if (trace) {
-                    System.out.println(line);
-                }
-                
-                //keep info into an ArrayList
-                if (line.startsWith("info")){
-                    listInfos.add(new Info(line.replaceFirst("info ", "")));
-                }
-                //breaking condition "bestmove"
-                if (line.startsWith("bestmove")){
-                    try (Scanner sc = new Scanner(line)) {
-                        sc.useDelimiter(" "); //space as delimiter
-                        sc.next(); //read sttring bestmove
-                        bestm=sc.next(); //read bestmove
-                        try{
-                        sc.next(); //read ponder string
-                        ponder=sc.next(); //read ponder value
-                        } catch (NoSuchElementException nse){ponder="0000";}
-                    } 
-                    return bestm; //return move
-                } //end if bestmove
-            }
-              } catch (IOException ex) {
-            Logger.getLogger(TestChess.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return "0000";
-    }
- 
-
-       /***************************************
-        * Return the ponder value after a GO command.<br>
-        * This method must be run only after a GO command.
-        * @return A String contains the ponder values or "mate" word if a mate is reach.
-        ***************************************/
-       public String getPonder(){
-           if (!isGOCall) ponder="0000";
-           if (ponder==null) ponder="0000";
-           return ponder;
-       }
-
        
        /***************************************
         * Return the name of the running engine.<br>
@@ -386,6 +363,7 @@ public class UCIChess {
            return engineName;
        }
 
+       
        /***************************************
         * Return the name(s) of the author(s) of the running chess engine
         * you must execute the uci command before
@@ -444,18 +422,7 @@ public class UCIChess {
         if (!isUCICall) return 0;
         return listOfOptions.size();
     }
-    
-    
-      /***************************
-     * Return the max number of infos after a GO command.<br>
-     * You must execute the GO command before used this method.
-     * @return An integer containing the count return.
-     ***************************/
-    public int get_number_infos(){
-        if (!isGOCall) return 0;
-        return listInfos.size();
-    }
-    
+
     
     /**************************
      * Return an option supported by the engine by is number.<br>
@@ -476,6 +443,166 @@ public class UCIChess {
         return listOfOptions.get(Number);
     }
 
+    
+    /*************************************
+     * set option name for option with no value, 
+     * like "Clear Hash" for example.
+     * @param id Is the name of the option.
+     * @return A boolean true if option name is sent otherwise false.
+     *************************************/
+    public boolean send_option_name_noValue(String id){
+     if (id==null) return false;
+        send_uci_cmd("setoption name "+id );
+        return true;
+    }
+    
+    
+    /**************************************
+     * set option name for option with values, 
+     * like "Nullmove" waiting for a boolean value true/false for example.
+     * @param id Is the name of the option.
+     * @param values Is the values to set for this option.
+     * @return A boolean true if option name is sent otherwise false.
+     **************************************/
+    public boolean send_option_name_withValue(String id, String values){
+        if (id==null) return false;
+        if (values==null) return false;
+        send_uci_cmd("setoption name "+id+" value "+values);
+        return true;
+    }
+    
+//======================ENGINE THINKING==============================
+    /*****************************************
+     * This Method, make the engine searching the bestmove and return it as soon as possible
+     *****************************************/
+    public void go_think(){
+        send_uci_cmd(GOTHINK); //just thinking...
+    }
+   
+    
+    /*****************************************
+     * This Method, make the engine searching the bestmove and return it as soon as possible
+     * when the depth search is reaching.
+     * @param depth This value must be between 1 and 32.
+     *****************************************/   
+    public void go_think_depth(int depth){
+         if (depth<1) depth=1; //min depth 1
+         if (depth>32) depth=32; //max depth 32
+        send_uci_cmd(GOTHINK+" depth "+depth);
+    }
+   
+    /*****************************************
+     * This Method, make the engine searching the bestmove and return it as soon as possible
+     * when the number of calculating nodes search is reach.
+     * @param nodes This value must be between 1 and 100.000.000.
+     *****************************************/   
+    public void go_think_nodes(long nodes){
+          if (nodes<1) nodes=1; //min 1 nodes
+          if (nodes>100000000) nodes=100000000; //max 100000000 nodes
+        send_uci_cmd(GOTHINK+" nodes "+nodes);
+    }
+   
+    /*****************************************
+     * This Method, make the engine searching the bestmove and return it as soon as possible
+     * when the "mate in x turns" search is reaching.
+     * @param mateIn This value must be between 1 and 500.
+     *****************************************/   
+    public void go_think_mate_in(int mateIn){
+        if (mateIn<1) mateIn=1; //min in one turns
+        if (mateIn>500) mateIn=500; //max in 500 turns
+        send_uci_cmd(GOTHINK+" mate "+mateIn);
+    }
+   
+    /*****************************************
+     * This Method, make the engine searching the bestmove and return it as soon as possible
+     * when the depth search is reaching.
+     * @param miliSec This value must be between 1 and 12.000.000 (2 hours).
+     *****************************************/   
+    public void go_think_moveTime(long miliSec){
+        if (miliSec<1) miliSec=1; //min 1 milisecond
+        if (miliSec>(120*60*1000)) miliSec=(120*60*1000); //max 2 hours
+        send_uci_cmd(GOTHINK+" movetime "+miliSec);
+    }
+   
+    /*****************************************
+     * This Method, make the engine searching the bestmove and return it in a infinite time...
+     *****************************************/   
+    public void go_think_infinite(){
+        send_uci_cmd(GOTHINK+" infinite");
+    }
+   
+    /*****************************************
+     * This Method, make the engine searching in pondering mode and return it in a infinite time...
+     *****************************************/   
+    public void go_think_ponder(){
+        send_uci_cmd(GOTHINK+" ponder");
+    }
+    
+ /***********************************
+  * Ask the best move calculate by the chess engine.<br>
+  * This method can only be uses after a GO command.
+  * @param trace A boolean values that print the full chess engine responses.
+  * @return A String values contains the best move in an Algebraic Notation.
+  *************************************/
+    
+       public final String get_bestMove(boolean trace){
+         try {
+             if (!isGOCall) return "0000";
+             String line;
+             String bestm;
+            while ((line=in.readLine())!=null) {
+                if (trace) {
+                    System.out.println(line);
+                }
+                
+                //keep info into an ArrayList
+                if (line.startsWith("info")){
+                    listInfos.add(new Info(line.replaceFirst("info ", "")));
+                }
+                //breaking condition "bestmove"
+                if (line.startsWith("bestmove")){
+                    try (Scanner sc = new Scanner(line)) {
+                        sc.useDelimiter(" "); //space as delimiter
+                        sc.next(); //read sttring bestmove
+                        bestm=sc.next(); //read bestmove
+                        try{
+                        sc.next(); //read ponder string
+                        ponder=sc.next(); //read ponder value
+                        } catch (NoSuchElementException nse){ponder="0000";}
+                    } 
+                    return bestm; //return move
+                } //end if bestmove
+            }
+              } catch (IOException ex) {
+            Logger.getLogger(TestChess.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "0000";
+    }
+ 
+
+       /***************************************
+        * Return the ponder value after a GO command.<br>
+        * This method must be run only after a GO command.
+        * @return A String contains the ponder values or "mate" word if a mate is reach.
+        ***************************************/
+       public String getPonder(){
+           if (!isGOCall) ponder="0000";
+           if (ponder==null) ponder="0000";
+           return ponder;
+       }
+
+    
+    
+      /***************************
+     * Return the max number of infos after a GO command.<br>
+     * You must execute the GO command before used this method.
+     * @return An integer containing the count return.
+     ***************************/
+    public int get_number_infos(){
+        if (!isGOCall) return 0;
+        return listInfos.size();
+    }
+    
     
     /**************************
      * Return an info line by is number from the responses engine after a GO command.<br>
