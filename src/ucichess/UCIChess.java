@@ -560,7 +560,11 @@ public class UCIChess {
                 //keep info into an ArrayList
                 if (line.startsWith("info")){
                     listInfoSimple.add(new InfoSimple(line.replaceFirst("info ", "")));
+                    //parse detailed infos line
+                    parse_Info_Line(line);
                 }
+                
+                
                 //breaking condition "bestmove"
                 if (line.startsWith("bestmove")){
                     try (Scanner sc = new Scanner(line)) {
@@ -581,6 +585,14 @@ public class UCIChess {
         return "0000";
     }
  
+       
+       /*******************************
+        * parse infoline in small object.
+        *******************************/
+       private void parse_Info_Line(String line){
+           
+       }
+       
 
        /***************************************
         * Return the ponder value after a GO command.<br>
