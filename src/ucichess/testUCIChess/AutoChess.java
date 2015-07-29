@@ -26,12 +26,12 @@ import ucichess.UCIChess;
 public class AutoChess {
     String moves=null; //keep moves in a String
 
-    final boolean traceMode=false;
-    final long timeThinking=500; //time thinking in miliseconds
+    final boolean traceMode=true;
+    final long timeThinking=150; //time thinking in miliseconds
     
     public AutoChess() {
     //run Engine1
-    UCIChess engine1=new UCIChess("C:\\Users\\tondeur-h.CHV\\Downloads\\Protector_1_6_0\\bin\\Protector_Win32.exe");
+    UCIChess engine1=new UCIChess("C:\\Users\\tondeur-h.CHV\\Downloads\\Protector_1_6_0\\bin\\Protector_Win64.exe");
     //run engine2
     UCIChess engine2=new UCIChess("C:/perso/javafx/TP/stockfish-6-win/Windows/stockfish-6-32.exe");
    //get name of first one
@@ -52,7 +52,8 @@ public class AutoChess {
        engine1.get_ReadyOk(traceMode);
        
             //play white for engine1
-            engine1.go_Think(); //think for best move x seconds
+            //engine1.go_Think(); //think for best move x seconds
+             engine1.go_Think_MoveTime(timeThinking);//think for best move x seconds
             String repw=engine1.get_BestMove(traceMode);  //read response
             if (moves==null){moves=repw;} //just the first move
             else {moves=moves+" "+repw;} //incruise moves list
@@ -68,7 +69,8 @@ public class AutoChess {
             engine2.get_ReadyOk(traceMode);
        
             //play black for engine2
-            engine2.go_Think(); //think for best move
+            //engine2.go_Think(); //think for best move
+            engine2.go_Think_MoveTime(timeThinking);//think for best move
             String repb=engine2.get_BestMove(traceMode);  //read response
             moves=moves+" "+repb; //incruise moves list
             System.out.println("\n"+nameEngine2+"=> Black play (turn "+turn+") "+repb+"\n");

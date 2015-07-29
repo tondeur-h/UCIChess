@@ -1,0 +1,266 @@
+UCIChes API How to use it ?
+==========================
+
+Before coding
+-------------
+
+Make sure you have all the files java source code :
+- UCIChess.java
+- Square.java
+- engine-interface.txt (help on uci protocol)
+- API UCIChess Javadoc
+
+The first java file contains the UCIChess class with all methods for manage a Chess Engine.
+THe second contains Square class and methods for manage a ChessBoard Square like coordinate, convertion formats, etc...
+
+Make sure you have the JavaDoc for this API also.
+You can refer at any time to this documentation to deal with the syntax methods. 
+
+You must notice also that most of methods wait for a boolean values in her parameters
+this boolean if needed, help you to visualise to the out console the full output 
+of the chess engine. This can help you to debug and understand what's happen.
+
+Notice that this api is an asynchronous read, that mean that you must wait 
+that a command is finish before reading results (you cannot access to partial results). 
+
+
+UCIChess Description and use case
+---------------------------------
+
+1) Run the chess engine
+   ==================== 
+The first action is to call the chess engine and run it to get communications 
+streams with it, to this purpose you have to construct an UCIChess object by 
+calling the UCIChess constructor with the full path of the chess engine.
+
+UCIChess uci=new UCIChess("c:/stockfish/engine/stockfish-6-64.exe");
+
+2) Get chess engine Name and Author(s)
+   =================================== 
+So at this time you can communicate with the chess engine, sending him some uci 
+commands, and read responses from is calculating steps.
+
+You can get the Name and Author(s) Name(s) a the engine by calling the fallowing
+methods
+
+uci.get_UciOk(true);
+String engineName=uci.get_EngineName();
+Sttring engineAuthor=uci.get_EngineAuthor();
+
+* To get name and author you must before ask to the engine this information with
+get_UciOk() method, instead of Name and Author return "empty" string value.
+
+
+3) Ask the engine is "optionname" capabilities
+   =========================================== 
+You can get OptionName capability of the chess engine after calling the
+get_UciOK() method. To do that after calling the get_UciOk method, you can call
+the get_Number_Options() method to know how much optionName command are supported 
+and call the get_Option(Number) method to get a spécific optionName and get details 
+like "id", "type", "default values and min and max values" of the option.
+
+uci.get_UciOk(true);
+int numOpt=get_Number_Options();
+for (int index=0;index<numOpt;index++){
+    System.out.println(get_Option(index);
+}  
+
+4) Adjust option of the engine
+   =========================== 
+you can adjust this option Name by calling the send_Option_Name_NoValue() or 
+send_Option_Name_WithValue() methods.
+
+for example the chess engine supports this optionname :
+-----------------------------------------------------
+optionname hash clear
+
+you can set this option by calling like this :
+--------------------------------------------
+send_Option_Name_NoValue("hash clear");
+
+
+For example th chess engine supports this optionname :
+----------------------------------------------------
+option name Minimum Thinking Time type spin default 20 min 0 max 5000
+
+you can set this option by calling like this :
+--------------------------------------------
+send_Option_Name_WithValue("Minimum Thinking Time","1000"); 
+
+
+5) Ask the engine uci isReady?
+   =========================== 
+get_UciOk() method return a boolean value that indicate if 
+true : the chess engine is ready and uci protocole is supported.
+false : the chess engine is not ready.
+
+If this method seem to freeze, must be that your chess engine not compatible 
+with uci protocol communication (see chess engine documentation).
+
+6) Ask to the engine if it's ready for caculating a turn
+   ======================================================
+At any time and before sending a command to the engine, you must test if it is
+ready to execute another command.
+you can use for this action the get_IsReady() method.
+
+uci.get_UciOk(false);
+uci.go_Think(false); //calculate white move
+... //make the move
+uci.get_IsReady(false); //wait for engine be ready
+uci.go_Think(false); //calculate black move
+...//make the move
+
+I advice you to always use this method before each command.
+
+7) make a move to the chess engine
+   ===============================
+
+Two methods are useful for setup a position in the engine.
+move_FromFEN() and move_FromSTART()
+
+move_FromSTART need a String parameter containing moves from the start position.
+moves and coded in Algebraic Notation separated by a space caracter.
+
+like this : e2e4 e7e5 e1g1 ...
+
+String moves="e2e4";
+//white play
+uci.move_FromSTART(moves,false); //set white move to the engine
+//black play
+uci.get_IsReady(false); //wait for engine be ready
+uci.go_Think(false); //ask him to calculate black move
+moves=moves+" "+uci.get_BestMove(false); //construct the moves list from start position
+uci.move_FromSTART(moves,false); //set black moves to the engine
+
+
+move_FromFEN need a String parameter containig the FEN format position of the 
+chessboard, and a String parameter to indicate the move to apply.
+@See FEN format documentation.
+
+String move="e2e4";
+//white play
+uci.move_FromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w QKqk -",move,false); //set white move to the engine
+//black play
+uci.get_IsReady(false); //wait for engine be ready
+uci.go_Think(false); //ask him to calculate black move
+move=move+" "+uci.get_BestMove(false); //construct the moves list from start position
+uci.move_FromSTART("rnbqkbnr/p1pppppp/1p6/8/8/8/PPPPPPPP/RNBQKBNR w QKqk -",move,false); //set black moves to the engine
+
+8) Ask the chess engine to Think
+   =============================
+Many methods are able to ask the engine to calculate a move.
+
+- The simpliest is go_Think(), this method force the engine to calculate during a 
+maximum time depend of the option name setup in the engine.
+see use case on point (7) up there
+
+- The most useful to is the method go_Think_MoveTime(int duration)
+    Duration is in miliSeconds
+
+uci.go_Think_MoveTime(5000); //search best move during 5 seconds
+
+- go_Think_Depth(maxDepth), can be used for asking the engine to calculate in a 
+maximum depth define by maxdepth parameter.
+
+- go_Think_MateIn(x), can be used for asking the engine to calculate a mate in a 
+x plies.
+
+- go_Think_Nodes(maxNodes), can be used for asking the engine to calculate in a 
+maximum nodes define by maxNodes parameter.
+
+- go_Think_Infinite(), can be used for asking the engine to calculate in a 
+infinite duration, the caculation must be stop by a stop uci command with 
+the send_uci_cmd("stop") method.
+
+- go_Think_Ponder(), can be used for asking the engine to calculate in a 
+pondering mode.
+
+9) Get the best move after the think phases
+   ========================================
+You must use the get_BestMove(), only and strictly after a go_Think_xxx method.
+
+uci.go_Think(false);
+String bestMove=uci.get_BestMove(false);
+System.out.println("Best move="+bestMove);
+
+
+You can get the ponder move too if possible, with using of the get_Ponder() method.
+
+uci.go_Think(false);
+String bestMove=uci.get_BestMove(false);
+System.out.println("Best move="+bestMove);
+System.out.println("Ponder move="+uci.get_Ponder()); 
+
+10) Get infos from the calculating phases of the engine
+    ===================================================
+After a go_Think_xxxx method, you can ask the intermediate calculating info 
+from the engine, two possibilities,
+
+- get info lines that are not cutting in rubric values.
+- get info lines that are cut in rubric values.
+
+Get full line info, use the get_Number_SimpleInfo() and get_SimpleInfo(numline)
+get_SimpleInfo return a InfoSimple object, the InfoSimple class has a getInfo() 
+method that return a String values.
+
+uci.go_Think(false);
+int maxLines=uci.get_Number_SimpleInfo();
+for (int index=0;index<maxLines;index++){
+    System.out.println(uci.get_SimpleInfo(index).getInfo());
+}
+
+
+Get detailled info from engine is possible by using the get_Number_DetailedInfo() 
+and the get_DetailedInfo(numline) methods.
+get_DetailledInfo return a InfoDetailed object, the InfoDetailed class has some  
+methods that return each type of values (String format).
+
+*The list of methods is :
+        public String getDepth() 
+        public String getSelDepth() 
+        public String getTime() 
+        public String getNodes() 
+        public String getPv() 
+        public String getMultiPV() 
+        public String getScoreCP() 
+        public String getScoreMate() 
+        public String getScoreLowerBound() 
+        public String getScoreUpperBound() 
+        public String getCurrmove() 
+        public String getCurrmoveNumber() 
+        public String getHashfull() 
+        public String getNps() 
+        public String getTbhits() 
+        public String getSbhits() 
+        public String getCpuLoad() 
+        public String getStr() 
+        public String getRefutation() 
+        public String getCurrLine() 
+     
+
+uci.go_Think(false);
+int maxLines=uci.get_Number_DetailedInfo();
+for (int index=0;index<maxLines;index++){
+    System.out.println(uci.get_DetailedInfo(index).getTime());
+    System.out.println(uci.get_DetailedInfo(index).getPv());
+}
+
+11) The generic send_uci_cmd() method
+    =================================
+
+This method can be used for sending uci commands to the engine, you must control 
+uci commands format.
+But if so, then you can use all the command you want with this method as simple 
+to complex.
+
+uci.send_uci_cmd("setoption name NalimovPath value c:\chess\tb\4;c:\chess\tb\5");
+uci.send_uci_cmd("position startpos moves e2e4");
+uci.send_uci_cmd("go movetime 5000);
+ 
+12) Stop chess engine and free process
+    ==================================
+You can stop the engine execution by calling the stop_Engine() method.
+
+UCIChess uci=new UCIChess("c:/stockfish/engine/stockfish-6-64.exe");
+//do wath you want...
+uci.stop_Engine();

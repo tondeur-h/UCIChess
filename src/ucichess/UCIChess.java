@@ -13,22 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ /*
- * Copyright (C) 2015 Tondeur Herve
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */ 
 package ucichess;
 
 import ucichess.testUCIChess.TestChess;
@@ -45,10 +30,10 @@ import java.util.logging.Logger;
 /*********************
  * UCIChess API<br>
  * This API help you to communicate
- * with Chess Engine than respect Universal Chess Interface
+ * with Chess Engine that respect Universal Chess Interface
  * protocol communication.<br>
  * You can with this API, run a chess engine, send him
- * some uci commands et read responses from this engine.<br>
+ * some uci commands and read responses from this engine.<br>
  * 
  * Example of use : <br><br>
  *      //test with protector chess engine<br>
@@ -140,18 +125,18 @@ import java.util.logging.Logger;
  * @version 1.0
  *********************/
 public class UCIChess {
-    //some variables for internal API uses
+    //some variables for internal uses
     private OutputStream out; //to chess engine
     private BufferedReader in; //from chess engine
-    private Process p; //engine runnin Thread
+    private Process p; //engine running Thread
     private String engineName; 
     private String engineAuthor;
-    private String ponder;
-    private ArrayList<OptionName> listOfOptions;
-    private ArrayList<InfoSimple> listInfoSimple;
-    private ArrayList<InfoDetailed> listInfoDetail;
+    private String ponder; //ponder read value
+    private ArrayList<OptionName> listOfOptions; //keep a list of options
+    private ArrayList<InfoSimple> listInfoSimple; ////keep a list of infos lines
+    private ArrayList<InfoDetailed> listInfoDetail; //keep a list of detailed infos
             
-    //internal use only
+    //boolean values for internal use only
     private boolean isUCICall=false;
     private boolean  isGOCall=false;
     private boolean  isREADYCall=false;
@@ -161,9 +146,9 @@ public class UCIChess {
     
     
     
-    //list of SIMPLE COMMANDS
+    //list of SIMPLE COMMANDS, can be used with send_uci_cmd()
     final public static String UCI="uci"; //UCI COMMAND
-    final public static String GOTHINK="go";
+    final public static String GOTHINK="go"; //GO command
     final public static String MOVEFROMSTART="position startpos moves ";
     final public static String ISREADY="isready";
     final public static String STOP="stop";
@@ -174,7 +159,7 @@ public class UCIChess {
     /***************************
     * construct the API UCIChess<br>
     * Start the chess engine in a ProcessBuilder
-    * and connect in and out stream communication
+    * and connect in and out streams communications
     * with this process.<br>
     * @param engine is the full absolute path of the chess engine<br>
     * Make sure you are using a engine that implement an uci protocol.
@@ -188,9 +173,10 @@ public class UCIChess {
             in = new BufferedReader(new InputStreamReader(p.getInputStream()));
             //prepare optionsList
             listOfOptions=new ArrayList<>();
+            //prepare simple line info list
             listInfoSimple=new ArrayList<>();
         
-            //for info parser
+            //prepare detailed info list
             listInfoDetail=new ArrayList<>();
                   
         } catch (IOException ex) {
@@ -204,7 +190,9 @@ public class UCIChess {
      ******************************/
     public void stop_Engine(){
         try {
+            //close process engine jdk8
             if (p.isAlive()){p.destroyForcibly();}
+            //closes streams (but must be close with process)
             out.close();
             in.close();
         } catch (IOException ex) {
@@ -224,7 +212,7 @@ public class UCIChess {
      ******************************************/
         public final void move_FromFEN(String fen, String moves, boolean trace){
         try {
-            String cmd="position fen "+fen+" moves "+moves+"\n"; //add crlf or cr
+            String cmd="position fen "+fen+" moves "+moves+"\n"; //the cmd to send
             //send command
              if (trace) System.out.println(cmd);
             out.write(cmd.getBytes());
@@ -242,7 +230,7 @@ public class UCIChess {
      ******************************************/
         public final void move_FromSTART(String moves,boolean trace){
         try {
-            String cmd="position startpos moves "+moves+"\n"; //add crlf or cr
+            String cmd="position startpos moves "+moves+"\n"; //cmd to send
             if (trace) System.out.println(cmd);
             //send command
             out.write(cmd.getBytes());
@@ -555,13 +543,13 @@ public class UCIChess {
          try {
              if (!isGOCall) return "0000";
              String line;
-             String bestm;
+             String bestmove;
             while ((line=in.readLine())!=null) {
                 if (trace) {
                     System.out.println(line);
                 }
                 
-                //keep info into an ArrayList
+                //keep infos lines  into an ArrayList
                 if (line.startsWith("info")){
                     listInfoSimple.add(new InfoSimple(line.replaceFirst("info ", "")));
                     //parse detailed infos line
@@ -574,13 +562,13 @@ public class UCIChess {
                     try (Scanner sc = new Scanner(line)) {
                         sc.useDelimiter(" "); //space as delimiter
                         sc.next(); //read sttring bestmove
-                        bestm=sc.next(); //read bestmove
+                        bestmove=sc.next(); //read bestmove
                         try{
                         sc.next(); //read ponder string
                         ponder=sc.next(); //read ponder value
                         } catch (NoSuchElementException nse){ponder="0000";}
                     } 
-                    return bestm; //return move
+                    return bestmove; //return move
                 } //end if bestmove
             }
               } catch (IOException ex) {
@@ -594,19 +582,20 @@ public class UCIChess {
         * parse infoline in small object.
         *******************************/
        private void parse_Info_Line(String line){
-           String key;
-           String value;
+           String key; //variable that keep the key code name
+           String value; //variable that keep the value
        //the first key is "info" so 
+           //make an InfoDetailed object
            InfoDetailed id=new InfoDetailed();
-           Scanner sc=new Scanner(line);
-           key=sc.next(); //read key "info"
+           Scanner sc=new Scanner(line); //sc for read each words of the line
+           key=sc.next(); //read key "info" and lose it
            value=sc.next(); //read next key the first
            while (sc.hasNext()){
                //test if value is a key
                //if yes so key=value and read next value
-               if (value.compareTo("score")==0) {key="";value="";} //delete score key
+               if (value.compareTo("score")==0) {key="";value="";} //delete score key not usefull
                if (isKey(value)){key=value;value=sc.next();}
-               //else do nothing keep key and value as before
+               //else do nothing keep key and value as it is
                
                //test key and add value
                 if (key.startsWith("depth")){
@@ -669,18 +658,27 @@ public class UCIChess {
                if (key.startsWith("currline")){
                     id.setCurrLine(id.getCurrLine()+" "+value);
                 }
-               if (sc.hasNext()) value=sc.next(); //read next value
+               if (sc.hasNext()) value=sc.next(); //read next value if possible
            } //end while
+           //add the InfoDetailed object to the Array
            listInfoDetail.add(id);
            
            sc.close();
        }
        
-
+       
+       /***********************************
+        * Method used for internal use
+        * call by parse_Info_Line()
+        * test if val is a know word => so it is a key
+        * @param val
+        * @return 
+        ***********************************/
        private boolean isKey(String val){
            String words="depth seldepth time nodes pv multipv cp mate lowerbound upperbound currmove currmovenumber hashfull nps tbhits sbhits cpuload string refutation currline";
            return words.contains(val);
        }
+       
        
        /***************************************
         * Return the ponder value after a GO command.<br>
@@ -693,7 +691,6 @@ public class UCIChess {
            return ponder;
        }
 
-    
     
     /***************************
      * Return the max number of infos after a GO command.<br>
@@ -753,7 +750,7 @@ public class UCIChess {
     
 //===============================BEANS CLASS DEFINITIONS==========================    
 /*******************************
- * class encapsulate option name
+ * class that encapsulate the "option name" return values from uci
  * @author tondeur-h
  *******************************/
 public final class OptionName{
@@ -768,15 +765,26 @@ public final class OptionName{
     }
 
     // getters and setters for this beans
-    
+    /**
+     * Return the name of the option
+     * @return Name of the option
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Return the type of the option
+     * @return Name of the option
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Return the values default value, and min and max values for this option if so!
+     * @return Values of the option
+     */
     public String getValues() {
         return values;
     }
@@ -785,32 +793,36 @@ public final class OptionName{
 
 
 /********************
- * class Infos with details
+ * class for managed Infos return by a GO command wich is cut in details
  * @author tondeur-h
  ********************/
 public class InfoDetailed{
 
-    String depth;
-    String selDepth;
-    String time;
-    String nodes;
-    String pv;
-    String multiPV;
-    String scoreCP;
-    String scoreMate;
-    String scoreLowerBound;
-    String scoreUpperBound;
-    String currmove;
-    String currmoveNumber;
-    String hashfull;
-    String nps;
-    String tbhits;
-    String sbhits;
-    String cpuLoad;
-    String str;
-    String refutation;
-    String currLine;
+    //variables for managed the infos values
+    private String depth;
+    private String selDepth;
+    private String time;
+    private String nodes;
+    private String pv;
+    private String multiPV;
+    private String scoreCP;
+    private String scoreMate;
+    private String scoreLowerBound;
+    private String scoreUpperBound;
+    private String currmove;
+    private String currmoveNumber;
+    private String hashfull;
+    private String nps;
+    private String tbhits;
+    private String sbhits;
+    private String cpuLoad;
+    private String str;
+    private String refutation;
+    private String currLine;
 
+        /***************
+         * make an empty InfoDetailred object
+         ****************/
         public InfoDetailed() {
             depth="";
             selDepth="";
@@ -834,162 +846,243 @@ public class InfoDetailed{
             currLine = "";
         }
     
-        public void setDepth(String depth) {
+        private void setDepth(String depth) {
             this.depth = depth;
         }
 
-        public void setSelDepth(String selDepth) {
+        private void setSelDepth(String selDepth) {
             this.selDepth = selDepth;
         }
 
-        public void setTime(String time) {
+        private void setTime(String time) {
             this.time = time;
         }
 
-        public void setNodes(String nodes) {
+        private void setNodes(String nodes) {
             this.nodes = nodes;
         }
 
-        public void setPv(String pv) {
+        private void setPv(String pv) {
             this.pv = pv;
         }
 
-        public void setMultiPV(String multiPV) {
+        private void setMultiPV(String multiPV) {
             this.multiPV = multiPV;
         }
 
-        public void setScoreCP(String scoreCP) {
+        private void setScoreCP(String scoreCP) {
             this.scoreCP = scoreCP;
         }
 
-        public void setScoreMate(String scoreMate) {
+        private void setScoreMate(String scoreMate) {
             this.scoreMate = scoreMate;
         }
 
-        public void setScoreLowerBound(String scoreLowerBound) {
+        private void setScoreLowerBound(String scoreLowerBound) {
             this.scoreLowerBound = scoreLowerBound;
         }
 
-        public void setScoreUpperBound(String scoreUpperBound) {
+        private void setScoreUpperBound(String scoreUpperBound) {
             this.scoreUpperBound = scoreUpperBound;
         }
 
-        public void setCurrmove(String currmove) {
+        private void setCurrmove(String currmove) {
             this.currmove = currmove;
         }
 
-        public void setCurrmoveNumber(String currmoveNumber) {
+        private void setCurrmoveNumber(String currmoveNumber) {
             this.currmoveNumber = currmoveNumber;
         }
 
-        public void setHashfull(String hashfull) {
+        private void setHashfull(String hashfull) {
             this.hashfull = hashfull;
         }
 
-        public void setNps(String nps) {
+        private void setNps(String nps) {
             this.nps = nps;
         }
 
-        public void setTbhits(String tbhits) {
+        private void setTbhits(String tbhits) {
             this.tbhits = tbhits;
         }
 
-        public void setSbhits(String sbhits) {
+        private void setSbhits(String sbhits) {
             this.sbhits = sbhits;
         }
 
-        public void setCpuLoad(String cpuLoad) {
+        private void setCpuLoad(String cpuLoad) {
             this.cpuLoad = cpuLoad;
         }
 
-        public void setStr(String str) {
+        private void setStr(String str) {
             this.str = str;
         }
 
-        public void setRefutation(String refutation) {
+        private void setRefutation(String refutation) {
             this.refutation = refutation;
         }
 
-        public void setCurrLine(String currLine) {
+        private void setCurrLine(String currLine) {
             this.currLine = currLine;
         }
    
+        /**
+         * Get depth info value
+         * @return depth value
+         */
         public String getDepth() {
             return depth;
         }
+
+         /**
+         * Get seldepth info value
+         * @return seldepth value
+         */
 
         public String getSelDepth() {
             return selDepth;
         }
 
+        /**
+         * Get time info value
+         * @return time value
+         */
         public String getTime() {
             return time;
         }
-
+        
+        /**
+         * Get nodes info value
+         * @return nodes value
+         */
         public String getNodes() {
             return nodes;
         }
-
+        
+        /**
+         * Get pv info value
+         * @return pv value
+         */
         public String getPv() {
             return pv;
         }
-
+        
+        /**
+         * Get multipv info value
+         * @return multipv value
+         */
         public String getMultiPV() {
             return multiPV;
         }
 
+        /**
+         * Get score cp info value
+         * @return score cp value
+         */
         public String getScoreCP() {
             return scoreCP;
         }
-
+        
+        /**
+         * Get score mate value
+         * @return score mate value
+         */
         public String getScoreMate() {
             return scoreMate;
         }
-
+        
+        /**
+         * Get score lowerbound info value
+         * @return Depth value
+         */
         public String getScoreLowerBound() {
             return scoreLowerBound;
         }
-
+        
+        /**
+         * Get score upperbound info value
+         * @return score upperbound value
+         */
         public String getScoreUpperBound() {
             return scoreUpperBound;
         }
-
+        
+        /**
+         * Get currmove info value
+         * @return currmove value
+         */
         public String getCurrmove() {
             return currmove;
         }
-
+ 
+        /**
+         * Get currmovenumber info value
+         * @return currmovenumber value
+         */
         public String getCurrmoveNumber() {
             return currmoveNumber;
         }
 
+        /**
+         * Get hashfull info value
+         * @return hashfull value
+         */
         public String getHashfull() {
             return hashfull;
         }
 
+        /**
+         * Get nps info value
+         * @return nps value
+         */
         public String getNps() {
             return nps;
         }
-
+        
+        /**
+         * Get tbhits info value
+         * @return tbhits value
+         */
         public String getTbhits() {
             return tbhits;
         }
 
+        /**
+         * Get sbhits info value
+         * @return sbhits value
+         */
         public String getSbhits() {
             return sbhits;
         }
-
+       
+        /**
+         * Get cpuload info value
+         * @return cpuload value
+         */
         public String getCpuLoad() {
             return cpuLoad;
         }
-
+       
+        /**
+         * Get string info value
+         * @return string value
+         */
         public String getStr() {
             return str;
         }
-
+       
+        /**
+         * Get refutation info value
+         * @return refutation value
+         */
         public String getRefutation() {
             return refutation;
         }
-
+       
+        /**
+         * Get currline info value
+         * @return currline value
+         */
         public String getCurrLine() {
             return currLine;
         }
@@ -998,20 +1091,28 @@ public class InfoDetailed{
 
 
 /********************
- * class info moves
+ * class for managed Infos return by a GO command wich is a simple line return
  * @author tondeur-h
  ********************/
 public final class InfoSimple {
     String info; //string info to get
 
+    /**
+     * Return the info line
+     * @return 
+     */
     public String getInfo() {
         return info;
     }
 
-    public void setInfo(String info) {
+    private void setInfo(String info) {
         this.info = info;
     }
 
+    /**
+     * construct a InfoSimple object
+     * @param info 
+     */
     public InfoSimple(String info) {
         this.info = info;
     }
