@@ -30,9 +30,9 @@ public class TestChess {
     public TestChess()  {
         
         //test with stockfish 6 chess engine
-        //UCIChess uci=new UCIChess("C:/perso/javafx/TP/stockfish-6-win/Windows/stockfish-6-32.exe");
+        //UCIChess uci=new UCIChess("C:\\Arena\\Engines\\stockfish-6-win\\Windows\\stockfish-6-64.exe/stockfish-6-32.exe");
         //test with protector chess engine
-        UCIChess uci=new UCIChess("C:\\Users\\tondeur-h.CHV\\Downloads\\Protector_1_6_0\\bin\\Protector_Win32.exe");
+        UCIChess uci=new UCIChess("C:\\Arena\\Engines\\Protector_1_6_0\\bin\\Protector_Win64.exe");
     
             //ask uci infos
             System.out.println("======================TEST UCI COMMAND======================");

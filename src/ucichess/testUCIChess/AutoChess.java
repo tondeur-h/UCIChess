@@ -31,9 +31,9 @@ public class AutoChess {
     
     public AutoChess() {
     //run Engine1
-    UCIChess engine1=new UCIChess("C:\\Users\\tondeur-h.CHV\\Downloads\\Protector_1_6_0\\bin\\Protector_Win64.exe");
+    UCIChess engine1=new UCIChess("C:\\Arena\\Engines\\Protector_1_6_0\\bin\\Protector_Win64.exe");
     //run engine2
-    UCIChess engine2=new UCIChess("C:/perso/javafx/TP/stockfish-6-win/Windows/stockfish-6-32.exe");
+    UCIChess engine2=new UCIChess("C:\\Arena\\Engines\\stockfish-6-win\\Windows\\stockfish-6-64.exe");
    //get name of first one
     engine1.get_UciOk(false);
    String nameEngine1=engine1.getEngineName();
