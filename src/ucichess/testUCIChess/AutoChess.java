@@ -26,8 +26,8 @@ import ucichess.UCIChess;
 public class AutoChess {
     String moves=null; //keep moves in a String
 
-    final boolean traceMode=true;
-    final long timeThinking=150; //time thinking in miliseconds
+    final boolean traceMode=false;
+    final long timeThinking=2000; //time thinking in miliseconds
     
     public AutoChess() {
     //run Engine1
@@ -53,13 +53,14 @@ public class AutoChess {
        
             //play white for engine1
             //engine1.go_Think(); //think for best move x seconds
-             engine1.go_Think_MoveTime(timeThinking);//think for best move x seconds
+            System.out.println("Wait white thinking...!");
+            engine1.go_Think_MoveTime(timeThinking);//think for best move x seconds
             String repw=engine1.get_BestMove(traceMode);  //read response
             if (moves==null){moves=repw;} //just the first move
             else {moves=moves+" "+repw;} //incruise moves list
             System.out.println("\n"+nameEngine1+"=> White play (turn "+turn+") "+repw+"\n");
-            //if white bestmove is (none) then black win
-            if (repw.compareTo("(none)")==0){System.out.println("\nturn("+turn+")"+nameEngine2+" playing BLACK WIN\n");moves=moves+" white mate";break;}
+            //if black is mate then white say "score mate 1" so test it
+            if (engine1.is_opponent_Mated(traceMode)){System.out.println("\nturn("+turn+")"+nameEngine1+" playing WHITE WIN\n");moves=moves+" black is mate";break;}
             //apply moves to all engines
             engine1.move_FromSTART(moves,traceMode); //make move
             engine2.move_FromSTART(moves,traceMode); //make move
@@ -70,13 +71,15 @@ public class AutoChess {
        
             //play black for engine2
             //engine2.go_Think(); //think for best move
+            System.out.println("Wait black thinking...!");
             engine2.go_Think_MoveTime(timeThinking);//think for best move
             String repb=engine2.get_BestMove(traceMode);  //read response
             moves=moves+" "+repb; //incruise moves list
             System.out.println("\n"+nameEngine2+"=> Black play (turn "+turn+") "+repb+"\n");
-            //if black bestmove is (none) then white win
-            if (repb.compareTo("(none)")==0) {System.out.println("\nturn("+turn+")"+nameEngine1+" playing WHITE WIN\n");moves=moves+" black mate";break;}
             System.out.println("moves : "+moves+"\n");
+            //if white is mate then black say "score mate 1" so test it
+            if (engine2.is_opponent_Mated(traceMode)) {System.out.println("\nturn("+turn+")"+nameEngine2+" playing BLACK WIN\n");moves=moves+" white is mate";break;}
+            
             //apply moves to all engines
             engine1.move_FromSTART(moves,traceMode); //make move
             engine2.move_FromSTART(moves,traceMode); //make move

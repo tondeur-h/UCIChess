@@ -578,6 +578,18 @@ public class UCIChess {
     }
  
        
+       /*********************************
+        * test if the best move make opponent mated
+        * @param trace A boolean value for trace result value.
+        * @return A bbolean value true if opponent is mated otherwise false.
+        *********************************/
+       public boolean is_opponent_Mated(boolean trace){
+           String getMate=get_DetailedInfo(get_Number_DetailedInfo()-1).getScoreMate();
+           if (trace) System.out.println("score mate="+getMate);
+           return getMate.compareTo("1")==0;
+       }
+       
+       
        /*******************************
         * parse infoline in small object.
         *******************************/
@@ -593,7 +605,7 @@ public class UCIChess {
            while (sc.hasNext()){
                //test if value is a key
                //if yes so key=value and read next value
-               if (value.compareTo("score")==0) {key="";value="";} //delete score key not usefull
+               if (value.compareTo("score")==0) {key="";value=sc.next();} //delete score key not usefull
                if (isKey(value)){key=value;value=sc.next();}
                //else do nothing keep key and value as it is
                
@@ -770,7 +782,7 @@ public final class OptionName{
      * @return Name of the option
      */
     public String getId() {
-        return id;
+        return id.trim();
     }
 
     /**
@@ -778,7 +790,7 @@ public final class OptionName{
      * @return Name of the option
      */
     public String getType() {
-        return type;
+        return type.trim();
     }
 
     /**
@@ -786,7 +798,7 @@ public final class OptionName{
      * @return Values of the option
      */
     public String getValues() {
-        return values;
+        return values.trim();
     }
    
 } //end of OptionName class
@@ -931,7 +943,7 @@ public class InfoDetailed{
          * @return depth value
          */
         public String getDepth() {
-            return depth;
+            return depth.trim();
         }
 
          /**
@@ -940,7 +952,7 @@ public class InfoDetailed{
          */
 
         public String getSelDepth() {
-            return selDepth;
+            return selDepth.trim();
         }
 
         /**
@@ -948,7 +960,7 @@ public class InfoDetailed{
          * @return time value
          */
         public String getTime() {
-            return time;
+            return time.trim();
         }
         
         /**
@@ -956,7 +968,7 @@ public class InfoDetailed{
          * @return nodes value
          */
         public String getNodes() {
-            return nodes;
+            return nodes.trim();
         }
         
         /**
@@ -964,7 +976,7 @@ public class InfoDetailed{
          * @return pv value
          */
         public String getPv() {
-            return pv;
+            return pv.trim();
         }
         
         /**
@@ -972,7 +984,7 @@ public class InfoDetailed{
          * @return multipv value
          */
         public String getMultiPV() {
-            return multiPV;
+            return multiPV.trim();
         }
 
         /**
@@ -980,7 +992,7 @@ public class InfoDetailed{
          * @return score cp value
          */
         public String getScoreCP() {
-            return scoreCP;
+            return scoreCP.trim();
         }
         
         /**
@@ -988,7 +1000,7 @@ public class InfoDetailed{
          * @return score mate value
          */
         public String getScoreMate() {
-            return scoreMate;
+            return scoreMate.trim();
         }
         
         /**
@@ -996,7 +1008,7 @@ public class InfoDetailed{
          * @return Depth value
          */
         public String getScoreLowerBound() {
-            return scoreLowerBound;
+            return scoreLowerBound.trim();
         }
         
         /**
@@ -1004,7 +1016,7 @@ public class InfoDetailed{
          * @return score upperbound value
          */
         public String getScoreUpperBound() {
-            return scoreUpperBound;
+            return scoreUpperBound.trim();
         }
         
         /**
@@ -1012,7 +1024,7 @@ public class InfoDetailed{
          * @return currmove value
          */
         public String getCurrmove() {
-            return currmove;
+            return currmove.trim();
         }
  
         /**
@@ -1020,7 +1032,7 @@ public class InfoDetailed{
          * @return currmovenumber value
          */
         public String getCurrmoveNumber() {
-            return currmoveNumber;
+            return currmoveNumber.trim();
         }
 
         /**
@@ -1028,7 +1040,7 @@ public class InfoDetailed{
          * @return hashfull value
          */
         public String getHashfull() {
-            return hashfull;
+            return hashfull.trim();
         }
 
         /**
@@ -1036,7 +1048,7 @@ public class InfoDetailed{
          * @return nps value
          */
         public String getNps() {
-            return nps;
+            return nps.trim();
         }
         
         /**
@@ -1044,7 +1056,7 @@ public class InfoDetailed{
          * @return tbhits value
          */
         public String getTbhits() {
-            return tbhits;
+            return tbhits.trim();
         }
 
         /**
@@ -1052,7 +1064,7 @@ public class InfoDetailed{
          * @return sbhits value
          */
         public String getSbhits() {
-            return sbhits;
+            return sbhits.trim();
         }
        
         /**
@@ -1060,7 +1072,7 @@ public class InfoDetailed{
          * @return cpuload value
          */
         public String getCpuLoad() {
-            return cpuLoad;
+            return cpuLoad.trim();
         }
        
         /**
@@ -1068,7 +1080,7 @@ public class InfoDetailed{
          * @return string value
          */
         public String getStr() {
-            return str;
+            return str.trim();
         }
        
         /**
@@ -1076,7 +1088,7 @@ public class InfoDetailed{
          * @return refutation value
          */
         public String getRefutation() {
-            return refutation;
+            return refutation.trim();
         }
        
         /**
@@ -1084,7 +1096,7 @@ public class InfoDetailed{
          * @return currline value
          */
         public String getCurrLine() {
-            return currLine;
+            return currLine.trim();
         }
         
 } //end class Infos
@@ -1102,7 +1114,7 @@ public final class InfoSimple {
      * @return 
      */
     public String getInfo() {
-        return info;
+        return info.trim();
     }
 
     private void setInfo(String info) {

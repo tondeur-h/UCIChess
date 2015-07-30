@@ -23,6 +23,16 @@ of the chess engine. This can help you to debug and understand what's happen.
 Notice that this api is an asynchronous read, that mean that you must wait 
 that a command is finish before reading results (you cannot access to partial results). 
 
+How to test if an engine as mate is adverse, you hav to test the value of the 
+get_DetailedInfo(lastLine).getScoreMate(), if this value is equal to "1" so the 
+adverse is mate.
+
+if (uci.get_DetailedInfo(uci.get_Number_DetailedInfo()-1).getScoreMate().compareTo("1")==0) ...
+
+To simplfy this test you can use the is_Opponent_Mated() Method :
+
+if (is_Opponent_Mated(false)) {System.out.println("Black is mate...");}
+
 
 UCIChess Description and use case
 ---------------------------------
@@ -175,8 +185,8 @@ the send_uci_cmd("stop") method.
 - go_Think_Ponder(), can be used for asking the engine to calculate in a 
 pondering mode.
 
-9) Get the best move after the think phases
-   ========================================
+9) Get the best move or the mate value after the think phases
+   ===========================================================
 You must use the get_BestMove(), only and strictly after a go_Think_xxx method.
 
 uci.go_Think(false);
@@ -190,6 +200,12 @@ uci.go_Think(false);
 String bestMove=uci.get_BestMove(false);
 System.out.println("Best move="+bestMove);
 System.out.println("Ponder move="+uci.get_Ponder()); 
+
+You can test that the move make the opponent mated by calling the is_Opponent_Mated() 
+method
+
+uci.go_Think(false);
+if (uci.is_Opponent_Mated(false)) System.out.println ("Black is mated!");
 
 10) Get infos from the calculating phases of the engine
     ===================================================
