@@ -105,18 +105,31 @@ public class TestChess {
             System.out.println("Black play = "+rep2); //draw black turn
             System.out.println("Black ponder = "+uci.get_Ponder()); //best white next move
             uci.move_FromSTART("e2e4 "+rep+" g1f3 "+rep2,false); //make move
-            System.out.println("============TEST Square class==========================");
-            System.out.println("Convert move : "+rep2);
-            Square.convert(rep2);
-            System.out.println(Square.getColFrom());
-            System.out.println(Square.getRowFrom());
-            System.out.println(Square.getColTo());
-            System.out.println(Square.getRowTo());
-            System.out.println(Square.getPromote());
-            System.out.println("-------------------------------------------------------");
-            //bye bye...
+
+            System.out.println("-------------------TEST SQUARE--------------------------");
+            
+            //white play
+            String whiteMove="e2e4";
+            String startPos="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+            uci.move_FromFEN(startPos, whiteMove, true);
+            String fenWhite=Square.movesToFen(startPos, whiteMove);
+            Square.show_chessboard();
+            
+            //black response
+            uci.go_Think();
+            String blackMove=uci.get_BestMove(true);
+             System.out.println("black move "+blackMove);
+             uci.move_FromFEN(fenWhite, blackMove, true);
+             String fenBlack=Square.movesToFen(fenWhite, blackMove);
+             Square.show_chessboard();
+             
+
+
+             
+//bye bye...
             System.out.println("Bye Bye!");
             uci.stop_Engine();
+           
 }
 
     

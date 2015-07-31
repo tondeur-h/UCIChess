@@ -38,16 +38,153 @@ public final class Square{
  private static int rowTo;
  private static int colTo;
  private static String promote;
+ private static String FEN;
+ private static String color;
+ private static String castle;
 
+ private static String [][]chessboard;
+ 
  
  /*************************************
   * Convert moves list into fen String.
-  * @param moves A moves list in Algebraic Notation.
+  * @param startFEN start position in FEN format
+  * @param move A move in Algebraic Notation.
   * @return A String containing the FEN format.
   *************************************/
- public String movesToFen(String moves){
-     String fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
- return fen;
+ public static String movesToFen(String startFEN,String move){
+//if move is null return FEN start position
+     if (move==null){
+ FEN=startFEN;
+     }
+//create virtual chess board
+chessboard=new String [8][8];
+//parse FEN and assign to chessboard
+assign_chessboard(startFEN);
+//convert move in coordinate
+convert(move);
+//make move on chessboard
+chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
+chessboard[colFrom-1][rowFrom-1]=null;
+//construct FEN return
+FEN="";
+String val;  //read piece value
+int count=0; //count empty square
+for (int r=7;r>-1;r--){
+    for(int c=0;c<8;c++){
+        //read piece values
+    val=chessboard[c][r];
+    //if piece is null =>count empty Square
+    if (val==null) {count++;}
+    //if piece is not null
+    if (val!=null) {
+        //if counter>0 then write counter and reset counter 
+        if (count>0) {FEN=FEN+count;count=0;} 
+        //write piece value also
+        FEN=FEN+val;
+    }
+ }
+    //on change row write count empty square if necessary
+    if (count>0) {FEN=FEN+count;count=0;}
+    FEN=FEN+"/"; //add slash change line
+    
+}
+return FEN;
+ }
+ 
+ 
+ /***************************************
+  * draw the chessboard on an out console
+  ***************************************/
+ public static void show_chessboard(){
+     //draw coordinate on top
+     System.out.println("*  a  b  c  d  e  f  g  h  *");
+     for (int row=7;row>=0;row--){
+         for (int col=0;col<8;col++){
+             //draw number coordinate on left
+             if (col==0) System.out.print((row+1)+" ");
+             String val=chessboard[col][row];  //read piece
+             //if square is black and empty put a # char
+             if (val==null && be_black(col,row)==true) {val="#";} else 
+             //if square is white and empty put space char
+             {if (val==null) val=" ";}
+             //write piece value
+             System.out.print(" "+val+" ");
+             //draw right coordinate
+             if (col==7) {System.out.print(" "+(row+1));}
+         }
+         //on new row
+         System.out.print("\n");
+     }
+     //draw coordinate on bottom
+      System.out.println("*  a  b  c  d  e  f  g  h  *\n");
+ }
+ 
+ 
+ /********************
+  * 
+  * @param c
+  * @param r
+  * @return 
+  ********************/
+ private static boolean be_black(int c,int r){
+     //even row 8 6 4 2
+     if (((r+1) % 2)==0){
+        //col is even b d f h
+         if (((c+1) % 2)==0) {return true;}
+     }
+     //odd row 7 5 3 1
+     if (((r+1) % 2)!=0){
+            //col is odd a c e g
+         if (((c+1) % 2)!=0) {return true;}
+     }
+     return false;
+ }
+ 
+ 
+ /**************************
+  * assign a FEN format to a virtual chessboard
+  * @param lineFEN 
+  **************************/
+ public static void assign_chessboard(String lineFEN){
+    /* rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 */
+     //si lettre est r n b q k / p 1 2 3 4 5 6 7 8 P R N B Q K alors position
+     chessboard=new String [8][8];
+     
+     int indexChar=0;
+     int indexSquare=0; //0 between 63
+     int col,row;
+     
+     col=0;
+     row=7;
+     while (row>-1){
+         char letter=lineFEN.charAt(indexChar);
+         switch (letter){
+             case 'r':chessboard[col][row]="r";col++;break;
+             case 'n':chessboard[col][row]="n";col++;break;
+             case 'b':chessboard[col][row]="b";col++;break;
+             case 'q':chessboard[col][row]="q";col++;break;
+             case 'k':chessboard[col][row]="k";col++;break;
+             case 'p':chessboard[col][row]="p";col++;break;
+             case 'R':chessboard[col][row]="R";col++;break;
+             case 'N':chessboard[col][row]="N";col++;break;
+             case 'B':chessboard[col][row]="B";col++;break;
+             case 'Q':chessboard[col][row]="Q";col++;break;
+             case 'K':chessboard[col][row]="K";col++;break;
+             case 'P':chessboard[col][row]="P";col++;break;
+             case '/':row--;col=0;break;
+             case '1':col=col+1;break;
+             case '2':col=col+2;break;
+             case '3':col=col+3;break;
+             case '4':col=col+4;break;
+             case '5':col=col+5;break;
+             case '6':col=col+6;break;
+             case '7':col=col+7;break;
+             case '8':col=col+8;break;                 
+         }
+         if (col>7 && row==0){row--;}
+         indexChar++;
+     }
+ 
  }
  
  
