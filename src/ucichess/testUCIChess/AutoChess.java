@@ -28,7 +28,7 @@ public class AutoChess {
     String moves=null; //keep moves in a String
 
     final boolean traceMode=false;
-    final long timeThinking=1000; //time thinking in miliseconds
+    final long timeThinking=100; //time thinking in miliseconds
     String fenPos="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
     
     public AutoChess() {

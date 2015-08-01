@@ -13,23 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *//*
- * Copyright (C) 2015 tondeur herve
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ucichess;
 
 /**
@@ -78,8 +62,39 @@ assign_chessboard(startFEN);
 //convert move in coordinate
 convert(move);
 //make move on chessboard
+//deal with castle movements 
 chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
 chessboard[colFrom-1][rowFrom-1]=null;
+//castle movements
+//e1g1 => h1f1
+//e1c1 =>a1d1
+//e8g8 =>h8f8
+//e8c8 =>a8d8
+if (move.compareTo("e1g1")==0){
+    //small white castle
+convert("h1f1");
+chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
+chessboard[colFrom-1][rowFrom-1]=null;
+}
+if (move.compareTo("e1c1")==0){
+    //big white castle
+convert("a1d1");
+chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
+chessboard[colFrom-1][rowFrom-1]=null;
+}
+if (move.compareTo("e8g8")==0){
+    //small black castle
+convert("h8f8");
+chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
+chessboard[colFrom-1][rowFrom-1]=null;
+}
+if (move.compareTo("e8g8")==0){
+    //big black castle
+convert("a8d8");
+chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
+chessboard[colFrom-1][rowFrom-1]=null;
+}
+
 //construct FEN return
 FEN="";
 String val;  //read piece value
