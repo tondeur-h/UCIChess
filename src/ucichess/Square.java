@@ -13,6 +13,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *//*
+ * Copyright (C) 2015 tondeur herve
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package ucichess;
@@ -46,12 +61,12 @@ public final class Square{
  
  
  /*************************************
-  * Convert moves list into fen String.
+  * Apply a move on a fen string.
   * @param startFEN start position in FEN format
   * @param move A move in Algebraic Notation.
-  * @return A String containing the FEN format.
+  * @return A String containing the new FEN format.
   *************************************/
- public static String movesToFen(String startFEN,String move){
+ public static String moveOnFen(String startFEN,String move){
 //if move is null return FEN start position
      if (move==null){
  FEN=startFEN;
@@ -94,6 +109,21 @@ return FEN;
  
  /***************************************
   * draw the chessboard on an out console
+  * Black Square are represented by # character<br>
+  * White Square by a space charactere.<br>
+  * I keep conventionnal notation for chess piece<br>
+  * r black root<br>
+  * n black knight<br>
+  * b black bishop<br>
+  * q black queen<br>
+  * k black king<br>
+  * p black pawn<br>
+  * R white Root<br>
+  * N white Knight<br>
+  * B white Bishop<br>
+  * Q white Queen<br>
+  * K white King<br>
+  * P white Pawn<br>
   ***************************************/
  public static void show_chessboard(){
      //draw coordinate on top
@@ -121,7 +151,7 @@ return FEN;
  
  
  /********************
-  * 
+  * test is square is a black square
   * @param c
   * @param r
   * @return 
@@ -142,23 +172,28 @@ return FEN;
  
  
  /**************************
-  * assign a FEN format to a virtual chessboard
-  * @param lineFEN 
+  * Assign a string FEN format to a virtual chessboard<br>
+  * Call this method before using show_chessboard() method.
+  * @param lineFEN A string containing a FEN position
   **************************/
  public static void assign_chessboard(String lineFEN){
     /* rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 */
-     //si lettre est r n b q k / p 1 2 3 4 5 6 7 8 P R N B Q K alors position
+     //if lettre is in (r n b q k / p 1 2 3 4 5 6 7 8 P R N B Q K) then deal with it
      chessboard=new String [8][8];
      
      int indexChar=0;
      int indexSquare=0; //0 between 63
      int col,row;
      
+     //begin by row 8 on the chessboard because FEN begin by black chess pieces
      col=0;
      row=7;
+     //until reach row 1
      while (row>-1){
+         //read the letter
          char letter=lineFEN.charAt(indexChar);
          switch (letter){
+             //if if a chess piece add in virtual chesboard
              case 'r':chessboard[col][row]="r";col++;break;
              case 'n':chessboard[col][row]="n";col++;break;
              case 'b':chessboard[col][row]="b";col++;break;
@@ -171,7 +206,11 @@ return FEN;
              case 'Q':chessboard[col][row]="Q";col++;break;
              case 'K':chessboard[col][row]="K";col++;break;
              case 'P':chessboard[col][row]="P";col++;break;
+             //if it is a break row decrease the row number
              case '/':row--;col=0;break;
+             //if it a empty square ignore chessboard places
+             //we assume that square where there are no piece
+             //must have a null value.
              case '1':col=col+1;break;
              case '2':col=col+2;break;
              case '3':col=col+3;break;
@@ -181,6 +220,7 @@ return FEN;
              case '7':col=col+7;break;
              case '8':col=col+8;break;                 
          }
+         
          if (col>7 && row==0){row--;}
          indexChar++;
      }

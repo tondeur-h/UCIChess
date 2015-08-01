@@ -1111,7 +1111,7 @@ public final class InfoSimple {
 
     /**
      * Return the info line
-     * @return 
+     * @return Return the full informations line.
      */
     public String getInfo() {
         return info.trim();
@@ -1123,7 +1123,7 @@ public final class InfoSimple {
 
     /**
      * construct a InfoSimple object
-     * @param info 
+     * @param info The string line info to deal with.
      */
     public InfoSimple(String info) {
         this.info = info;

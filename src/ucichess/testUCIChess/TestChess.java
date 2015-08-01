@@ -112,7 +112,7 @@ public class TestChess {
             String whiteMove="e2e4";
             String startPos="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
             uci.move_FromFEN(startPos, whiteMove, true);
-            String fenWhite=Square.movesToFen(startPos, whiteMove);
+            String fenWhite=Square.moveOnFen(startPos, whiteMove);
             Square.show_chessboard();
             
             //black response
@@ -120,7 +120,7 @@ public class TestChess {
             String blackMove=uci.get_BestMove(true);
              System.out.println("black move "+blackMove);
              uci.move_FromFEN(fenWhite, blackMove, true);
-             String fenBlack=Square.movesToFen(fenWhite, blackMove);
+             String fenBlack=Square.moveOnFen(fenWhite, blackMove);
              Square.show_chessboard();
              
 

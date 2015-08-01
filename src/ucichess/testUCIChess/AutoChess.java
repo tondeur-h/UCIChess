@@ -61,7 +61,7 @@ public class AutoChess {
             if (moves==null){moves=repw;} //just the first move
             else {moves=moves+" "+repw;} //incruise moves list
             System.out.println("\n"+nameEngine1+"=> White play (turn "+turn+") "+repw+"\n");
-            fenPos=Square.movesToFen(fenPos, repw);
+            fenPos=Square.moveOnFen(fenPos, repw);
             Square.show_chessboard();
             //if black is mate then white say "score mate 1" so test it
             if (engine1.is_opponent_Mated(traceMode)){System.out.println("\nturn("+turn+")"+nameEngine1+" playing WHITE WIN\n");moves=moves+" black is mate";break;}
@@ -80,7 +80,7 @@ public class AutoChess {
             String repb=engine2.get_BestMove(traceMode);  //read response
             moves=moves+" "+repb; //incruise moves list
             System.out.println("\n"+nameEngine2+"=> Black play (turn "+turn+") "+repb+"\n");
-            fenPos=Square.movesToFen(fenPos, repb);
+            fenPos=Square.moveOnFen(fenPos, repb);
             Square.show_chessboard();
             System.out.println("moves : "+moves+"\n");
             //if white is mate then black say "score mate 1" so test it
