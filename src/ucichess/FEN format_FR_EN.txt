@@ -76,3 +76,84 @@ Après le coup 1. ... c7c5 :
 Après le coup 2. Cg1f3 :
 
     rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2 
+
+================================================================================
+
+A FEN record defines a particular position, it is written on a single
+line using only ASCII characters.
+ 
+One of such records containing text file should have the extension ".fen".
+
+This notation originates from the English, where the pieces are named rook (tower)
+ knight (horseman), bishop (crazy), queen (lady), king (King) and pawn (pawn).
+For this reason, their name is often abbreviated to "RNBQKP" in English.
+In addition, English, White says white (w), whereas black says black (b).
+
+A record contains 6 fields.
+The separator is a space.
+
+The fields are:
+---------------
+
+    1- Position of parts of the view that white side.
+		. Each row is described in the row 8 to row 1.
+		. For each row, the content is described in the column 'a' in the column 'h'.
+		. The white pieces are represented by uppercase letters ("KQRBNP")
+          Black by lowercase letters ("kqrbnp").
+		. The number of empty boxes is denoted by a number from 1 to 8,
+          and a slash "/" separates the rows.
+    2- Color plays. "W" means that white plays, while "b"
+       means that it is the black tower.
+    3- Roque possible. If no opponents can not castle, then enter "-".
+	   Otherwise, use a combination of letters:
+        "K" (the white king can side, that is to say, the castling)
+        "Q" (white lady can the side, big castling)
+        "K" (the black king can side)
+        "Q" (Black can the lady side).
+    4- Case of an en passant in algebraic notation.
+       If there is none, then enter "-".
+       If a pawn just move 2 steps, then this is the position
+       "Behind" the counter.
+    5- Half blows: the number of half moves or since the last catch
+       the last pawn move.
+       This shows whether the game is drawn according to the 50 move rule.
+    6 Hit: the number of complete strokes.
+       It starts at 1 and is incremented by 1 after the coup black.
+
+Examples
+========
+
+Starting from the initial position of the traditional game:
+
+    rnbqkbnr / pppppppp / 8/8/8/8 / PPPPPPPP / w RNBQKBNR KQkq - 0 1
+
+This is a representation of the 8 rows of the board starting from the top,
+separated by "/":
+
+    the black pieces ("rnbqkbnr")
+    black pawns ("pppppppp")
+    4 empty rows so with the number 8 for 8 empty boxes ("8/8/8/8")
+    white pawns ("PPPPPPPP")
+    white pieces ("RNBQKBNR")
+    turn white ("w")
+    Possible Roques ("KQkq")
+    box passing ("-")
+    counting strokes ("1 0")
+
+After the move 1. e2e4:
+
+    rnbqkbnr / pppppppp / 8/8 / 4P3 / 8 / PPPP1PPP / b RNBQKBNR KQkq e3 0 1
+
+both fields blacks are not changed,
+the following two rows either,
+row 4 becomes 4P3: 4 empty boxes horizontally, a white pawn P, 3 empty boxes.
+ PPPP1PPP: So the box left of the peg 1 is empty.
+It is thus play of black b.
+
+After the move ... 1. c7c5:
+
+    rnbqkbnr / pp1ppppp / 8 / 2p5 / 4P3 / 8 / PPPP1PPP / w RNBQKBNR KQkq c6 0 2
+
+After the move 2. Cg1f3:
+
+    rnbqkbnr / pp1ppppp / 8 / 2p5 / 4P3 / 5N2 / PPPP1PPP / b RNBQKB1R KQkq - 1 2
