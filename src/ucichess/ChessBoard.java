@@ -13,30 +13,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *//*
- * Copyright (C) 2015 tondeur herve
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package ucichess;
 
-/**
- *
- * @author tondeur herve GPL v3.0
- */
 /**************************
- * A square of a chessboard
+ * A representation of a virtual chessboard
  * @author tondeur herve 2015 GPL V3.0
  **************************/
 public final class ChessBoard {
@@ -58,6 +39,10 @@ public final class ChessBoard {
 
  //a virtual chessboard
  private static String [][]chessboard;
+
+    //hide the default constructor
+    private ChessBoard() {
+    }
  
  
  /*************************************
@@ -66,7 +51,7 @@ public final class ChessBoard {
   * @param move A move in Algebraic Notation.
   * @return A String containing the new FEN format.
   *************************************/
- public static String moveOnFen(String startFEN,String move){
+ public static String moveFromFEN(String startFEN,String move){
 //if move is null return FEN start position
      if (move==null){
  FEN=startFEN;
@@ -76,7 +61,7 @@ chessboard=new String [8][8];
 //parse FEN and assign to chessboard
 assign_chessboard(startFEN);
 //convert move in coordinate
-convert(move);
+moveToCoord(move);
 //make move on chessboard
 //deal with castle movements 
 chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
@@ -88,25 +73,25 @@ chessboard[colFrom-1][rowFrom-1]=null;
 //e8c8 =>a8d8
 if (move.compareTo("e1g1")==0){
     //small white castle
-convert("h1f1");
+moveToCoord("h1f1");
 chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
 chessboard[colFrom-1][rowFrom-1]=null;
 }
 if (move.compareTo("e1c1")==0){
     //big white castle
-convert("a1d1");
+moveToCoord("a1d1");
 chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
 chessboard[colFrom-1][rowFrom-1]=null;
 }
 if (move.compareTo("e8g8")==0){
     //small black castle
-convert("h8f8");
+moveToCoord("h8f8");
 chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
 chessboard[colFrom-1][rowFrom-1]=null;
 }
 if (move.compareTo("e8g8")==0){
     //big black castle
-convert("a8d8");
+moveToCoord("a8d8");
 chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
 chessboard[colFrom-1][rowFrom-1]=null;
 }
@@ -165,7 +150,7 @@ return FEN;
              if (col==0) System.out.print((row+1)+" ");
              String val=chessboard[col][row];  //read piece
              //if square is black and empty put a # char
-             if (val==null && be_black(col,row)==true) {val="#";} else 
+             if (val==null && is_black(col,row)==true) {val="#";} else 
              //if square is white and empty put space char
              {if (val==null) val=" ";}
              //write piece value
@@ -188,7 +173,7 @@ return FEN;
   * @param r
   * @return 
   ***********************************/
- private static boolean be_black(int c,int r){
+ private static boolean is_black(int c,int r){
      //even row 8 6 4 2
      if (((r+1) % 2)==0){
         //col is even b d f h
@@ -207,6 +192,7 @@ return FEN;
   * Assign a string FEN format to a virtual chessboard<br>
   * Call this method before using show_chessboard() method.
   * @param lineFEN A string containing a FEN position
+     * @return A Sring Array 8x8 that represent the chessboard coordinate (base 0)
   **************************/
  public static String[][] assign_chessboard(String lineFEN){
     /* rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 */
@@ -266,9 +252,9 @@ return FEN;
   * Convert a string chessboard coordinate
   * into a numeric convention.
   * ie e2e4 give 5 2 5 4
-  * @param coord A String with ChessBoard coordonate.
+  * @param move A String with ChessBoard coordonate.
   *****************************************/
-    public static void convert (String coord){
+    public static void moveToCoord (String move){
         //example g1f3 give colFrom=7 rowFrom=1 colTo=6 rowTo=3
             //default values
             rowFrom=0;
@@ -276,15 +262,15 @@ return FEN;
             colFrom=0;
             colTo=0;
             promote="";
-        if (coord.length()>=4){
+        if (move.length()>=4){
         try{
-            //translate coord
-            colFrom=coord.charAt(0)-96;
-            rowFrom=coord.charAt(1)-48;
-            colTo=coord.charAt(2)-96;
-            rowTo=coord.charAt(3)-48;
-            
-            if (coord.length()==5){promote=coord.substring(4);}
+            //translate move
+            colFrom=move.charAt(0)-96;
+            rowFrom=move.charAt(1)-48;
+            colTo=move.charAt(2)-96;
+            rowTo=move.charAt(3)-48;
+            //look for promotion
+            if (move.length()==5){promote=move.substring(4);} else {promote="";}
             
         }catch (Exception e){  
             rowFrom=0;
@@ -297,6 +283,22 @@ return FEN;
         }
     }
  
+    
+    /****************************************
+     * convert chessboard coordinate to algebraic notation move<br>
+     * take care to promote event.
+     * @param cFrom number of the column from where the move begin 
+     * @param rFrom number of the row from where the move begin
+     * @param cTo number of the column to where the move finish
+     * @param rTo number of the row to where the move finish
+     * @param promotion give the promotion letter rnbq RNBQ
+     * @return A String contains the move in algebraic notation.
+     *******************************************/
+    public static String coordToMove(int cFrom, int rFrom, int cTo, int rTo, String promotion){
+        return Character.toString((char)(96+cFrom))+(rFrom)+Character.toString((char)(96+cTo))+(rTo)+promotion;
+    }
+    
+    
         /************************************
          * Get Row-From coordanate
          * using convention
