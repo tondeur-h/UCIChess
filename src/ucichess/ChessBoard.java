@@ -13,6 +13,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *//*
+ * Copyright (C) 2015 tondeur herve
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package ucichess;
 
@@ -24,7 +39,7 @@ package ucichess;
  * A square of a chessboard
  * @author tondeur herve 2015 GPL V3.0
  **************************/
-public final class Square{
+public final class ChessBoard {
 /**naming convention
  * ==================
  * On a normal chessboard
@@ -41,6 +56,7 @@ public final class Square{
  private static String color;
  private static String castle;
 
+ //a virtual chessboard
  private static String [][]chessboard;
  
  
@@ -103,7 +119,7 @@ for (int r=7;r>-1;r--){
     for(int c=0;c<8;c++){
         //read piece values
     val=chessboard[c][r];
-    //if piece is null =>count empty Square
+    //if piece is null =>count empty ChessBoard
     if (val==null) {count++;}
     //if piece is not null
     if (val!=null) {
@@ -124,8 +140,8 @@ return FEN;
  
  /***************************************
   * draw the chessboard on an out console
-  * Black Square are represented by # character<br>
-  * White Square by a space charactere.<br>
+ Black ChessBoard are represented by # character<br>
+ White ChessBoard by a space charactere.<br>
   * I keep conventionnal notation for chess piece<br>
   * r black root<br>
   * n black knight<br>
@@ -165,12 +181,13 @@ return FEN;
  }
  
  
- /********************
+ /**********************************
   * test is square is a black square
+  * call by show_chessboard
   * @param c
   * @param r
   * @return 
-  ********************/
+  ***********************************/
  private static boolean be_black(int c,int r){
      //even row 8 6 4 2
      if (((r+1) % 2)==0){
@@ -191,7 +208,7 @@ return FEN;
   * Call this method before using show_chessboard() method.
   * @param lineFEN A string containing a FEN position
   **************************/
- public static void assign_chessboard(String lineFEN){
+ public static String[][] assign_chessboard(String lineFEN){
     /* rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 */
      //if lettre is in (r n b q k / p 1 2 3 4 5 6 7 8 P R N B Q K) then deal with it
      chessboard=new String [8][8];
@@ -240,6 +257,8 @@ return FEN;
          indexChar++;
      }
  
+     //end assigning
+     return chessboard;
  }
  
  
@@ -247,7 +266,7 @@ return FEN;
   * Convert a string chessboard coordinate
   * into a numeric convention.
   * ie e2e4 give 5 2 5 4
-  * @param coord A String with Square coordonate.
+  * @param coord A String with ChessBoard coordonate.
   *****************************************/
     public static void convert (String coord){
         //example g1f3 give colFrom=7 rowFrom=1 colTo=6 rowTo=3
@@ -328,4 +347,4 @@ return FEN;
         return promote;
     }
     
-} //end of Square class
+} //end of ChessBoard class

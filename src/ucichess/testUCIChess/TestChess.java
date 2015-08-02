@@ -13,11 +13,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *//*
+ * Copyright (C) 2015 tondeur herve
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package ucichess.testUCIChess;
 
-import ucichess.Square;
+import ucichess.ChessBoard;
 import ucichess.UCIChess;
 
 /**
@@ -112,16 +127,16 @@ public class TestChess {
             String whiteMove="e2e4";
             String startPos="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
             uci.move_FromFEN(startPos, whiteMove, true);
-            String fenWhite=Square.moveOnFen(startPos, whiteMove);
-            Square.show_chessboard();
+            String fenWhite=ChessBoard.moveOnFen(startPos, whiteMove);
+            ChessBoard.show_chessboard();
             
             //black response
             uci.go_Think();
             String blackMove=uci.get_BestMove(true);
              System.out.println("black move "+blackMove);
              uci.move_FromFEN(fenWhite, blackMove, true);
-             String fenBlack=Square.moveOnFen(fenWhite, blackMove);
-             Square.show_chessboard();
+             String fenBlack=ChessBoard.moveOnFen(fenWhite, blackMove);
+             ChessBoard.show_chessboard();
              
 
 
