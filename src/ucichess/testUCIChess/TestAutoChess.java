@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ucichess.testUCIChess;
 
 import ucichess.ChessBoard;
@@ -24,14 +23,14 @@ import ucichess.UCIChess;
  * UCIChess auto-chess example : A game between two engines
  * @author tondeur herve 2015 GPL V3.0
  */
-public class AutoChess {
+public class TestAutoChess {
     String moves=null; //keep moves in a String
 
     final boolean traceMode=false;
     final long timeThinking=100; //time thinking in miliseconds
     String fenPos="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
     
-    public AutoChess() {
+    public TestAutoChess() {
     //run Engine1
     UCIChess engine1=new UCIChess("C:\\Arena\\Engines\\Protector_1_6_0\\bin\\Protector_Win64.exe");
     //run engine2
@@ -113,6 +112,6 @@ public class AutoChess {
      * @param args not uses
      ***************************/
     public static void main(String[] args) {
-        new AutoChess();
+        new TestAutoChess();
     }
 }

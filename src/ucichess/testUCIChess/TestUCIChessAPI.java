@@ -23,10 +23,10 @@ import ucichess.UCIChess;
  * Example : Test some of the UCIChess Methods...
  * @author tondeur herve 2015 GPL V3.0
  */
-public class TestChess {
+public class TestUCIChessAPI {
 
     
-    public TestChess()  {
+    public TestUCIChessAPI()  {
         
         //test with stockfish 6 chess engine
         //UCIChess uci=new UCIChess("C:\\Arena\\Engines\\stockfish-6-win\\Windows\\stockfish-6-64.exe/stockfish-6-32.exe");
@@ -133,7 +133,7 @@ public class TestChess {
 
     
     public static void main(String[] args) {
-        TestChess testChess = new TestChess();
+        TestUCIChessAPI testChess = new TestUCIChessAPI();
     }
     
 }
