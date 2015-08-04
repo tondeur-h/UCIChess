@@ -4,9 +4,14 @@ ChessBoard API
 This API provide only static methods, so no need to instanciate an object from 
 this class, you have just to do a static call to this methods.
 
+You must notice that chessboard coordinate are zero based, so column values and
+count from 0 to 7 to represent letters a to h (left to right) and rows and count 
+from 0 to 7 to represent numbers 1 to 8 (bottom to top).
+ 
+
 This API provide some methods to deal with FEN format like :
 ===========================================================
-
+STARTPOSITION constant =>"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 assign_chessboard(FEN)
 moveFromFEN(FEN,move)
 show_chessboard()
@@ -16,19 +21,19 @@ chessboard coordinate wihtout applying a move.
 assign_chessboard method return a String array 8x8 size that represent a 
 chessboard like this
 
-  1 2 3 4 5 6 7 8 
-8                 8
-7                 7
-6                 6
-5                 5
-4                 4
-3                 3
-2                 2
-1                 1
+  0 1 2 3 4 5 6 7 
+8                 7
+7                 6
+6                 5
+5                 4
+4                 3
+3                 2
+2                 1
+1                 0
   a b c d e f g h
 
-row keep number identification, but col have number identification where
-1 mean a, 2 mean b,3 mean c, 4 mean d, 5 mean e, 6 mean f,7 mean g, 8 mean h
+row keep number identification, but col have number identification (zero base) where
+0 mean a, 1 mean b,2 mean c, 3 mean d, 4 mean e, 5 mean f,6 mean g, 7 mean h
 
 each square can contains a string like
 rnbqkpRNBQKP
@@ -108,7 +113,7 @@ getPromote()
 
 1) moveToCoord(move) method help you to convert a algebraic notation move to
 chessboard numeric coordinate representation.
-Where a=1, b=2, c=3, d=4, e=5,f=6,g=7, h=8
+Where a=0, b=1, c=2, d=3, e=4,f=5,g=6, h=7
 And promote piece if exist rnbqRNBQ are possible.
 
 2) getColFrom, getRowFrom, getColTo, getRowTo, getPromote methods, help you
@@ -126,7 +131,7 @@ Return :
 ------
 
 Transform e7e8Q move into chessboard coordinate
-From : 5-7 To : 5-8
+From : 4-6 To : 4-7
 Promote = Q
 
 
@@ -136,12 +141,12 @@ convert a chessboard numeric coordinate into a algebraic notation move.
 Example :
 -------
 
-     System.out.println("Transform coordinate 7-8 6-6 into a move representation");
-     System.out.println("move is : "+ChessBoard.coordToMove(7, 8, 6, 6,""));
+     System.out.println("Transform coordinate 6-7 5-5 into a move representation");
+     System.out.println("move is : "+ChessBoard.coordToMove(6, 7, 5, 5,""));
 
 Return :
 ------
 
-Transform coordinate 7-8 6-6 into a move representation
+Transform coordinate 6-7 5-5 into a move representation
 move is : g8f6
    

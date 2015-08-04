@@ -16,6 +16,8 @@
  */
 package ucichess;
 
+import java.util.ArrayList;
+
 /**************************
  * A representation of a virtual chessboard
  * @author tondeur herve 2015 GPL V3.0
@@ -39,7 +41,11 @@ public final class ChessBoard {
 
  //a virtual chessboard
  private static String [][]chessboard;
+ private static ArrayList<Position> listOfMove;
 
+ //start position
+ public static final String STARTPOSITION="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+ 
     //hide the default constructor
     private ChessBoard() {
     }
@@ -64,8 +70,8 @@ assign_chessboard(startFEN);
 moveToCoord(move);
 //make move on chessboard
 //deal with castle movements 
-chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
-chessboard[colFrom-1][rowFrom-1]=null;
+chessboard[colTo][rowTo]=chessboard[colFrom][rowFrom];
+chessboard[colFrom][rowFrom]=null;
 //castle movements
 //e1g1 => h1f1
 //e1c1 =>a1d1
@@ -74,26 +80,26 @@ chessboard[colFrom-1][rowFrom-1]=null;
 if (move.compareTo("e1g1")==0){
     //small white castle
 moveToCoord("h1f1");
-chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
-chessboard[colFrom-1][rowFrom-1]=null;
+chessboard[colTo][rowTo]=chessboard[colFrom][rowFrom];
+chessboard[colFrom][rowFrom]=null;
 }
 if (move.compareTo("e1c1")==0){
     //big white castle
 moveToCoord("a1d1");
-chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
-chessboard[colFrom-1][rowFrom-1]=null;
+chessboard[colTo][rowTo]=chessboard[colFrom][rowFrom];
+chessboard[colFrom][rowFrom]=null;
 }
 if (move.compareTo("e8g8")==0){
     //small black castle
 moveToCoord("h8f8");
-chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
-chessboard[colFrom-1][rowFrom-1]=null;
+chessboard[colTo][rowTo]=chessboard[colFrom][rowFrom];
+chessboard[colFrom][rowFrom]=null;
 }
 if (move.compareTo("e8g8")==0){
     //big black castle
 moveToCoord("a8d8");
-chessboard[colTo-1][rowTo-1]=chessboard[colFrom-1][rowFrom-1];
-chessboard[colFrom-1][rowFrom-1]=null;
+chessboard[colTo][rowTo]=chessboard[colFrom][rowFrom];
+chessboard[colFrom][rowFrom]=null;
 }
 
 //construct FEN return
@@ -265,10 +271,10 @@ return FEN;
         if (move.length()>=4){
         try{
             //translate move
-            colFrom=move.charAt(0)-96;
-            rowFrom=move.charAt(1)-48;
-            colTo=move.charAt(2)-96;
-            rowTo=move.charAt(3)-48;
+            colFrom=move.charAt(0)-97;
+            rowFrom=move.charAt(1)-49;
+            colTo=move.charAt(2)-97;
+            rowTo=move.charAt(3)-49;
             //look for promotion
             if (move.length()==5){promote=move.substring(4);} else {promote="";}
             
@@ -295,7 +301,7 @@ return FEN;
      * @return A String contains the move in algebraic notation.
      *******************************************/
     public static String coordToMove(int cFrom, int rFrom, int cTo, int rTo, String promotion){
-        return Character.toString((char)(96+cFrom))+(rFrom)+Character.toString((char)(96+cTo))+(rTo)+promotion;
+        return Character.toString((char)(97+cFrom))+(rFrom+1)+Character.toString((char)(97+cTo))+(rTo+1)+promotion;
     }
     
     
@@ -348,5 +354,620 @@ return FEN;
     public static String getPromote() {
         return promote;
     }
+    
+    /**
+     * Get a complete list of valid move for the piece in the FEN chess proposed.
+     * @param fen Give the fen format chessboard position
+     * @param colPiece Give the column number for the piece to analyse
+     * @param rowPiece give the row number for the piece to analyse
+     * @return An ArrayList of Position Object with all valid moves.
+     */
+    public static ArrayList<Position> get_list_of_valid_moves(String fen,int colPiece,int rowPiece){
+       int upDown;
+       int leftright;
+       boolean stop;
+       
+    //prepare listofmove
+        if (listOfMove==null){
+            listOfMove=new ArrayList<>();
+        }
+        else
+        {
+            listOfMove.clear();
+        }
+        
+        //coordonate are not correct return an empty list of moves
+        if (colPiece<0 || colPiece>7 || rowPiece<0 || rowPiece>7) return listOfMove;
+       
+        
+    //assign chessboard to split fen into coordinate
+        assign_chessboard(fen);
+    
+    // read the piece to move
+    String piece=chessboard[colPiece][rowPiece];
+    
+    //if Square is empty return a empty moves list.
+    if (piece==null) return listOfMove;  //return an empty list
+    
+    //else treat each case...
+    switch(piece){
+        //===================================BLACK ROOT================================
+        case "r":
+            // black root move/take (row--,col), (row++,col), (row,col--), (row,col++)
+            //test on the left
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece));
+                if (pieceIsWhite((colPiece+leftright), rowPiece)) stop=true;
+                leftright--;
+            }
+             //test on the right
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece));
+                 if (pieceIsWhite((colPiece+leftright), rowPiece)) stop=true;
+                leftright++;
+            }
+              //test to the bottom
+            upDown=-1;
+            stop=false;
+            while ((rowPiece+upDown)>=0 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
+                listOfMove.add(new Position(colPiece, rowPiece+upDown));
+                 if (pieceIsWhite(colPiece, (rowPiece+upDown))) stop=true;
+                upDown--;
+            }
+              //test to the top
+            upDown=1;
+            stop=false;
+            while ((rowPiece+upDown)<=7 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
+                listOfMove.add(new Position(colPiece, rowPiece+upDown));
+                if (pieceIsWhite(colPiece, (rowPiece+upDown))) stop=true;
+                upDown++;
+            }            
+            break;
+        //===================================BLACK KNIGHT==============================
+        case "n":  
+            /*black knight : move/take (row+2,col-1),(row+2,col+1),
+                                       (row+1,col-2),(row+1,col+2),
+                                       *(row-2,col-1),*(row-2,col+1),
+                                       *(row-1,col-2) *(row-1,col+2)*/
+            //down1 left (col-2,row-1)
+            if ((colPiece-2)>=0 && (rowPiece-1)>=0){
+                if(squareIsEmpty(colPiece-2,rowPiece-1) || pieceIsWhite(colPiece-2,rowPiece-1)){
+                    listOfMove.add(new Position(colPiece-2, rowPiece-1));
+                }
+            }
+            //down2 left (col-1,row-2)
+            if ((colPiece-1)>=0 && (rowPiece-2)>=0){
+                if(squareIsEmpty(colPiece-1,rowPiece-2) || pieceIsWhite(colPiece-1,rowPiece-2)){
+                    listOfMove.add(new Position(colPiece-1, rowPiece-2));
+                }
+            }
+            //down1 right (col+2,row-1)
+            if ((colPiece+2)<=7 && (rowPiece-1)>=0){
+                if(squareIsEmpty(colPiece+2,rowPiece-1) || pieceIsWhite(colPiece+2,rowPiece-1)){
+                    listOfMove.add(new Position(colPiece+2, rowPiece-1));
+                }
+            }
+            //down2 right (col+1,row-2)
+            if ((colPiece+1)<=7 && (rowPiece-2)>=0){
+                if(squareIsEmpty(colPiece+1,rowPiece-2) || pieceIsWhite(colPiece+1,rowPiece-2)){
+                    listOfMove.add(new Position(colPiece+1, rowPiece-2));
+                }
+            }
+            //up1 left (col-2,row+1)
+            if ((colPiece-2)>=0 && (rowPiece+1)<=7){
+                if(squareIsEmpty(colPiece-2,rowPiece+1) || pieceIsWhite(colPiece-2,rowPiece+1)){
+                    listOfMove.add(new Position(colPiece-2, rowPiece+1));
+                }
+            }
+            //up2 left (col-1,row+2)
+            if ((colPiece-1)>=0 && (rowPiece+2)<=7){
+                if(squareIsEmpty(colPiece-1,rowPiece+2) || pieceIsWhite(colPiece-1,rowPiece+2)){
+                    listOfMove.add(new Position(colPiece-1, rowPiece+2));
+                }
+            }
+            //up1 right (col+2,row+1)
+            if ((colPiece+2)<=7 && (rowPiece+1)<=7){
+                if(squareIsEmpty(colPiece+2,rowPiece+1) || pieceIsWhite(colPiece+2,rowPiece+1)){
+                    listOfMove.add(new Position(colPiece+2, rowPiece+1));
+                }
+            }
+            //up2 right (col+1,row+2)
+            if ((colPiece+1)<=7 && (rowPiece+2)<=7){
+                if(squareIsEmpty(colPiece+1,rowPiece+2) || pieceIsWhite(colPiece+1,rowPiece+2)){
+                    listOfMove.add(new Position(colPiece+1, rowPiece+2));
+                }
+            }
+            break;
+            //===================================BLACK BISHOP==============================
+        case "b": 
+            // black bishop move/take (row--,col--), (row--,col++), (row++,col--), (row++,col++)
+            //test down-left direction
+            upDown=-1;
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown--;
+                leftright--;
+            }
+            //test down-right direction
+            upDown=-1;
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown--;
+                leftright++;
+            }
+            //test up-left direction
+            upDown=1;
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown++;
+                leftright--;
+            }
+            //test up-right direction
+            upDown=1;
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown++;
+                leftright++;
+            }
+            break;
+            //===================================BLACK QUEEN===============================
+        case "q": 
+            // black queen move/take (row--,col), (row++,col), (row,col--), (row,col++)
+            //                       (row--,col--), (row--,col++), (row++,col--), (row++,col++)
+            //test on the left
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece));
+                if (pieceIsWhite((colPiece+leftright), rowPiece)) stop=true;
+                leftright--;
+            }
+             //test on the right
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece));
+                 if (pieceIsWhite((colPiece+leftright), rowPiece)) stop=true;
+                leftright++;
+            }
+              //test to the bottom
+            upDown=-1;
+            stop=false;
+            while ((rowPiece+upDown)>=0 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
+                listOfMove.add(new Position(colPiece, rowPiece+upDown));
+                 if (pieceIsWhite(colPiece, (rowPiece+upDown))) stop=true;
+                upDown--;
+            }
+              //test to the top
+            upDown=1;
+            stop=false;
+            while ((rowPiece+upDown)<=7 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
+                listOfMove.add(new Position(colPiece, rowPiece+upDown));
+                if (pieceIsWhite(colPiece, (rowPiece+upDown))) stop=true;
+                upDown++;
+            }
+              //test down-left direction
+            upDown=-1;
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown--;
+                leftright--;
+            }
+            //test down-right direction
+            upDown=-1;
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown--;
+                leftright++;
+            }
+            //test up-left direction
+            upDown=1;
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown++;
+                leftright--;
+            }
+            //test up-right direction
+            upDown=1;
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown++;
+                leftright++;
+            }
+            break;
+            //====================================BLACK KING===============================
+        case "k": 
+            /* black king : move/take (row-1,col),(row-1,col-1),(row-1,col+1)
+                                      (row,col-1),(row,col+1)
+                                      (row+1,col)(row+1,col-1)(row+1,col-1)
+            rook : if (e8 and h8=r and f8,g8 empty => g8)
+                   if (e8 and a8=r and d8,c8,b8 empty => b8)*/
+            break;
+            //====================================BLACK PAWN===============================
+        case "p":
+             // black pawn : move (row-1,col),(row-2,col)(if row is 6), take(row-1,col+1), (row-1,col-1)
+            //move one step
+            if ((rowPiece-1)>=0){
+                if(squareIsEmpty(colPiece,rowPiece-1)){
+                    listOfMove.add(new Position(colPiece, rowPiece-1));
+                }
+            }
+            //move two step
+            if ((rowPiece-2)>=0){
+                if(squareIsEmpty(colPiece,rowPiece-1) && squareIsEmpty(colPiece,rowPiece-2) && rowPiece==6){
+                    listOfMove.add(new Position(colPiece, rowPiece-2));
+                }
+            }
+            //take left
+            if ((colPiece-1)>=0){
+                if(squareIsEmpty(colPiece-1,rowPiece-1) && pieceIsWhite(colPiece-1,rowPiece-1)){
+                    listOfMove.add(new Position(colPiece-1, rowPiece-1));
+                }
+            }
+            //take right
+            if ((colPiece+1)<=7){
+                if(squareIsEmpty(colPiece+1,rowPiece-1) && pieceIsWhite(colPiece+1,rowPiece-1)){
+                    listOfMove.add(new Position(colPiece+1, rowPiece-1));
+                }
+            }
+            //TODO => black "prise en passant" <=
+            break;
+            //===================================WHITE ROOT==============================
+        case "R": 
+            // white root move/take (row--,col), (row++,col), (row,col--), (row,col++)
+            //test on the left
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece));
+                if (pieceIsBlack((colPiece+leftright), rowPiece)) stop=true;
+                leftright--;
+            }
+             //test on the right
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece));
+                 if (pieceIsBlack((colPiece+leftright), rowPiece)) stop=true;
+                leftright++;
+            }
+              //test to the bottom
+            upDown=-1;
+            stop=false;
+            while ((rowPiece+upDown)>=0 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
+                listOfMove.add(new Position(colPiece, rowPiece+upDown));
+                 if (pieceIsBlack(colPiece, (rowPiece+upDown))) stop=true;
+                upDown--;
+            }
+              //test to the top
+            upDown=1;
+            stop=false;
+            while ((rowPiece+upDown)<=7 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
+                listOfMove.add(new Position(colPiece, rowPiece+upDown));
+                if (pieceIsBlack(colPiece, (rowPiece+upDown))) stop=true;
+                upDown++;
+            }
+            break;
+            //===================================WHITE KNIGHT==============================
+        case "N": 
+            /*white knight : move/take (row+2,col-1),(row+2,col+1),
+                                       (row+1,col-2),(row+1,col+2),
+                                       (row-2,col-1),(row-2,col+1),
+                                       (row-1,col-2) (row-1,col+2)*/
+            if ((colPiece-2)>=0 && (rowPiece-1)>=0){
+                if(squareIsEmpty(colPiece-2,rowPiece-1) || pieceIsBlack(colPiece-2,rowPiece-1)){
+                    listOfMove.add(new Position(colPiece-2, rowPiece-1));
+                }
+            }
+            //down2 left (col-1,row-2)
+            if ((colPiece-1)>=0 && (rowPiece-2)>=0){
+                if(squareIsEmpty(colPiece-1,rowPiece-2) || pieceIsBlack(colPiece-1,rowPiece-2)){
+                    listOfMove.add(new Position(colPiece-1, rowPiece-2));
+                }
+            }
+            //down1 right (col+2,row-1)
+            if ((colPiece+2)<=7 && (rowPiece-1)>=0){
+                if(squareIsEmpty(colPiece+2,rowPiece-1) || pieceIsBlack(colPiece+2,rowPiece-1)){
+                    listOfMove.add(new Position(colPiece+2, rowPiece-1));
+                }
+            }
+            //down2 right (col+1,row-2)
+            if ((colPiece+1)<=7 && (rowPiece-2)>=0){
+                if(squareIsEmpty(colPiece+1,rowPiece-2) || pieceIsBlack(colPiece+1,rowPiece-2)){
+                    listOfMove.add(new Position(colPiece+1, rowPiece-2));
+                }
+            }
+            //up1 left (col-2,row+1)
+            if ((colPiece-2)>=0 && (rowPiece+1)<=7){
+                if(squareIsEmpty(colPiece-2,rowPiece+1) || pieceIsBlack(colPiece-2,rowPiece+1)){
+                    listOfMove.add(new Position(colPiece-2, rowPiece+1));
+                }
+            }
+            //up2 left (col-1,row+2)
+            if ((colPiece-1)>=0 && (rowPiece+2)<=7){
+                if(squareIsEmpty(colPiece-1,rowPiece+2) || pieceIsBlack(colPiece-1,rowPiece+2)){
+                    listOfMove.add(new Position(colPiece-1, rowPiece+2));
+                }
+            }
+            //up1 right (col+2,row+1)
+            if ((colPiece+2)<=7 && (rowPiece+1)<=7){
+                if(squareIsEmpty(colPiece+2,rowPiece+1) || pieceIsBlack(colPiece+2,rowPiece+1)){
+                    listOfMove.add(new Position(colPiece+2, rowPiece+1));
+                }
+            }
+            //up2 right (col+1,row+2)
+            if ((colPiece+1)<=7 && (rowPiece+2)<=7){
+                if(squareIsEmpty(colPiece+1,rowPiece+2) || pieceIsBlack(colPiece+1,rowPiece+2)){
+                    listOfMove.add(new Position(colPiece+1, rowPiece+2));
+                }
+            }
+            break;
+            //===================================WHITE BISHOP==============================
+        case "B": 
+            // white bishop move/take (row--,col--), (row--,col++), (row++,col--), (row++,col++)
+            //test down-left direction
+            upDown=-1;
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown--;
+                leftright--;
+            }
+            //test down-right direction
+            upDown=-1;
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown--;
+                leftright++;
+            }
+            //test up-left direction
+            upDown=1;
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown++;
+                leftright--;
+            }
+            //test up-right direction
+            upDown=1;
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown++;
+                leftright++;
+            }
+            break;
+            //===================================WHITE QUEEN==============================
+        case "Q": 
+            // white queen move/take (row--,col), (row++,col), (row,col--), (row,col++)
+            //                       (row--,col--), (row--,col++), (row++,col--), (row++,col++)
+            //test on the left
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece));
+                if (pieceIsBlack((colPiece+leftright), rowPiece)) stop=true;
+                leftright--;
+            }
+             //test on the right
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece));
+                 if (pieceIsBlack((colPiece+leftright), rowPiece)) stop=true;
+                leftright++;
+            }
+              //test to the bottom
+            upDown=-1;
+            stop=false;
+            while ((rowPiece+upDown)>=0 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
+                listOfMove.add(new Position(colPiece, rowPiece+upDown));
+                 if (pieceIsBlack(colPiece, (rowPiece+upDown))) stop=true;
+                upDown--;
+            }
+              //test to the top
+            upDown=1;
+            stop=false;
+            while ((rowPiece+upDown)<=7 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
+                listOfMove.add(new Position(colPiece, rowPiece+upDown));
+                if (pieceIsBlack(colPiece, (rowPiece+upDown))) stop=true;
+                upDown++;
+            }
+            //test down-left direction
+            upDown=-1;
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown--;
+                leftright--;
+            }
+            //test down-right direction
+            upDown=-1;
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown--;
+                leftright++;
+            }
+            //test up-left direction
+            upDown=1;
+            leftright=-1;
+            stop=false;
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown++;
+                leftright--;
+            }
+            //test up-right direction
+            upDown=1;
+            leftright=1;
+            stop=false;
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+                listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+                if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
+                upDown++;
+                leftright++;
+            }
+            break;
+            //===================================WHITE KING==============================
+        case "K": 
+            /* white king : move (row-1,col),(row-1,col-1),(row-1,col+1)
+                                      (row,col-1),(row,col+1)
+                                      (row+1,col)(row+1,col-1)(row+1,col-1)
+            A king cannot make a move if is will be in danger, so test before 
+            if the move is possible.
+            rook : if (e1 and h1=R and f1,g1 empty => g1)
+                   if (e1 and a1=r and d1,c1,b1 empty => b1)*/
+            //down1 left (col-2,row-1)
+            break;
+            //===================================WHITE PAWN==============================
+        case "P": 
+             // white pawn : move (row+1,col),(row+2,col)(if row is 2), take(row+1,col+1), (row+1,col-1)
+            //move one step
+            if ((rowPiece+1)<=7){
+                if(squareIsEmpty(colPiece,rowPiece+1)){
+                    listOfMove.add(new Position(colPiece, rowPiece+1));
+                }
+            }
+            //move two step
+            if ((rowPiece+2)<=7){
+                if(squareIsEmpty(colPiece,rowPiece+1) && squareIsEmpty(colPiece,rowPiece+2) && rowPiece==1){
+                    listOfMove.add(new Position(colPiece, rowPiece+2));
+                }
+            }
+            //take left
+            if ((colPiece-1)>=0){
+                if(squareIsEmpty(colPiece-1,rowPiece+1) && pieceIsBlack(colPiece-1,rowPiece+1)){
+                    listOfMove.add(new Position(colPiece-1, rowPiece+1));
+                }
+            }
+            //take right
+            if ((colPiece+1)<=7){
+                if(squareIsEmpty(colPiece+1,rowPiece+1) && pieceIsBlack(colPiece+1,rowPiece+1)){
+                    listOfMove.add(new Position(colPiece+1, rowPiece+1));
+                }
+            }
+            //TODO => white "prise en passant" <= 
+            break;
+            //===================================CLEAR SQUARE==============================
+        default :
+            listOfMove.clear();
+            break;
+    }
+
+    return listOfMove;
+    } //end get_list_of_valid_moves
+    
+    
+    /**
+     * test if Square is empty
+     * @param c
+     * @param r
+     * @return 
+     */
+    private static boolean squareIsEmpty(int c,int r){
+        return chessboard[c][r]==null;
+    }
+    
+    
+    /**
+     * test if piece on this square is white
+     * @param c
+     * @param r
+     * @return 
+     */
+    private static boolean pieceIsWhite(int c, int r){
+        if (chessboard[c][r]==null) return false;
+        if (chessboard[c][r].compareTo("R")==0) return true;
+        if (chessboard[c][r].compareTo("N")==0) return true;
+        if (chessboard[c][r].compareTo("B")==0) return true;
+        if (chessboard[c][r].compareTo("Q")==0) return true;
+        if (chessboard[c][r].compareTo("P")==0) return true;       
+       return false;
+    }
+    
+    
+    /**
+     * test if piece on this square is black
+     * @param c
+     * @param r
+     * @return 
+     */
+    private static boolean pieceIsBlack(int c, int r){
+        if (chessboard[c][r]==null) return false;
+        if (chessboard[c][r].compareTo("r")==0) return true;
+        if (chessboard[c][r].compareTo("n")==0) return true;
+        if (chessboard[c][r].compareTo("b")==0) return true;
+        if (chessboard[c][r].compareTo("q")==0) return true;
+        if (chessboard[c][r].compareTo("p")==0) return true;       
+       return false;
+    }
+    
+    
+    
+    /**
+     * beans class for Square position dealing
+     */
+    public static class Position{
+        int col;
+        int row;
+
+        public int getCol() {
+            return col;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public Position(int col, int row) {
+            this.col = col;
+            this.row = row;
+        }
+        
+    } //end Position class
+    
     
 } //end of ChessBoard class

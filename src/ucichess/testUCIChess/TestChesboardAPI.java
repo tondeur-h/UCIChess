@@ -17,6 +17,7 @@
 
 package ucichess.testUCIChess;
 
+import java.util.ArrayList;
 import ucichess.ChessBoard;
 
 /**
@@ -25,7 +26,7 @@ import ucichess.ChessBoard;
  */
 public class TestChesboardAPI {
 
-    String FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+    String FEN=ChessBoard.STARTPOSITION;
     
     public TestChesboardAPI() {
     //test assign and show
@@ -47,9 +48,16 @@ public class TestChesboardAPI {
     System.out.println("Promote = "+ChessBoard.getPromote()+"\n");
     
     //test coordToMove
-        System.out.println("Transform coordinate 7-8 6-6 into a move representation");
-        System.out.println("move is : "+ChessBoard.coordToMove(7, 8, 6, 6,""));
-    
+        System.out.println("Transform coordinate 6-7 5-5 into a move representation");
+        System.out.println("move is : "+ChessBoard.coordToMove(6, 7, 5, 5,""));
+  
+        
+    //test positions
+        ArrayList<ChessBoard.Position> ar=ChessBoard.get_list_of_valid_moves("3b4/8/8/3q4/8/8/8/3B4", 3, 4);
+        for (int i=0;i<ar.size();i++){
+            System.out.println(((ChessBoard.Position) ar.get(i)).getCol()+"-"+((ChessBoard.Position) ar.get(i)).getRow());
+        }
+        
     }
 
     
