@@ -126,7 +126,7 @@ for (int r=7;r>-1;r--){
     
 }
 return FEN;
- }
+ } // end moveFromFEN
  
  
  /***************************************
@@ -169,7 +169,7 @@ return FEN;
      }
      //draw coordinate on bottom
       System.out.println("*  a  b  c  d  e  f  g  h  *\n");
- }
+ }//end show_chessboard
  
  
  /**********************************
@@ -191,7 +191,7 @@ return FEN;
          if (((c+1) % 2)!=0) {return true;}
      }
      return false;
- }
+ } //end is_black
  
  
  /**************************
@@ -251,7 +251,7 @@ return FEN;
  
      //end assigning
      return chessboard;
- }
+ } //end assign_chessboard
  
  
  /*****************************************
@@ -287,7 +287,7 @@ return FEN;
         }
         
         }
-    }
+    } //end moveToCoord
  
     
     /****************************************
@@ -302,7 +302,7 @@ return FEN;
      *******************************************/
     public static String coordToMove(int cFrom, int rFrom, int cTo, int rTo, String promotion){
         return Character.toString((char)(97+cFrom))+(rFrom+1)+Character.toString((char)(97+cTo))+(rTo+1)+promotion;
-    }
+    } //end coordToMove
     
     
         /************************************
@@ -313,8 +313,9 @@ return FEN;
          ***********************************/
     public static int getRowFrom() {
         return rowFrom;
-    }
+    } //end getRowFrom
 
+    
         /***********************************
          * Get-col From coordonate
          * using convention
@@ -323,8 +324,9 @@ return FEN;
          ************************************/    
     public static int getColFrom() {
         return colFrom;
-    }
+    } //end getColFrom
 
+    
         /************************************
          * Get-Row To coordonate
          * using convention
@@ -333,8 +335,9 @@ return FEN;
          ************************************/
     public static int getRowTo() {
         return rowTo;
-    }
+    } //end getRowTo
 
+    
         /***********************************
          * Get-col To coordonate
          * using convention
@@ -343,8 +346,9 @@ return FEN;
          ************************************/
     public static int getColTo() {
         return colTo;
-    }
+    } //end getColTo
 
+    
     /************************
      * Get promote value<br>
      * a chess piece letter
@@ -353,7 +357,8 @@ return FEN;
      *************************/
     public static String getPromote() {
         return promote;
-    }
+    } //end getPromote
+    
     
     /**
      * Get a complete list of valid move for the piece in the FEN chess proposed.
@@ -605,11 +610,64 @@ return FEN;
             break;
             //====================================BLACK KING===============================
         case "k": 
-            /* black king : move/take (row-1,col),(row-1,col-1),(row-1,col+1)
-                                      (row,col-1),(row,col+1)
-                                      (row+1,col)(row+1,col-1)(row+1,col-1)
-            rook : if (e8 and h8=r and f8,g8 empty => g8)
-                   if (e8 and a8=r and d8,c8,b8 empty => b8)*/
+            /* black king : move (row+1,col-1) (row+1,col) (row+1,col+1)
+                                 (row,col-1)       k       (row,col+1)
+                                 (row-1,col-1) (row-1,col) (row-1,col-1)
+            A king cannot make a move if is will be in danger, so test if the move is possible.
+            to reach this goal you must test each valid destination
+            */
+            //test up-left direction
+            upDown=1;
+            leftright=-1;
+            if ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
+                if (!blackKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+            }
+            //test up-right direction
+            upDown=1;
+            leftright=1;
+            if ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
+                if (!blackKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+            }
+            //test down-left direction
+            upDown=-1;
+            leftright=-1;
+            if ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
+                if (!blackKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+            }
+            //test down-right direction
+            upDown=-1;
+            leftright=1;
+            if ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
+                if (!blackKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+            }
+            //test left direction
+            leftright=-1;
+            if ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece)) || pieceIsWhite((colPiece+leftright),(rowPiece)))){
+                if (!blackKingIsThreat((colPiece+leftright),(rowPiece))) listOfMove.add(new Position(colPiece+leftright, rowPiece));
+            }
+            //test right direction
+            leftright=1;
+            if ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece)) || pieceIsWhite((colPiece+leftright),(rowPiece)))){
+                if (!blackKingIsThreat((colPiece+leftright),(rowPiece))) listOfMove.add(new Position(colPiece+leftright, rowPiece));
+            }
+            //test bottom direction
+            upDown=-1;
+            if ((rowPiece+upDown)>=0 && (squareIsEmpty((colPiece),(rowPiece+upDown)) || pieceIsWhite((colPiece),(rowPiece+upDown)))){
+                if (!blackKingIsThreat((colPiece),(rowPiece+upDown))) listOfMove.add(new Position(colPiece, rowPiece+upDown));
+            }
+            //test top direction
+            upDown=1;
+            if ((rowPiece+upDown)>=0 && (squareIsEmpty((colPiece),(rowPiece+upDown)) || pieceIsWhite((colPiece),(rowPiece+upDown)))){
+                if (!blackKingIsThreat((colPiece),(rowPiece+upDown))) listOfMove.add(new Position(colPiece, rowPiece+upDown));
+            }
+            //if e8=k && f8=empty && g8=empty && h8=r then return g8
+            if (pieceIN(4,7,"k") && squareIsEmpty(5,7) && squareIsEmpty(6,7) && pieceIN(7,7,"r")){
+                listOfMove.add(new Position(6, 7));
+            }
+            //if e8=k && d8=empty && c8=empty && b8=empty && a8=r then return b8
+            if (pieceIN(4,7,"k") && squareIsEmpty(3,7) && squareIsEmpty(2,7) && squareIsEmpty(1,7) && pieceIN(0,7,"r")){
+                listOfMove.add(new Position(1, 7));
+            }
             break;
             //====================================BLACK PAWN===============================
         case "p":
@@ -853,14 +911,63 @@ return FEN;
             break;
             //===================================WHITE KING==============================
         case "K": 
-            /* white king : move (row-1,col),(row-1,col-1),(row-1,col+1)
-                                      (row,col-1),(row,col+1)
-                                      (row+1,col)(row+1,col-1)(row+1,col-1)
-            A king cannot make a move if is will be in danger, so test before 
-            if the move is possible.
-            rook : if (e1 and h1=R and f1,g1 empty => g1)
-                   if (e1 and a1=r and d1,c1,b1 empty => b1)*/
-            //down1 left (col-2,row-1)
+            /* white king : move (row+1,col-1) (row+1,col) (row+1,col+1)
+                                 (row,col-1)       K       (row,col+1)
+                                 (row-1,col-1) (row-1,col) (row-1,col-1)
+            A king cannot make a move if is will be in danger, so test if the move is possible.
+            */
+            //test up-left direction
+            upDown=1;
+            leftright=-1;
+            if ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
+                if (!whiteKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+            }
+            //test up-right direction
+            upDown=1;
+            leftright=1;
+            if ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
+                if (!whiteKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+            }
+            //test down-left direction
+            upDown=-1;
+            leftright=-1;
+            if ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
+                if (!whiteKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+            }
+            //test down-right direction
+            upDown=-1;
+            leftright=1;
+            if ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
+                if (!whiteKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
+            }
+            //test left direction
+            leftright=-1;
+            if ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece)) || pieceIsBlack((colPiece+leftright),(rowPiece)))){
+                if (!whiteKingIsThreat((colPiece+leftright),(rowPiece))) listOfMove.add(new Position(colPiece+leftright, rowPiece));
+            }
+            //test right direction
+            leftright=1;
+            if ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece)) || pieceIsBlack((colPiece+leftright),(rowPiece)))){
+                if (!whiteKingIsThreat((colPiece+leftright),(rowPiece))) listOfMove.add(new Position(colPiece+leftright, rowPiece));
+            }
+            //test bottom direction
+            upDown=-1;
+            if ((rowPiece+upDown)>=0 && (squareIsEmpty((colPiece),(rowPiece+upDown)) || pieceIsBlack((colPiece),(rowPiece+upDown)))){
+                if (!whiteKingIsThreat((colPiece),(rowPiece+upDown))) listOfMove.add(new Position(colPiece, rowPiece+upDown));
+            }
+            //test top direction
+            upDown=1;
+            if ((rowPiece+upDown)<=7 && (squareIsEmpty((colPiece),(rowPiece+upDown)) || pieceIsBlack((colPiece),(rowPiece+upDown)))){
+                if (!whiteKingIsThreat((colPiece),(rowPiece+upDown))) listOfMove.add(new Position(colPiece, rowPiece+upDown));
+            }
+            //if e1=K && f1=empty && g1=empty && h1=R then return g1
+            if (pieceIN(4,0,"K") && squareIsEmpty(5,0) && squareIsEmpty(6,0) && pieceIN(7,0,"R")){
+                listOfMove.add(new Position(6, 0));
+            }
+            //if e1=K && d1=empty && c1=empty && b1=empty && a1=R then return b1
+            if (pieceIN(4,0,"K") && squareIsEmpty(3,0) && squareIsEmpty(2,0) && squareIsEmpty(1,0) && pieceIN(0,0,"R")){
+                listOfMove.add(new Position(1, 0));
+            }            
             break;
             //===================================WHITE PAWN==============================
         case "P": 
@@ -909,7 +1016,7 @@ return FEN;
      */
     private static boolean squareIsEmpty(int c,int r){
         return chessboard[c][r]==null;
-    }
+    } //end squareIsEmpty
     
     
     /**
@@ -926,7 +1033,7 @@ return FEN;
         if (chessboard[c][r].compareTo("Q")==0) return true;
         if (chessboard[c][r].compareTo("P")==0) return true;       
        return false;
-    }
+    } //end pieceIsWhite
     
     
     /**
@@ -943,10 +1050,251 @@ return FEN;
         if (chessboard[c][r].compareTo("q")==0) return true;
         if (chessboard[c][r].compareTo("p")==0) return true;       
        return false;
-    }
+    } //end pieceIsBlack
     
     
+    /**
+     * Test is white King is Threated
+     * @param c
+     * @param r
+     * @return 
+     */
+    private static boolean whiteKingIsThreat(int c,int r){
+        int leftRight;
+        int upDown;
+        /* white king : move 
+                             (row+2,col-1)(n)                     (row+2,col-1)(n)  
+            (row+1,col-2)(n) (row+1,col-1)(pk) (row+1,col)(k) (row+1,col+1)(pk) (row+1,col+2)(n)
+                             (row,col-1)(k)        K            (row,col+1)(k)
+            (row-1,col-2)(n) (row-1,col-1)(k)  (row-1,col)(k) (row-1,col-1)(k)(row-1,col-2)(n)
+                             (row-2,col-1)(n)                     (row-2,col-1)(n)        
+            */   
+        //black pawn threat
+        if ((c-1)>=0 && (r+1)<=7 && pieceIN(c-1, r+1, "p")) return true;
+        if ((c+1)<=7 && (r+1)<=7 && pieceIN(c+1, r+1, "p")) return true;
+        //black king threat 
+        if ((c-1)>=0 && pieceIN(c-1, r, "k")) return true;
+        if ((c+1)<=7 && pieceIN(c+1, r, "k")) return true;
+        if ((r-1)>=0 && pieceIN(c, r-1, "k")) return true;
+        if ((r+1)<=7 && pieceIN(c, r+1, "k")) return true;
+        if ((c-1)>=0 && (r+1)<=7 && pieceIN(c-1, r+1, "k")) return true;
+        if ((c+1)<=7 && (r+1)<=7 && pieceIN(c+1, r+1, "k")) return true;
+        if ((c-1)>=0 && (r-1)>=0 && pieceIN(c-1, r-1, "k")) return true;
+        if ((c+1)<=7 && (r-1)>=0 && pieceIN(c+1, r-1, "k")) return true;
+        //black knight threat
+        if ((c-1)>=0 && (r+2)<=7 && pieceIN(c-1, r+2, "n")) return true;
+        if ((c+1)<=7 && (r+2)<=7 && pieceIN(c+1, r+2, "n")) return true;
+        if ((c-2)>=0 && (r+1)<=7 && pieceIN(c-2, r+1, "n")) return true;
+        if ((c+2)<=7 && (r+1)<=7 && pieceIN(c+2, r+1, "n")) return true;
+        if ((c-1)>=0 && (r-2)>=0 && pieceIN(c-1, r-2, "n")) return true;
+        if ((c+1)<=7 && (r-2)>=0 && pieceIN(c+1, r-2, "n")) return true;
+        if ((c-2)>=0 && (r-1)>=0 && pieceIN(c-2, r-1, "n")) return true;
+        if ((c+2)<=7 && (r-1)>=0 && pieceIN(c+2, r-1, "n")) return true;
+        //black root/bishop/queen threat
+        //test to the left
+        leftRight=-1;
+        while ((c+leftRight)>=0){
+             if (chessboard[c+leftRight][r]!=null){
+              if (pieceIN(c+leftRight,r,"rq")) return true;  
+             }
+            leftRight--;     
+        }
+        //test to the right
+        leftRight=1;
+        while ((c+leftRight)<=7){
+             if (chessboard[c+leftRight][r]!=null){
+              if (pieceIN(c+leftRight,r,"rq")) return true;  
+             }
+            leftRight++;     
+        }
+        //test to the bottom
+        upDown=-1;
+        while ((r+upDown)>=0){
+             if (chessboard[c][r+upDown]!=null){
+              if (pieceIN(c,r+upDown,"rq")) return true;  
+             }
+            upDown--;     
+        }
+        //test to the top
+        upDown=1;
+        while ((r+upDown)<=7){
+             if (chessboard[c][r+upDown]!=null){
+              if (pieceIN(c,r+upDown,"rq")) return true;  
+             }
+            upDown++;     
+        }
+        //test to the left bottom
+        leftRight=-1;
+        upDown=-1;
+        while ((c+leftRight)>=0 && (r+upDown)>=0){
+             if (chessboard[c+leftRight][r+upDown]!=null){
+              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;  
+             }
+            leftRight--;
+            upDown--;
+        }
+        //test to the left top
+        leftRight=-1;
+        upDown=1;
+        while ((c+leftRight)>=0 && (r+upDown)<=7){
+             if (chessboard[c+leftRight][r+upDown]!=null){
+              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;  
+             }
+            leftRight--;
+            upDown++;
+        }
+        //test to the right bottom
+        leftRight=1;
+        upDown=-1;
+        while ((c+leftRight)<=7 && (r+upDown)>=0){
+             if (chessboard[c+leftRight][r+upDown]!=null){
+              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;  
+             }
+            leftRight++;
+            upDown--;
+        }
+        //test to the right top
+        leftRight=1;
+        upDown=1;
+        while ((c+leftRight)<=7 && (r+upDown)<=7){
+             if (chessboard[c+leftRight][r+upDown]!=null){
+              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;  
+             }
+            leftRight++;
+            upDown++;
+        }
+        return false;
+    } //end whiteKingIsThreat
     
+    
+    /**
+     * 
+     * @param c
+     * @param r
+     * @param pieces
+     * @return 
+     */
+    private static boolean pieceIN(int c,int r,String pieces){
+        if (chessboard[c][r]==null) return false;
+        return pieces.contains(chessboard[c][r]);
+    } //end pieceIN
+    
+    
+    /**
+     * 
+     * @param c
+     * @param r
+     * @return 
+     */
+    private static boolean blackKingIsThreat(int c,int r){
+        int leftRight;
+        int upDown;
+        /* black king : move 
+                             (row+2,col-1)(N)                (row+2,col-1)(N)  
+            (row+1,col-2)(n) (row+1,col-1)(K) (row+1,col)(K) (row+1,col+1)(K) (row+1,col+2)(N)
+                             (row,col-1)(K)        k         (row,col+1)(K)
+            (row-1,col-2)(n) (row-1,col-1)(PK)(row-1,col)(K) (row-1,col-1)(PK)(row-1,col-2)(N)
+                             (row-2,col-1)(N)                     (row-2,col-1)(N)        
+            */   
+        //white pawn threat
+        if ((c-1)>=0 && (r-1)>=0 && pieceIN(c-1, r+1, "P")) return true;
+        if ((c+1)<=7 && (r-1)>=0 && pieceIN(c+1, r+1, "P")) return true;
+        //white king threat 
+        if ((c-1)>=0 && pieceIN(c-1, r, "K")) return true;
+        if ((c+1)<=7 && pieceIN(c+1, r, "K")) return true;
+        if ((r-1)>=0 && pieceIN(c, r-1, "K")) return true;
+        if ((r+1)<=7 && pieceIN(c, r+1, "K")) return true;
+        if ((c-1)>=0 && (r+1)<=7 && pieceIN(c-1, r+1, "K")) return true;
+        if ((c+1)<=7 && (r+1)<=7 && pieceIN(c+1, r+1, "K")) return true;
+        if ((c-1)>=0 && (r-1)>=0 && pieceIN(c-1, r-1, "K")) return true;
+        if ((c+1)<=7 && (r-1)>=0 && pieceIN(c+1, r-1, "K")) return true;
+        //white knight threat
+        if ((c-1)>=0 && (r+2)<=7 && pieceIN(c-1, r+2, "N")) return true;
+        if ((c+1)<=7 && (r+2)<=7 && pieceIN(c+1, r+2, "N")) return true;
+        if ((c-2)>=0 && (r+1)<=7 && pieceIN(c-2, r+1, "N")) return true;
+        if ((c+2)<=7 && (r+1)<=7 && pieceIN(c+2, r+1, "N")) return true;
+        if ((c-1)>=0 && (r-2)>=0 && pieceIN(c-1, r-2, "N")) return true;
+        if ((c+1)<=7 && (r-2)>=0 && pieceIN(c+1, r-2, "N")) return true;
+        if ((c-2)>=0 && (r-1)>=0 && pieceIN(c-2, r-1, "N")) return true;
+        if ((c+2)<=7 && (r-1)>=0 && pieceIN(c+2, r-1, "N")) return true;
+        //white root threat
+        //test to the left
+        leftRight=-1;
+        while ((c+leftRight)>=0){
+             if (chessboard[c+leftRight][r]!=null){
+              if (pieceIN(c+leftRight,r,"RQ")) return true;  
+             }
+            leftRight--;     
+        }
+        //test to the right
+        leftRight=1;
+        while ((c+leftRight)<=7){
+             if (chessboard[c+leftRight][r]!=null){
+              if (pieceIN(c+leftRight,r,"RQ")) return true;  
+             }
+            leftRight++;     
+        }
+        //test to the bottom
+        upDown=-1;
+        while ((r+upDown)>=0){
+             if (chessboard[c][r+upDown]!=null){
+              if (pieceIN(c,r+upDown,"RQ")) return true;  
+             }
+            upDown--;     
+        }
+        //test to the top
+        upDown=1;
+        while ((r+upDown)<=7){
+             if (chessboard[c][r+upDown]!=null){
+              if (pieceIN(c,r+upDown,"RQ")) return true;  
+             }
+            upDown++;     
+        }
+        //test to the left bottom
+        leftRight=-1;
+        upDown=-1;
+        while ((c+leftRight)>=0 && (r+upDown)>=0){
+             if (chessboard[c+leftRight][r+upDown]!=null){
+              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;  
+             }
+            leftRight--;
+            upDown--;
+        }
+        //test to the left top
+        leftRight=-1;
+        upDown=1;
+        while ((c+leftRight)>=0 && (r+upDown)<=7){
+             if (chessboard[c+leftRight][r+upDown]!=null){
+              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;  
+             }
+            leftRight--;
+            upDown++;
+        }
+        //test to the right bottom
+        leftRight=1;
+        upDown=-1;
+        while ((c+leftRight)<=7 && (r+upDown)>=0){
+             if (chessboard[c+leftRight][r+upDown]!=null){
+              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;  
+             }
+            leftRight++;
+            upDown--;
+        }
+        //test to the right top
+        leftRight=1;
+        upDown=1;
+        while ((c+leftRight)<=7 && (r+upDown)<=7){
+             if (chessboard[c+leftRight][r+upDown]!=null){
+              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;  
+             }
+            leftRight++;
+            upDown++;
+        }
+        return false;
+    } //end blackKingIsThreat
+    
+    
+ 
     /**
      * beans class for Square position dealing
      */

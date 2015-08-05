@@ -53,7 +53,8 @@ public class TestChesboardAPI {
   
         
     //test positions
-        ArrayList<ChessBoard.Position> ar=ChessBoard.get_list_of_valid_moves("3b4/8/8/3q4/8/8/8/3B4", 3, 4);
+        System.out.println("\"3K4/8/8/3P4/8/4k3/8/8\", 4, 2");
+        ArrayList<ChessBoard.Position> ar=ChessBoard.get_list_of_valid_moves("3K4/8/8/3P4/8/4k3/8/8", 4, 2);
         for (int i=0;i<ar.size();i++){
             System.out.println(((ChessBoard.Position) ar.get(i)).getCol()+"-"+((ChessBoard.Position) ar.get(i)).getRow());
         }
