@@ -149,4 +149,13 @@ Return :
 
 Transform coordinate 6-7 5-5 into a move representation
 move is : g8f6
+
+This API provide a method to check all valid moves
+==================================================
+
+ArrayList<Position> get_list_of_valid_moves(String fen,int colPiece,int rowPiece)
+
+This method take a String fen to assign a chessboard position and column and row 
+position of a piece and return an ArrayList of position object with all the valid 
+moves for this piece.
    
