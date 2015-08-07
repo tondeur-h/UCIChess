@@ -17,8 +17,10 @@
 
 package ucichess.testUCIChess;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import ucichess.ChessBoard;
+import ucichess.ChessBoard.Position;
 import ucichess.UCIChess;
 
 /**
@@ -32,33 +34,64 @@ String listMoves;
 String whiteMove;
 String blackMove;
 ucichess.UCIChess uci;
-    
+String engName;
+boolean testMove;
+
+
+/*
+ * prepare new game
+ */
     public TestChessGame() {
         currFEN=ChessBoard.STARTPOSITION;
         gameisOn=true;
+        testMove=false;
+        
         runEngine();
         gameloop();
     } //end constructor
     
     
+    /*
+     * game loop
+     */
     public void gameloop(){
+        System.out.println("== NEW GAME ==");
+        ChessBoard.assign_chessboard(currFEN);
+        ChessBoard.show_chessboard();
+        whiteMove="e2e4";
+        
     while (gameisOn){
         //White to play => human player...
+        System.out.println("----------------------------------------------------");
+        System.out.println("== WHITE PLAY (Human) ==");
+        while (!testMove){
         whiteMove=askMove();
-        //apply white move
+        testMove=test_Move(whiteMove);
+        if (!testMove) System.out.println(whiteMove+" this move is not correct, must be from a1 to h8 and from to format like e2e4!");
+        }
+        testMove=false; //for the next move...
         listMoves=listMoves+" "+whiteMove;
+        //draw and apply white move on screen
         currFEN=ChessBoard.moveFromFEN(currFEN, whiteMove);
         ChessBoard.show_chessboard();
         
         //black move
+        System.out.println("----------------------------------------------------");
+        System.out.println("== BLACK PLAY ("+engName+") ==");
         uci.move_FromFEN(currFEN, blackMove,false);
         uci.go_Think_MoveTime(1000);
         blackMove=uci.get_BestMove(false);
+        System.out.println("Is move = "+blackMove);
         //keep list moves in memory
         listMoves=listMoves+" "+blackMove;
         //draw move and calculate new FEN
         currFEN=ChessBoard.moveFromFEN(currFEN, blackMove);
         ChessBoard.show_chessboard();
+        
+        if (uci.is_engine_Mated(false)){
+               System.exit(0);
+        }
+        
         if (uci.is_opponent_Mated(false)){
            System.exit(0);
         }
@@ -66,24 +99,67 @@ ucichess.UCIChess uci;
         
     } //end gameLoop
     
-    
+  
+    /*
+    run the engine 
+    */
     public void runEngine(){
         uci=new UCIChess("C:\\Arena\\Engines\\stockfish-6-win\\Windows\\stockfish-6-64.exe");
         if (uci.get_UciOk(false)){
-            System.out.println("Engine "+uci.getEngineName()+" is ready...");   
+            engName=uci.getEngineName();
+            System.out.println("Engine "+engName+" is ready...");   
         }
     }
     
     
+    /*
+    ask a move to the user and test it...
+    */
     public String askMove(){
-        System.out.print("White move ie=> e2e4 : ");
+        System.out.print("White move ie=> "+whiteMove+" : ");
         Scanner sc=new Scanner(System.in);
         return sc.nextLine();
     }
     
     
+    public boolean test_Move(String move){
+        //test format
+        if (move.length()<4 || move.length()>5 ){return false;}
+        //test letter and number
+        if (move.charAt(0)<97 || move.charAt(0)> 104){return false;}
+        if (move.charAt(1)<49 || move.charAt(1)> 56){return false;}
+        if (move.charAt(2)<97 || move.charAt(2)> 104){return false;}
+        if (move.charAt(3)<49 || move.charAt(3)> 56){return false;}
+        
+        if (move.length()==5){
+         //row destination must be 8
+            if(move.charAt(3)!=56){return false;}
+            //promote must be QRNB
+        if(move.charAt(4)!=81 || move.charAt(4)!=82 || move.charAt(4)!=78 || move.charAt(4)!=66){return false;}
+        }
+        
+        //test if is possible ?
+        //translate move into coordinate
+        ChessBoard.moveToCoord(move);
+        int fc=ChessBoard.getColFrom();
+        int fr=ChessBoard.getRowFrom();
+        int tc=ChessBoard.getColTo();
+        int tr=ChessBoard.getRowTo();
+        
+        //test if destination coordinate is in valid moves.
+        ArrayList<Position> lom=ChessBoard.get_list_of_valid_moves(currFEN, fc, fr);
+        for (int i=0;i<lom.size();i++){
+           int pc=lom.get(i).getCol();
+           int pr=lom.get(i).getRow();
+           if (tc==pc && tr==pr){return true;}
+        }
+        //default nothing match
+        return false;
+    }
+    
+    
     public static void main(String[] args) {
-        new TestAutoChess();
+        new TestChessGame();
     }
     
 }

@@ -589,6 +589,18 @@ public class UCIChess {
            return getMate.compareTo("1")==0;
        }
        
+
+        /*********************************
+        * test if the engine is mated
+        * @param trace A boolean value for trace result value.
+        * @return A bbolean value true if engine is mated otherwise false.
+        *********************************/
+       public boolean is_engine_Mated(boolean trace){
+           String getMate=get_DetailedInfo(get_Number_DetailedInfo()-1).getScoreMate();
+           if (trace) System.out.println("score mate="+getMate);
+           return getMate.compareTo("-1")==0;
+       }
+
        
        /*******************************
         * parse infoline in small object.
