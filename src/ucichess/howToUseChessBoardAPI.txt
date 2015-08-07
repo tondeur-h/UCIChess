@@ -158,4 +158,43 @@ ArrayList<Position> get_list_of_valid_moves(String fen,int colPiece,int rowPiece
 This method take a String fen to assign a chessboard position and column and row 
 position of a piece and return an ArrayList of position object with all the valid 
 moves for this piece.
-   
+ 
+Example :
+--------
+
+       System.out.println("\"3k2rr/pPp4p/nPbP3P/3P4/P6b/4P3/pp1N2N1/4KQBR\", 5, 0 => white Queen possibls Moves?");
+       ChessBoard.assign_chessboard("3k2rr/pPp4p/nPbP3P/3P4/P6b/4P3/pp1N2N1/4KQBR");
+       ChessBoard.show_chessboard();
+       ArrayList<ChessBoard.Position> ar=ChessBoard.get_list_of_valid_moves("3k2rr/pPp4p/nPbP3P/3P4/P6b/4P3/pp1N2N1/4KQBR", 5, 0);
+                for (int i=0;i<ar.size();i++){
+            System.out.println(((ChessBoard.Position) ar.get(i)).getCol()+"-"+((ChessBoard.Position) ar.get(i)).getRow());
+       }
+
+Return :
+-------
+
+"3k2rr/pPp4p/nPbP3P/3P4/P6b/4P3/pp1N2N1/4KQBR", 5, 0 => white Queen possible Moves?
+*  a  b  c  d  e  f  g  h  *
+8     #     k     #  r  r  8
+7  p  P  p     #     #  p  7
+6  n  P  b  P     #     P  6
+5  #     #  P  #     #     5
+4  P  #     #     #     b  4
+3  #     #     P     #     3
+2  p  p     N     #  N  #  2
+1  #     #     K  Q  B  R  1
+*  a  b  c  d  e  f  g  h  *
+
+Possible moves for white Queen f1 :
+5-1
+5-2
+5-3
+5-4
+5-5
+5-6
+5-7
+4-1
+3-2
+2-3
+1-4
+0-5  

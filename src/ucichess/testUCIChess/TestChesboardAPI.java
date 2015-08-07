@@ -53,9 +53,13 @@ public class TestChesboardAPI {
   
         
     //test positions
-        System.out.println("\"3K4/8/8/3P4/8/4k3/8/8\", 4, 2");
-        ArrayList<ChessBoard.Position> ar=ChessBoard.get_list_of_valid_moves("3K4/8/8/3P4/8/4k3/8/8", 4, 2);
-        for (int i=0;i<ar.size();i++){
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+       System.out.println("\"3k2rr/pPp4p/nPbP3P/3P4/P6b/4P3/pp1N2N1/4KQBR\", 5, 0 => white Queen possible Moves?");
+        ChessBoard.assign_chessboard("3k2rr/pPp4p/nPbP3P/3P4/P6b/4P3/pp1N2N1/4KQBR");
+        ChessBoard.show_chessboard();
+        System.out.println("Possible moves for white Queen f1 :");
+       ArrayList<ChessBoard.Position> ar=ChessBoard.get_list_of_valid_moves("3k2rr/pPp4p/nPbP3P/3P4/P6b/4P3/pp1N2N1/4KQBR", 5, 0);
+                for (int i=0;i<ar.size();i++){
             System.out.println(((ChessBoard.Position) ar.get(i)).getCol()+"-"+((ChessBoard.Position) ar.get(i)).getRow());
         }
         
