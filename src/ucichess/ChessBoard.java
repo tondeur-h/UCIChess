@@ -1223,7 +1223,7 @@ return FEN;
      * @param pieces list of pieces to test
      * @return true if is in list otherwise false.
      */
-    private static boolean pieceIN(int c,int r,String pieces){
+    public static boolean pieceIN(int c,int r,String pieces){
         if (chessboard[c][r]==null) return false;
         return pieces.contains(chessboard[c][r]);
     } //end pieceIN
