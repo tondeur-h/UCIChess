@@ -198,3 +198,49 @@ Possible moves for white Queen f1 :
 2-3
 1-4
 0-5  
+
+
+Some useful methods
+===================
+
+-> boolean blackKingIsThreat(int c,int r)
+-> boolean whiteKingIsThreat(int c,int r)
+
+This two methods help you to know if Black King oe White King is in a Threated position i
+it take the new coordinate destination.
+
+Example :
+-------
+
+//can i play this move ?
+if (!whiteKingIsThreat(3,1)) System.out.println("you can play this move;
+
+
+-> boolean square_is_Empty(int c,int r)
+-> boolean pieceIsBlack(int c, int r)
+-> boolean pieceIsWhite(int c, int r)
+
+This three methods can help you to know if a square of the designed coordinate is an 
+empty square or have a white piece or a black piece.
+
+
+-> boolean square_is_black(int c,int r)
+
+Help you to test if the coordinate square is a black square or a white square, 
+return true if black otherwise false. 
+
+
+-> boolean pieceIN(int c,int r,String pieces)
+
+Test if a square have a spécial piece in the pieces String list.
+
+The String list must only use rnbqkpRNBQKP letters.
+
+Example :
+-------
+//test if square g1 is white King
+if (pieceIN(6,0,"K")) return true;
+
+//test if square b7 is an black bishop or block root "br"
+if (pieceIN(2,6,"br")) return true;
+

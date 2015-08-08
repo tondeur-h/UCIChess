@@ -29,10 +29,10 @@ adverse is mate.
 
 if (uci.get_DetailedInfo(uci.get_Number_DetailedInfo()-1).getScoreMate().compareTo("1")==0) ...
 
-To simplfy this test you can use the is_Opponent_Mated() Method :
+To simplfy this test you can use the is_Opponent_Mated() is_Engine_Mated() Method :
 
 if (is_Opponent_Mated(false)) {System.out.println("Black is mate...");}
-
+if (is_Engine_Mated(false)) {System.out.println("White is mate...");}
 
 UCIChess Description and use case
 ---------------------------------

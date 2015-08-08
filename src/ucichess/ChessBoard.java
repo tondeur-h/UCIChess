@@ -156,7 +156,7 @@ return FEN;
              if (col==0) System.out.print((row+1)+" ");
              String val=chessboard[col][row];  //read piece
              //if square is black and empty put a # char
-             if (val==null && is_black(col,row)==true) {val="#";} else 
+             if (val==null && square_is_black(col,row)==true) {val="#";} else 
              //if square is white and empty put space char
              {if (val==null) val=" ";}
              //write piece value
@@ -175,11 +175,11 @@ return FEN;
  /**********************************
   * test is square is a black square
   * call by show_chessboard
-  * @param c
-  * @param r
-  * @return 
+  * @param c column value zero based
+  * @param r row value zero based
+  * @return true if square is black otherwise false. 
   ***********************************/
- private static boolean is_black(int c,int r){
+ public static boolean square_is_black(int c,int r){
      //even row 8 6 4 2
      if (((r+1) % 2)==0){
         //col is even b d f h
@@ -191,7 +191,7 @@ return FEN;
          if (((c+1) % 2)!=0) {return true;}
      }
      return false;
- } //end is_black
+ } //end square_is_black
  
  
  /**************************
@@ -402,7 +402,7 @@ return FEN;
             //test on the left
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
+            while ((colPiece+leftright)>=0 && (square_is_Empty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece));
                 if (pieceIsWhite((colPiece+leftright), rowPiece)) stop=true;
                 leftright--;
@@ -410,7 +410,7 @@ return FEN;
              //test on the right
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
+            while ((colPiece+leftright)<=7 && (square_is_Empty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece));
                  if (pieceIsWhite((colPiece+leftright), rowPiece)) stop=true;
                 leftright++;
@@ -418,7 +418,7 @@ return FEN;
               //test to the bottom
             upDown=-1;
             stop=false;
-            while ((rowPiece+upDown)>=0 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
+            while ((rowPiece+upDown)>=0 && (square_is_Empty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
                 listOfMove.add(new Position(colPiece, rowPiece+upDown));
                  if (pieceIsWhite(colPiece, (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -426,7 +426,7 @@ return FEN;
               //test to the top
             upDown=1;
             stop=false;
-            while ((rowPiece+upDown)<=7 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
+            while ((rowPiece+upDown)<=7 && (square_is_Empty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
                 listOfMove.add(new Position(colPiece, rowPiece+upDown));
                 if (pieceIsWhite(colPiece, (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -440,49 +440,49 @@ return FEN;
                                        *(row-1,col-2) *(row-1,col+2)*/
             //down1 left (col-2,row-1)
             if ((colPiece-2)>=0 && (rowPiece-1)>=0){
-                if(squareIsEmpty(colPiece-2,rowPiece-1) || pieceIsWhite(colPiece-2,rowPiece-1)){
+                if(square_is_Empty(colPiece-2,rowPiece-1) || pieceIsWhite(colPiece-2,rowPiece-1)){
                     listOfMove.add(new Position(colPiece-2, rowPiece-1));
                 }
             }
             //down2 left (col-1,row-2)
             if ((colPiece-1)>=0 && (rowPiece-2)>=0){
-                if(squareIsEmpty(colPiece-1,rowPiece-2) || pieceIsWhite(colPiece-1,rowPiece-2)){
+                if(square_is_Empty(colPiece-1,rowPiece-2) || pieceIsWhite(colPiece-1,rowPiece-2)){
                     listOfMove.add(new Position(colPiece-1, rowPiece-2));
                 }
             }
             //down1 right (col+2,row-1)
             if ((colPiece+2)<=7 && (rowPiece-1)>=0){
-                if(squareIsEmpty(colPiece+2,rowPiece-1) || pieceIsWhite(colPiece+2,rowPiece-1)){
+                if(square_is_Empty(colPiece+2,rowPiece-1) || pieceIsWhite(colPiece+2,rowPiece-1)){
                     listOfMove.add(new Position(colPiece+2, rowPiece-1));
                 }
             }
             //down2 right (col+1,row-2)
             if ((colPiece+1)<=7 && (rowPiece-2)>=0){
-                if(squareIsEmpty(colPiece+1,rowPiece-2) || pieceIsWhite(colPiece+1,rowPiece-2)){
+                if(square_is_Empty(colPiece+1,rowPiece-2) || pieceIsWhite(colPiece+1,rowPiece-2)){
                     listOfMove.add(new Position(colPiece+1, rowPiece-2));
                 }
             }
             //up1 left (col-2,row+1)
             if ((colPiece-2)>=0 && (rowPiece+1)<=7){
-                if(squareIsEmpty(colPiece-2,rowPiece+1) || pieceIsWhite(colPiece-2,rowPiece+1)){
+                if(square_is_Empty(colPiece-2,rowPiece+1) || pieceIsWhite(colPiece-2,rowPiece+1)){
                     listOfMove.add(new Position(colPiece-2, rowPiece+1));
                 }
             }
             //up2 left (col-1,row+2)
             if ((colPiece-1)>=0 && (rowPiece+2)<=7){
-                if(squareIsEmpty(colPiece-1,rowPiece+2) || pieceIsWhite(colPiece-1,rowPiece+2)){
+                if(square_is_Empty(colPiece-1,rowPiece+2) || pieceIsWhite(colPiece-1,rowPiece+2)){
                     listOfMove.add(new Position(colPiece-1, rowPiece+2));
                 }
             }
             //up1 right (col+2,row+1)
             if ((colPiece+2)<=7 && (rowPiece+1)<=7){
-                if(squareIsEmpty(colPiece+2,rowPiece+1) || pieceIsWhite(colPiece+2,rowPiece+1)){
+                if(square_is_Empty(colPiece+2,rowPiece+1) || pieceIsWhite(colPiece+2,rowPiece+1)){
                     listOfMove.add(new Position(colPiece+2, rowPiece+1));
                 }
             }
             //up2 right (col+1,row+2)
             if ((colPiece+1)<=7 && (rowPiece+2)<=7){
-                if(squareIsEmpty(colPiece+1,rowPiece+2) || pieceIsWhite(colPiece+1,rowPiece+2)){
+                if(square_is_Empty(colPiece+1,rowPiece+2) || pieceIsWhite(colPiece+1,rowPiece+2)){
                     listOfMove.add(new Position(colPiece+1, rowPiece+2));
                 }
             }
@@ -494,7 +494,7 @@ return FEN;
             upDown=-1;
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -504,7 +504,7 @@ return FEN;
             upDown=-1;
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -514,7 +514,7 @@ return FEN;
             upDown=1;
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -524,7 +524,7 @@ return FEN;
             upDown=1;
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -538,7 +538,7 @@ return FEN;
             //test on the left
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
+            while ((colPiece+leftright)>=0 && (square_is_Empty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece));
                 if (pieceIsWhite((colPiece+leftright), rowPiece)) stop=true;
                 leftright--;
@@ -546,7 +546,7 @@ return FEN;
              //test on the right
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
+            while ((colPiece+leftright)<=7 && (square_is_Empty((colPiece+leftright), rowPiece) || pieceIsWhite((colPiece+leftright), rowPiece)) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece));
                  if (pieceIsWhite((colPiece+leftright), rowPiece)) stop=true;
                 leftright++;
@@ -554,7 +554,7 @@ return FEN;
               //test to the bottom
             upDown=-1;
             stop=false;
-            while ((rowPiece+upDown)>=0 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
+            while ((rowPiece+upDown)>=0 && (square_is_Empty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
                 listOfMove.add(new Position(colPiece, rowPiece+upDown));
                  if (pieceIsWhite(colPiece, (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -562,7 +562,7 @@ return FEN;
               //test to the top
             upDown=1;
             stop=false;
-            while ((rowPiece+upDown)<=7 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
+            while ((rowPiece+upDown)<=7 && (square_is_Empty(colPiece, (rowPiece+upDown)) || pieceIsWhite(colPiece,(rowPiece+upDown)) && !stop)){
                 listOfMove.add(new Position(colPiece, rowPiece+upDown));
                 if (pieceIsWhite(colPiece, (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -571,7 +571,7 @@ return FEN;
             upDown=-1;
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -581,7 +581,7 @@ return FEN;
             upDown=-1;
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -591,7 +591,7 @@ return FEN;
             upDown=1;
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -601,7 +601,7 @@ return FEN;
             upDown=1;
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsWhite((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -619,53 +619,53 @@ return FEN;
             //test up-left direction
             upDown=1;
             leftright=-1;
-            if ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
+            if ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
                 if (!blackKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
             }
             //test up-right direction
             upDown=1;
             leftright=1;
-            if ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
+            if ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
                 if (!blackKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
             }
             //test down-left direction
             upDown=-1;
             leftright=-1;
-            if ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
+            if ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
                 if (!blackKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
             }
             //test down-right direction
             upDown=-1;
             leftright=1;
-            if ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
+            if ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright),(rowPiece+upDown)) || pieceIsWhite((colPiece+leftright),(rowPiece+upDown)))){
                 if (!blackKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
             }
             //test left direction
             leftright=-1;
-            if ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece)) || pieceIsWhite((colPiece+leftright),(rowPiece)))){
+            if ((colPiece+leftright)>=0 && (square_is_Empty((colPiece+leftright),(rowPiece)) || pieceIsWhite((colPiece+leftright),(rowPiece)))){
                 if (!blackKingIsThreat((colPiece+leftright),(rowPiece))) listOfMove.add(new Position(colPiece+leftright, rowPiece));
             }
             //test right direction
             leftright=1;
-            if ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece)) || pieceIsWhite((colPiece+leftright),(rowPiece)))){
+            if ((colPiece+leftright)<=7 && (square_is_Empty((colPiece+leftright),(rowPiece)) || pieceIsWhite((colPiece+leftright),(rowPiece)))){
                 if (!blackKingIsThreat((colPiece+leftright),(rowPiece))) listOfMove.add(new Position(colPiece+leftright, rowPiece));
             }
             //test bottom direction
             upDown=-1;
-            if ((rowPiece+upDown)>=0 && (squareIsEmpty((colPiece),(rowPiece+upDown)) || pieceIsWhite((colPiece),(rowPiece+upDown)))){
+            if ((rowPiece+upDown)>=0 && (square_is_Empty((colPiece),(rowPiece+upDown)) || pieceIsWhite((colPiece),(rowPiece+upDown)))){
                 if (!blackKingIsThreat((colPiece),(rowPiece+upDown))) listOfMove.add(new Position(colPiece, rowPiece+upDown));
             }
             //test top direction
             upDown=1;
-            if ((rowPiece+upDown)>=0 && (squareIsEmpty((colPiece),(rowPiece+upDown)) || pieceIsWhite((colPiece),(rowPiece+upDown)))){
+            if ((rowPiece+upDown)>=0 && (square_is_Empty((colPiece),(rowPiece+upDown)) || pieceIsWhite((colPiece),(rowPiece+upDown)))){
                 if (!blackKingIsThreat((colPiece),(rowPiece+upDown))) listOfMove.add(new Position(colPiece, rowPiece+upDown));
             }
             //if e8=k && f8=empty && g8=empty && h8=r then return g8
-            if (pieceIN(4,7,"k") && squareIsEmpty(5,7) && squareIsEmpty(6,7) && pieceIN(7,7,"r")){
+            if (pieceIN(4,7,"k") && square_is_Empty(5,7) && square_is_Empty(6,7) && pieceIN(7,7,"r")){
                 listOfMove.add(new Position(6, 7));
             }
             //if e8=k && d8=empty && c8=empty && b8=empty && a8=r then return b8
-            if (pieceIN(4,7,"k") && squareIsEmpty(3,7) && squareIsEmpty(2,7) && squareIsEmpty(1,7) && pieceIN(0,7,"r")){
+            if (pieceIN(4,7,"k") && square_is_Empty(3,7) && square_is_Empty(2,7) && square_is_Empty(1,7) && pieceIN(0,7,"r")){
                 listOfMove.add(new Position(1, 7));
             }
             break;
@@ -674,25 +674,25 @@ return FEN;
              // black pawn : move (row-1,col),(row-2,col)(if row is 6), take(row-1,col+1), (row-1,col-1)
             //move one step
             if ((rowPiece-1)>=0){
-                if(squareIsEmpty(colPiece,rowPiece-1)){
+                if(square_is_Empty(colPiece,rowPiece-1)){
                     listOfMove.add(new Position(colPiece, rowPiece-1));
                 }
             }
             //move two step
             if ((rowPiece-2)>=0){
-                if(squareIsEmpty(colPiece,rowPiece-1) && squareIsEmpty(colPiece,rowPiece-2) && rowPiece==6){
+                if(square_is_Empty(colPiece,rowPiece-1) && square_is_Empty(colPiece,rowPiece-2) && rowPiece==6){
                     listOfMove.add(new Position(colPiece, rowPiece-2));
                 }
             }
             //take left
             if ((colPiece-1)>=0){
-                if(squareIsEmpty(colPiece-1,rowPiece-1) && pieceIsWhite(colPiece-1,rowPiece-1)){
+                if(pieceIsWhite(colPiece-1,rowPiece-1)){
                     listOfMove.add(new Position(colPiece-1, rowPiece-1));
                 }
             }
             //take right
             if ((colPiece+1)<=7){
-                if(squareIsEmpty(colPiece+1,rowPiece-1) && pieceIsWhite(colPiece+1,rowPiece-1)){
+                if(pieceIsWhite(colPiece+1,rowPiece-1)){
                     listOfMove.add(new Position(colPiece+1, rowPiece-1));
                 }
             }
@@ -704,7 +704,7 @@ return FEN;
             //test on the left
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
+            while ((colPiece+leftright)>=0 && (square_is_Empty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece));
                 if (pieceIsBlack((colPiece+leftright), rowPiece)) stop=true;
                 leftright--;
@@ -712,7 +712,7 @@ return FEN;
              //test on the right
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
+            while ((colPiece+leftright)<=7 && (square_is_Empty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece));
                  if (pieceIsBlack((colPiece+leftright), rowPiece)) stop=true;
                 leftright++;
@@ -720,7 +720,7 @@ return FEN;
               //test to the bottom
             upDown=-1;
             stop=false;
-            while ((rowPiece+upDown)>=0 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
+            while ((rowPiece+upDown)>=0 && (square_is_Empty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
                 listOfMove.add(new Position(colPiece, rowPiece+upDown));
                  if (pieceIsBlack(colPiece, (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -728,7 +728,7 @@ return FEN;
               //test to the top
             upDown=1;
             stop=false;
-            while ((rowPiece+upDown)<=7 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
+            while ((rowPiece+upDown)<=7 && (square_is_Empty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
                 listOfMove.add(new Position(colPiece, rowPiece+upDown));
                 if (pieceIsBlack(colPiece, (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -741,49 +741,49 @@ return FEN;
                                        (row-2,col-1),(row-2,col+1),
                                        (row-1,col-2) (row-1,col+2)*/
             if ((colPiece-2)>=0 && (rowPiece-1)>=0){
-                if(squareIsEmpty(colPiece-2,rowPiece-1) || pieceIsBlack(colPiece-2,rowPiece-1)){
+                if(square_is_Empty(colPiece-2,rowPiece-1) || pieceIsBlack(colPiece-2,rowPiece-1)){
                     listOfMove.add(new Position(colPiece-2, rowPiece-1));
                 }
             }
             //down2 left (col-1,row-2)
             if ((colPiece-1)>=0 && (rowPiece-2)>=0){
-                if(squareIsEmpty(colPiece-1,rowPiece-2) || pieceIsBlack(colPiece-1,rowPiece-2)){
+                if(square_is_Empty(colPiece-1,rowPiece-2) || pieceIsBlack(colPiece-1,rowPiece-2)){
                     listOfMove.add(new Position(colPiece-1, rowPiece-2));
                 }
             }
             //down1 right (col+2,row-1)
             if ((colPiece+2)<=7 && (rowPiece-1)>=0){
-                if(squareIsEmpty(colPiece+2,rowPiece-1) || pieceIsBlack(colPiece+2,rowPiece-1)){
+                if(square_is_Empty(colPiece+2,rowPiece-1) || pieceIsBlack(colPiece+2,rowPiece-1)){
                     listOfMove.add(new Position(colPiece+2, rowPiece-1));
                 }
             }
             //down2 right (col+1,row-2)
             if ((colPiece+1)<=7 && (rowPiece-2)>=0){
-                if(squareIsEmpty(colPiece+1,rowPiece-2) || pieceIsBlack(colPiece+1,rowPiece-2)){
+                if(square_is_Empty(colPiece+1,rowPiece-2) || pieceIsBlack(colPiece+1,rowPiece-2)){
                     listOfMove.add(new Position(colPiece+1, rowPiece-2));
                 }
             }
             //up1 left (col-2,row+1)
             if ((colPiece-2)>=0 && (rowPiece+1)<=7){
-                if(squareIsEmpty(colPiece-2,rowPiece+1) || pieceIsBlack(colPiece-2,rowPiece+1)){
+                if(square_is_Empty(colPiece-2,rowPiece+1) || pieceIsBlack(colPiece-2,rowPiece+1)){
                     listOfMove.add(new Position(colPiece-2, rowPiece+1));
                 }
             }
             //up2 left (col-1,row+2)
             if ((colPiece-1)>=0 && (rowPiece+2)<=7){
-                if(squareIsEmpty(colPiece-1,rowPiece+2) || pieceIsBlack(colPiece-1,rowPiece+2)){
+                if(square_is_Empty(colPiece-1,rowPiece+2) || pieceIsBlack(colPiece-1,rowPiece+2)){
                     listOfMove.add(new Position(colPiece-1, rowPiece+2));
                 }
             }
             //up1 right (col+2,row+1)
             if ((colPiece+2)<=7 && (rowPiece+1)<=7){
-                if(squareIsEmpty(colPiece+2,rowPiece+1) || pieceIsBlack(colPiece+2,rowPiece+1)){
+                if(square_is_Empty(colPiece+2,rowPiece+1) || pieceIsBlack(colPiece+2,rowPiece+1)){
                     listOfMove.add(new Position(colPiece+2, rowPiece+1));
                 }
             }
             //up2 right (col+1,row+2)
             if ((colPiece+1)<=7 && (rowPiece+2)<=7){
-                if(squareIsEmpty(colPiece+1,rowPiece+2) || pieceIsBlack(colPiece+1,rowPiece+2)){
+                if(square_is_Empty(colPiece+1,rowPiece+2) || pieceIsBlack(colPiece+1,rowPiece+2)){
                     listOfMove.add(new Position(colPiece+1, rowPiece+2));
                 }
             }
@@ -795,7 +795,7 @@ return FEN;
             upDown=-1;
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -805,7 +805,7 @@ return FEN;
             upDown=-1;
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -815,7 +815,7 @@ return FEN;
             upDown=1;
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -825,7 +825,7 @@ return FEN;
             upDown=1;
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -839,7 +839,7 @@ return FEN;
             //test on the left
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
+            while ((colPiece+leftright)>=0 && (square_is_Empty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece));
                 if (pieceIsBlack((colPiece+leftright), rowPiece)) stop=true;
                 leftright--;
@@ -847,7 +847,7 @@ return FEN;
              //test on the right
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
+            while ((colPiece+leftright)<=7 && (square_is_Empty((colPiece+leftright), rowPiece) || pieceIsBlack((colPiece+leftright), rowPiece)) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece));
                  if (pieceIsBlack((colPiece+leftright), rowPiece)) stop=true;
                 leftright++;
@@ -855,7 +855,7 @@ return FEN;
               //test to the bottom
             upDown=-1;
             stop=false;
-            while ((rowPiece+upDown)>=0 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
+            while ((rowPiece+upDown)>=0 && (square_is_Empty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
                 listOfMove.add(new Position(colPiece, rowPiece+upDown));
                  if (pieceIsBlack(colPiece, (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -863,7 +863,7 @@ return FEN;
               //test to the top
             upDown=1;
             stop=false;
-            while ((rowPiece+upDown)<=7 && (squareIsEmpty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
+            while ((rowPiece+upDown)<=7 && (square_is_Empty(colPiece, (rowPiece+upDown)) || pieceIsBlack(colPiece,(rowPiece+upDown)) && !stop)){
                 listOfMove.add(new Position(colPiece, rowPiece+upDown));
                 if (pieceIsBlack(colPiece, (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -872,7 +872,7 @@ return FEN;
             upDown=-1;
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -882,7 +882,7 @@ return FEN;
             upDown=-1;
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown--;
@@ -892,7 +892,7 @@ return FEN;
             upDown=1;
             leftright=-1;
             stop=false;
-            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -902,7 +902,7 @@ return FEN;
             upDown=1;
             leftright=1;
             stop=false;
-            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
+            while ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright), (rowPiece+upDown)) || pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) && !stop){
                 listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
                 if (pieceIsBlack((colPiece+leftright), (rowPiece+upDown))) stop=true;
                 upDown++;
@@ -919,53 +919,53 @@ return FEN;
             //test up-left direction
             upDown=1;
             leftright=-1;
-            if ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
+            if ((colPiece+leftright)>=0 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
                 if (!whiteKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
             }
             //test up-right direction
             upDown=1;
             leftright=1;
-            if ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
+            if ((colPiece+leftright)<=7 && (rowPiece+upDown)<=7 && (square_is_Empty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
                 if (!whiteKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
             }
             //test down-left direction
             upDown=-1;
             leftright=-1;
-            if ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
+            if ((colPiece+leftright)>=0 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
                 if (!whiteKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
             }
             //test down-right direction
             upDown=-1;
             leftright=1;
-            if ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
+            if ((colPiece+leftright)<=7 && (rowPiece+upDown)>=0 && (square_is_Empty((colPiece+leftright),(rowPiece+upDown)) || pieceIsBlack((colPiece+leftright),(rowPiece+upDown)))){
                 if (!whiteKingIsThreat((colPiece+leftright),(rowPiece+upDown))) listOfMove.add(new Position(colPiece+leftright, rowPiece+upDown));
             }
             //test left direction
             leftright=-1;
-            if ((colPiece+leftright)>=0 && (squareIsEmpty((colPiece+leftright),(rowPiece)) || pieceIsBlack((colPiece+leftright),(rowPiece)))){
+            if ((colPiece+leftright)>=0 && (square_is_Empty((colPiece+leftright),(rowPiece)) || pieceIsBlack((colPiece+leftright),(rowPiece)))){
                 if (!whiteKingIsThreat((colPiece+leftright),(rowPiece))) listOfMove.add(new Position(colPiece+leftright, rowPiece));
             }
             //test right direction
             leftright=1;
-            if ((colPiece+leftright)<=7 && (squareIsEmpty((colPiece+leftright),(rowPiece)) || pieceIsBlack((colPiece+leftright),(rowPiece)))){
+            if ((colPiece+leftright)<=7 && (square_is_Empty((colPiece+leftright),(rowPiece)) || pieceIsBlack((colPiece+leftright),(rowPiece)))){
                 if (!whiteKingIsThreat((colPiece+leftright),(rowPiece))) listOfMove.add(new Position(colPiece+leftright, rowPiece));
             }
             //test bottom direction
             upDown=-1;
-            if ((rowPiece+upDown)>=0 && (squareIsEmpty((colPiece),(rowPiece+upDown)) || pieceIsBlack((colPiece),(rowPiece+upDown)))){
+            if ((rowPiece+upDown)>=0 && (square_is_Empty((colPiece),(rowPiece+upDown)) || pieceIsBlack((colPiece),(rowPiece+upDown)))){
                 if (!whiteKingIsThreat((colPiece),(rowPiece+upDown))) listOfMove.add(new Position(colPiece, rowPiece+upDown));
             }
             //test top direction
             upDown=1;
-            if ((rowPiece+upDown)<=7 && (squareIsEmpty((colPiece),(rowPiece+upDown)) || pieceIsBlack((colPiece),(rowPiece+upDown)))){
+            if ((rowPiece+upDown)<=7 && (square_is_Empty((colPiece),(rowPiece+upDown)) || pieceIsBlack((colPiece),(rowPiece+upDown)))){
                 if (!whiteKingIsThreat((colPiece),(rowPiece+upDown))) listOfMove.add(new Position(colPiece, rowPiece+upDown));
             }
             //if e1=K && f1=empty && g1=empty && h1=R then return g1
-            if (pieceIN(4,0,"K") && squareIsEmpty(5,0) && squareIsEmpty(6,0) && pieceIN(7,0,"R")){
+            if (pieceIN(4,0,"K") && square_is_Empty(5,0) && square_is_Empty(6,0) && pieceIN(7,0,"R")){
                 listOfMove.add(new Position(6, 0));
             }
             //if e1=K && d1=empty && c1=empty && b1=empty && a1=R then return b1
-            if (pieceIN(4,0,"K") && squareIsEmpty(3,0) && squareIsEmpty(2,0) && squareIsEmpty(1,0) && pieceIN(0,0,"R")){
+            if (pieceIN(4,0,"K") && square_is_Empty(3,0) && square_is_Empty(2,0) && square_is_Empty(1,0) && pieceIN(0,0,"R")){
                 listOfMove.add(new Position(1, 0));
             }            
             break;
@@ -974,25 +974,25 @@ return FEN;
              // white pawn : move (row+1,col),(row+2,col)(if row is 2), take(row+1,col+1), (row+1,col-1)
             //move one step
             if ((rowPiece+1)<=7){
-                if(squareIsEmpty(colPiece,rowPiece+1)){
+                if(square_is_Empty(colPiece,rowPiece+1)){
                     listOfMove.add(new Position(colPiece, rowPiece+1));
                 }
             }
             //move two step
             if ((rowPiece+2)<=7){
-                if(squareIsEmpty(colPiece,rowPiece+1) && squareIsEmpty(colPiece,rowPiece+2) && rowPiece==1){
+                if(square_is_Empty(colPiece,rowPiece+1) && square_is_Empty(colPiece,rowPiece+2) && rowPiece==1){
                     listOfMove.add(new Position(colPiece, rowPiece+2));
                 }
             }
             //take left
             if ((colPiece-1)>=0){
-                if(squareIsEmpty(colPiece-1,rowPiece+1) && pieceIsBlack(colPiece-1,rowPiece+1)){
+                if(pieceIsBlack(colPiece-1,rowPiece+1)){
                     listOfMove.add(new Position(colPiece-1, rowPiece+1));
                 }
             }
             //take right
             if ((colPiece+1)<=7){
-                if(squareIsEmpty(colPiece+1,rowPiece+1) && pieceIsBlack(colPiece+1,rowPiece+1)){
+                if(pieceIsBlack(colPiece+1,rowPiece+1)){
                     listOfMove.add(new Position(colPiece+1, rowPiece+1));
                 }
             }
@@ -1010,22 +1010,22 @@ return FEN;
     
     /**
      * test if Square is empty
-     * @param c
-     * @param r
-     * @return 
+     * @param c column value zero based
+     * @param r row value zero based
+     * @return true if square is empty otherwise false. 
      */
-    private static boolean squareIsEmpty(int c,int r){
+    public static boolean square_is_Empty(int c,int r){
         return chessboard[c][r]==null;
-    } //end squareIsEmpty
+    } //end square_is_Empty
     
     
     /**
      * test if piece on this square is white
-     * @param c
-     * @param r
-     * @return 
+     * @param c column value zero based
+     * @param r row value zero based
+     * @return a boolean value true if this piece is white else false.
      */
-    private static boolean pieceIsWhite(int c, int r){
+    public static boolean pieceIsWhite(int c, int r){
         if (chessboard[c][r]==null) return false;
         if (chessboard[c][r].compareTo("R")==0) return true;
         if (chessboard[c][r].compareTo("N")==0) return true;
@@ -1038,11 +1038,11 @@ return FEN;
     
     /**
      * test if piece on this square is black
-     * @param c
-     * @param r
-     * @return 
+     * @param c column value zero based
+     * @param r row value zero based
+     * @return a boolean value true if this piece is black else false.
      */
-    private static boolean pieceIsBlack(int c, int r){
+    public static boolean pieceIsBlack(int c, int r){
         if (chessboard[c][r]==null) return false;
         if (chessboard[c][r].compareTo("r")==0) return true;
         if (chessboard[c][r].compareTo("n")==0) return true;
@@ -1055,11 +1055,11 @@ return FEN;
     
     /**
      * Test is white King is Threated
-     * @param c
-     * @param r
-     * @return 
+     * @param c column value zero based
+     * @param r row value zero based
+     * @return a boolean value true if king is threated else false. 
      */
-    private static boolean whiteKingIsThreat(int c,int r){
+    public static boolean whiteKingIsThreat(int c,int r){
         int leftRight;
         int upDown;
         /* white king : move 
@@ -1168,11 +1168,11 @@ return FEN;
     
     
     /**
-     * 
-     * @param c
-     * @param r
-     * @param pieces
-     * @return 
+     * test if the square as a piece in pieces list.
+     * @param c column value zero based
+     * @param r row value zero based
+     * @param pieces list of pieces to test
+     * @return true if is in list otherwise false.
      */
     private static boolean pieceIN(int c,int r,String pieces){
         if (chessboard[c][r]==null) return false;
@@ -1181,12 +1181,12 @@ return FEN;
     
     
     /**
-     * 
-     * @param c
-     * @param r
-     * @return 
+     * test if black King is Threated  
+     * @param c column value zero based
+     * @param r row value zero based
+     * @return a boolean value true if king is threated else false. 
      */
-    private static boolean blackKingIsThreat(int c,int r){
+    public static boolean blackKingIsThreat(int c,int r){
         int leftRight;
         int upDown;
         /* black king : move 

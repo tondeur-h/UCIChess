@@ -30,12 +30,13 @@ import ucichess.UCIChess;
 public class TestChessGame {
 boolean gameisOn;
 String currFEN;
-String listMoves;
+String listMoves="";
 String whiteMove;
 String blackMove;
 ucichess.UCIChess uci;
 String engName;
 boolean testMove;
+int count;
 
 
 /*
@@ -45,6 +46,7 @@ boolean testMove;
         currFEN=ChessBoard.STARTPOSITION;
         gameisOn=true;
         testMove=false;
+        count=1;
         
         runEngine();
         gameloop();
@@ -61,23 +63,25 @@ boolean testMove;
         whiteMove="e2e4";
         
     while (gameisOn){
+        
         //White to play => human player...
         System.out.println("----------------------------------------------------");
-        System.out.println("== WHITE PLAY (Human) ==");
+        System.out.println("== ("+count+") WHITE PLAY (Human) ==");
         while (!testMove){
         whiteMove=askMove();
         testMove=test_Move(whiteMove);
-        if (!testMove) System.out.println(whiteMove+" this move is not correct, must be from a1 to h8 and from to format like e2e4!");
+        if (!testMove) System.out.println(whiteMove+" this move is not correct, must be from a1 to h8 and formated like this e2e4!");
         }
         testMove=false; //for the next move...
         listMoves=listMoves+" "+whiteMove;
         //draw and apply white move on screen
         currFEN=ChessBoard.moveFromFEN(currFEN, whiteMove);
         ChessBoard.show_chessboard();
-        
+                System.out.println("FEN="+currFEN);
+                
         //black move
         System.out.println("----------------------------------------------------");
-        System.out.println("== BLACK PLAY ("+engName+") ==");
+        System.out.println("== ("+count+") BLACK PLAY ("+engName+") ==");
         uci.move_FromFEN(currFEN, blackMove,false);
         uci.go_Think_MoveTime(1000);
         blackMove=uci.get_BestMove(false);
@@ -87,14 +91,22 @@ boolean testMove;
         //draw move and calculate new FEN
         currFEN=ChessBoard.moveFromFEN(currFEN, blackMove);
         ChessBoard.show_chessboard();
+        System.out.println("FEN="+currFEN);
+        count++;
         
+        //who is mated???
         if (uci.is_engine_Mated(false)){
-               System.exit(0);
+            System.out.println("BLACK is mated");
+            System.out.println(listMoves);
+            System.exit(0);
         }
         
         if (uci.is_opponent_Mated(false)){
-           System.exit(0);
+            System.out.println("WHITE is mated");
+            System.out.println(listMoves);
+            System.exit(0);
         }
+        
     } //end while 
         
     } //end gameLoop
@@ -122,7 +134,12 @@ boolean testMove;
     }
     
     
+    /*
+    test a move from white player
+    */
     public boolean test_Move(String move){
+
+        
         //test format
         if (move.length()<4 || move.length()>5 ){return false;}
         //test letter and number
@@ -130,13 +147,34 @@ boolean testMove;
         if (move.charAt(1)<49 || move.charAt(1)> 56){return false;}
         if (move.charAt(2)<97 || move.charAt(2)> 104){return false;}
         if (move.charAt(3)<49 || move.charAt(3)> 56){return false;}
+                
         
         if (move.length()==5){
-         //row destination must be 8
+        //showhelp
+            if(move.charAt(4)==104){
+                    //show help for all moves        
+                ChessBoard.moveToCoord(move);
+                int fc=ChessBoard.getColFrom();
+                int fr=ChessBoard.getRowFrom();
+                int tc=ChessBoard.getColTo();
+                int tr=ChessBoard.getRowTo();
+
+                ArrayList<Position> lom=ChessBoard.get_list_of_valid_moves(currFEN, fc, fr);
+                for (int i=0;i<lom.size();i++){
+                   int pc=lom.get(i).getCol();
+                   int pr=lom.get(i).getRow();
+
+                    System.out.println(ChessBoard.coordToMove(fc, fr, pc, pr,""));
+                }
+                return false;
+        }
+            
+            //row destination must be 8 if promote
             if(move.charAt(3)!=56){return false;}
             //promote must be QRNB
-        if(move.charAt(4)!=81 || move.charAt(4)!=82 || move.charAt(4)!=78 || move.charAt(4)!=66){return false;}
+            if(move.charAt(4)!=81 || move.charAt(4)!=82 || move.charAt(4)!=78 || move.charAt(4)!=66){return false;}
         }
+        
         
         //test if is possible ?
         //translate move into coordinate
@@ -146,6 +184,10 @@ boolean testMove;
         int tc=ChessBoard.getColTo();
         int tr=ChessBoard.getRowTo();
         
+        if (ChessBoard.pieceIsBlack(fc, fr)){return false;}
+        if (ChessBoard.square_is_Empty(fc, fr)){return false;}
+
+        
         //test if destination coordinate is in valid moves.
         ArrayList<Position> lom=ChessBoard.get_list_of_valid_moves(currFEN, fc, fr);
         for (int i=0;i<lom.size();i++){
@@ -153,6 +195,7 @@ boolean testMove;
            int pr=lom.get(i).getRow();
            if (tc==pc && tr==pr){return true;}
         }
+            
         //default nothing match
         return false;
     }
