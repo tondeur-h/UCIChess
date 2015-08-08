@@ -62,6 +62,30 @@ Return :
 *  a  b  c  d  e  f  g  h  *
 
 
+You can use the method show_wide_chessboard also, that print out a wide big 
+board .
+
+     a    b    c    d    e    f    g    h
+  .----.----.----.----.----.----.----.----.
+8 | br | bn | bb | bq | wk | bb | bn | br | 8
+  .----.----.----.----.----.----.----.----.
+7 | bp | bp | bp | bp | bp | bp | bp | bp | 7
+  .----.----.----.----.----.----.----.----.
+6 |    | ## |    | ## |    | ## |    | ## | 6
+  .----.----.----.----.----.----.----.----.
+5 | ## |    | ## |    | ## |    | ## |    | 5
+  .----.----.----.----.----.----.----.----.
+4 |    | ## |    | ## |    | ## |    | ## | 4
+  .----.----.----.----.----.----.----.----.
+3 | ## |    | ## |    | ## |    | ## |    | 3
+  .----.----.----.----.----.----.----.----.
+2 | wP | wP | wP | wP | wP | wP | wP | wP | 2
+  .----.----.----.----.----.----.----.----.
+1 | wR | wN | wB | wQ | wK | wB | wN | wR | 1
+  .----.----.----.----.----.----.----.----.
+     a    b    c    d    e    f    g    h
+
+
 2) moveFromFEN (FEN,move), is a method that assign the chessboard with the FEN 
 representation and so apply the ask move on it.
 This method return a new FEN value with the applying move.

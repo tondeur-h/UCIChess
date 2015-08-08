@@ -171,6 +171,55 @@ return FEN;
       System.out.println("*  a  b  c  d  e  f  g  h  *\n");
  }//end show_chessboard
  
+
+  /***************************************
+  * draw the chessboard on an out console in a large board.
+ Black ChessBoard are represented by ## character<br>
+ White ChessBoard by a two space charactere.<br>
+  * I keep conventionnal long notation for chess piece<br>
+  * br black root<br>
+  * bn black knight<br>
+  * bb black bishop<br>
+  * bq black queen<br>
+  * bk black king<br>
+  * wp black pawn<br>
+  * wR white Root<br>
+  * wN white Knight<br>
+  * wB white Bishop<br>
+  * wQ white Queen<br>
+  * wK white King<br>
+  * wP white Pawn<br>
+  ***************************************/
+ public static void show_wide_chessboard(){
+     String color=" ";
+     //draw coordinate on top
+     System.out.println("     a    b    c    d    e    f    g    h\n  .----.----.----.----.----.----.----.----.");
+     for (int row=7;row>=0;row--){
+         for (int col=0;col<8;col++){
+             //draw number coordinate on left
+             if (col==0) System.out.print((row+1)+" ");
+             String val=chessboard[col][row];  //read piece
+             //if square is black and empty put a # char
+             color=" ";
+             if (val==null && square_is_black(col,row)==true) {color="##";}
+             if (val==null && square_is_black(col,row)!=true) {color="  ";}
+             if (val!=null) {
+                 if (pieceIsBlack(col, row)) color="b"; else color="w";
+                 val=color+val;
+             } else val=color;
+             //write piece value
+             System.out.print("| "+val+" ");
+             //draw right coordinate
+             if (col==7) {System.out.print("| "+(row+1));}
+         }
+         //on new row
+         System.out.print("\n  .----.----.----.----.----.----.----.----.\n");
+     }
+     //draw coordinate on bottom
+      System.out.println("     a    b    c    d    e    f    g    h\n");
+ }//end show_chessboard
+
+ 
  
  /**********************************
   * test is square is a black square
