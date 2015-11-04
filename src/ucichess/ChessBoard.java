@@ -29,7 +29,7 @@ public final class ChessBoard {
  * a=1;b=2;c=3;d=4;e=5;f=6;g=7;h=8
  * row is letters from a to h
  * col is numbers from 1 to 8
- ****************************/    
+ ****************************/
  private static int rowFrom;
  private static int colFrom;
  private static int rowTo;
@@ -45,12 +45,12 @@ public final class ChessBoard {
 
  //start position
  public static final String STARTPOSITION="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
- 
+
     //hide the default constructor
     private ChessBoard() {
     }
- 
- 
+
+
  /*************************************
   * Apply a move on a fen string.
   * @param startFEN start position in FEN format
@@ -69,7 +69,7 @@ assign_chessboard(startFEN);
 //convert move in coordinate
 moveToCoord(move);
 //make move on chessboard
-//deal with castle movements 
+//deal with castle movements
 chessboard[colTo][rowTo]=chessboard[colFrom][rowFrom];
 chessboard[colFrom][rowFrom]=null;
 //castle movements
@@ -114,8 +114,8 @@ for (int r=7;r>-1;r--){
     if (val==null) {count++;}
     //if piece is not null
     if (val!=null) {
-        //if counter>0 then write counter and reset counter 
-        if (count>0) {FEN=FEN+count;count=0;} 
+        //if counter>0 then write counter and reset counter
+        if (count>0) {FEN=FEN+count;count=0;}
         //write piece value also
         FEN=FEN+val;
     }
@@ -123,12 +123,12 @@ for (int r=7;r>-1;r--){
     //on change row write count empty square if necessary
     if (count>0) {FEN=FEN+count;count=0;}
     FEN=FEN+"/"; //add slash change line
-    
+
 }
 return FEN;
  } // end moveFromFEN
- 
- 
+
+
  /***************************************
   * draw the chessboard on an out console
  Black ChessBoard are represented by # character<br>
@@ -156,7 +156,7 @@ return FEN;
              if (col==0) System.out.print((row+1)+" ");
              String val=chessboard[col][row];  //read piece
              //if square is black and empty put a # char
-             if (val==null && square_is_black(col,row)==true) {val="#";} else 
+             if (val==null && square_is_black(col,row)==true) {val="#";} else
              //if square is white and empty put space char
              {if (val==null) val=" ";}
              //write piece value
@@ -170,7 +170,7 @@ return FEN;
      //draw coordinate on bottom
       System.out.println("*  a  b  c  d  e  f  g  h  *\n");
  }//end show_chessboard
- 
+
 
   /***************************************
   * draw the chessboard on an out console in a large board.
@@ -219,14 +219,14 @@ return FEN;
       System.out.println("     a    b    c    d    e    f    g    h\n");
  }//end show_chessboard
 
- 
- 
+
+
  /**********************************
   * test is square is a black square
   * call by show_chessboard
   * @param c column value zero based
   * @param r row value zero based
-  * @return true if square is black otherwise false. 
+  * @return true if square is black otherwise false.
   ***********************************/
  public static boolean square_is_black(int c,int r){
      //even row 8 6 4 2
@@ -241,8 +241,8 @@ return FEN;
      }
      return false;
  } //end square_is_black
- 
- 
+
+
  /**************************
   * Assign a string FEN format to a virtual chessboard<br>
   * Call this method before using show_chessboard() method.
@@ -253,11 +253,11 @@ return FEN;
     /* rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 */
      //if lettre is in (r n b q k / p 1 2 3 4 5 6 7 8 P R N B Q K) then deal with it
      chessboard=new String [8][8];
-     
+
      int indexChar=0;
      int indexSquare=0; //0 between 63
      int col,row;
-     
+
      //begin by row 8 on the chessboard because FEN begin by black chess pieces
      col=0;
      row=7;
@@ -291,18 +291,18 @@ return FEN;
              case '5':col=col+5;break;
              case '6':col=col+6;break;
              case '7':col=col+7;break;
-             case '8':col=col+8;break;                 
+             case '8':col=col+8;break;
          }
-         
+
          if (col>7 && row==0){row--;}
          indexChar++;
      }
- 
+
      //end assigning
      return chessboard;
  } //end assign_chessboard
- 
- 
+
+
  /*****************************************
   * Convert a string chessboard coordinate
   * into a numeric convention.
@@ -326,23 +326,23 @@ return FEN;
             rowTo=move.charAt(3)-49;
             //look for promotion
             if (move.length()==5){promote=move.substring(4);} else {promote="";}
-            
-        }catch (Exception e){  
+
+        }catch (Exception e){
             rowFrom=0;
            rowTo=0;
            colFrom=0;
            colTo=0;
            promote="";
         }
-        
+
         }
     } //end moveToCoord
- 
-    
+
+
     /****************************************
      * convert chessboard coordinate to algebraic notation move<br>
      * take care to promote event.
-     * @param cFrom number of the column from where the move begin 
+     * @param cFrom number of the column from where the move begin
      * @param rFrom number of the row from where the move begin
      * @param cTo number of the column to where the move finish
      * @param rTo number of the row to where the move finish
@@ -352,8 +352,8 @@ return FEN;
     public static String coordToMove(int cFrom, int rFrom, int cTo, int rTo, String promotion){
         return Character.toString((char)(97+cFrom))+(rFrom+1)+Character.toString((char)(97+cTo))+(rTo+1)+promotion;
     } //end coordToMove
-    
-    
+
+
         /************************************
          * Get Row-From coordanate
          * using convention
@@ -364,18 +364,18 @@ return FEN;
         return rowFrom;
     } //end getRowFrom
 
-    
+
         /***********************************
          * Get-col From coordonate
          * using convention
          * * 1=1;2=2;3=3;4=4;5=5;6=6;7=7;8=8
          * @return An integer
-         ************************************/    
+         ************************************/
     public static int getColFrom() {
         return colFrom;
     } //end getColFrom
 
-    
+
         /************************************
          * Get-Row To coordonate
          * using convention
@@ -386,7 +386,7 @@ return FEN;
         return rowTo;
     } //end getRowTo
 
-    
+
         /***********************************
          * Get-col To coordonate
          * using convention
@@ -397,7 +397,7 @@ return FEN;
         return colTo;
     } //end getColTo
 
-    
+
     /************************
      * Get promote value<br>
      * a chess piece letter
@@ -407,8 +407,8 @@ return FEN;
     public static String getPromote() {
         return promote;
     } //end getPromote
-    
-    
+
+
     /**
      * Get a complete list of valid move for the piece in the FEN chess proposed.
      * @param fen Give the fen format chessboard position
@@ -420,7 +420,7 @@ return FEN;
        int upDown;
        int leftright;
        boolean stop;
-       
+
     //prepare listofmove
         if (listOfMove==null){
             listOfMove=new ArrayList<>();
@@ -429,20 +429,20 @@ return FEN;
         {
             listOfMove.clear();
         }
-        
+
         //coordonate are not correct return an empty list of moves
         if (colPiece<0 || colPiece>7 || rowPiece<0 || rowPiece>7) return listOfMove;
-       
-        
+
+
     //assign chessboard to split fen into coordinate
         assign_chessboard(fen);
-    
+
     // read the piece to move
     String piece=chessboard[colPiece][rowPiece];
-    
+
     //if Square is empty return a empty moves list.
     if (piece==null) return listOfMove;  //return an empty list
-    
+
     //else treat each case...
     switch(piece){
         //===================================BLACK ROOT================================
@@ -479,10 +479,10 @@ return FEN;
                 listOfMove.add(new Position(colPiece, rowPiece+upDown));
                 if (pieceIsWhite(colPiece, (rowPiece+upDown))) stop=true;
                 upDown++;
-            }            
+            }
             break;
         //===================================BLACK KNIGHT==============================
-        case "n":  
+        case "n":
             /*black knight : move/take (row+2,col-1),(row+2,col+1),
                                        (row+1,col-2),(row+1,col+2),
                                        *(row-2,col-1),*(row-2,col+1),
@@ -537,7 +537,7 @@ return FEN;
             }
             break;
             //===================================BLACK BISHOP==============================
-        case "b": 
+        case "b":
             // black bishop move/take (row--,col--), (row--,col++), (row++,col--), (row++,col++)
             //test down-left direction
             upDown=-1;
@@ -581,7 +581,7 @@ return FEN;
             }
             break;
             //===================================BLACK QUEEN===============================
-        case "q": 
+        case "q":
             // black queen move/take (row--,col), (row++,col), (row,col--), (row,col++)
             //                       (row--,col--), (row--,col++), (row++,col--), (row++,col++)
             //test on the left
@@ -658,7 +658,7 @@ return FEN;
             }
             break;
             //====================================BLACK KING===============================
-        case "k": 
+        case "k":
             /* black king : move (row+1,col-1) (row+1,col) (row+1,col+1)
                                  (row,col-1)       k       (row,col+1)
                                  (row-1,col-1) (row-1,col) (row-1,col-1)
@@ -748,7 +748,7 @@ return FEN;
             //TODO => black "prise en passant" <=
             break;
             //===================================WHITE ROOT==============================
-        case "R": 
+        case "R":
             // white root move/take (row--,col), (row++,col), (row,col--), (row,col++)
             //test on the left
             leftright=-1;
@@ -784,7 +784,7 @@ return FEN;
             }
             break;
             //===================================WHITE KNIGHT==============================
-        case "N": 
+        case "N":
             /*white knight : move/take (row+2,col-1),(row+2,col+1),
                                        (row+1,col-2),(row+1,col+2),
                                        (row-2,col-1),(row-2,col+1),
@@ -838,7 +838,7 @@ return FEN;
             }
             break;
             //===================================WHITE BISHOP==============================
-        case "B": 
+        case "B":
             // white bishop move/take (row--,col--), (row--,col++), (row++,col--), (row++,col++)
             //test down-left direction
             upDown=-1;
@@ -882,7 +882,7 @@ return FEN;
             }
             break;
             //===================================WHITE QUEEN==============================
-        case "Q": 
+        case "Q":
             // white queen move/take (row--,col), (row++,col), (row,col--), (row,col++)
             //                       (row--,col--), (row--,col++), (row++,col--), (row++,col++)
             //test on the left
@@ -959,7 +959,7 @@ return FEN;
             }
             break;
             //===================================WHITE KING==============================
-        case "K": 
+        case "K":
             /* white king : move (row+1,col-1) (row+1,col) (row+1,col+1)
                                  (row,col-1)       K       (row,col+1)
                                  (row-1,col-1) (row-1,col) (row-1,col-1)
@@ -1016,10 +1016,10 @@ return FEN;
             //if e1=K && d1=empty && c1=empty && b1=empty && a1=R then return b1
             if (pieceIN(4,0,"K") && square_is_Empty(3,0) && square_is_Empty(2,0) && square_is_Empty(1,0) && pieceIN(0,0,"R")){
                 listOfMove.add(new Position(1, 0));
-            }            
+            }
             break;
             //===================================WHITE PAWN==============================
-        case "P": 
+        case "P":
              // white pawn : move (row+1,col),(row+2,col)(if row is 2), take(row+1,col+1), (row+1,col-1)
             //move one step
             if ((rowPiece+1)<=7){
@@ -1045,7 +1045,7 @@ return FEN;
                     listOfMove.add(new Position(colPiece+1, rowPiece+1));
                 }
             }
-            //TODO => white "prise en passant" <= 
+            //TODO => white "prise en passant" <=
             break;
             //===================================CLEAR SQUARE==============================
         default :
@@ -1055,19 +1055,19 @@ return FEN;
 
     return listOfMove;
     } //end get_list_of_valid_moves
-    
-    
+
+
     /**
      * test if Square is empty
      * @param c column value zero based
      * @param r row value zero based
-     * @return true if square is empty otherwise false. 
+     * @return true if square is empty otherwise false.
      */
     public static boolean square_is_Empty(int c,int r){
         return chessboard[c][r]==null;
     } //end square_is_Empty
-    
-    
+
+
     /**
      * test if piece on this square is white
      * @param c column value zero based
@@ -1080,11 +1080,11 @@ return FEN;
         if (chessboard[c][r].compareTo("N")==0) return true;
         if (chessboard[c][r].compareTo("B")==0) return true;
         if (chessboard[c][r].compareTo("Q")==0) return true;
-        if (chessboard[c][r].compareTo("P")==0) return true;       
+        if (chessboard[c][r].compareTo("P")==0) return true;
        return false;
     } //end pieceIsWhite
-    
-    
+
+
     /**
      * test if piece on this square is black
      * @param c column value zero based
@@ -1097,31 +1097,32 @@ return FEN;
         if (chessboard[c][r].compareTo("n")==0) return true;
         if (chessboard[c][r].compareTo("b")==0) return true;
         if (chessboard[c][r].compareTo("q")==0) return true;
-        if (chessboard[c][r].compareTo("p")==0) return true;       
+        if (chessboard[c][r].compareTo("p")==0) return true;
        return false;
     } //end pieceIsBlack
-    
-    
+
+
     /**
-     * Test is white King is Threated
+     * Test if white King is Threated
      * @param c column value zero based
      * @param r row value zero based
-     * @return a boolean value true if king is threated else false. 
+     * @return a boolean value true if king is threated else false.
      */
     public static boolean whiteKingIsThreat(int c,int r){
         int leftRight;
         int upDown;
-        /* white king : move 
-                             (row+2,col-1)(n)                     (row+2,col-1)(n)  
+        boolean whiteMeet;
+        /* white king : move
+                             (row+2,col-1)(n)                     (row+2,col-1)(n)
             (row+1,col-2)(n) (row+1,col-1)(pk) (row+1,col)(k) (row+1,col+1)(pk) (row+1,col+2)(n)
                              (row,col-1)(k)        K            (row,col+1)(k)
             (row-1,col-2)(n) (row-1,col-1)(k)  (row-1,col)(k) (row-1,col-1)(k)(row-1,col-2)(n)
-                             (row-2,col-1)(n)                     (row-2,col-1)(n)        
-            */   
+                             (row-2,col-1)(n)                     (row-2,col-1)(n)
+            */
         //black pawn threat
         if ((c-1)>=0 && (r+1)<=7 && pieceIN(c-1, r+1, "p")) return true;
         if ((c+1)<=7 && (r+1)<=7 && pieceIN(c+1, r+1, "p")) return true;
-        //black king threat 
+        //black king threat
         if ((c-1)>=0 && pieceIN(c-1, r, "k")) return true;
         if ((c+1)<=7 && pieceIN(c+1, r, "k")) return true;
         if ((r-1)>=0 && pieceIN(c, r-1, "k")) return true;
@@ -1142,42 +1143,52 @@ return FEN;
         //black root/bishop/queen threat
         //test to the left
         leftRight=-1;
-        while ((c+leftRight)>=0){
-             if (chessboard[c+leftRight][r]!=null){
-              if (pieceIN(c+leftRight,r,"rq")) return true;  
+        whiteMeet=false;
+        while ((c+leftRight)>=0 && whiteMeet==false){
+            if (pieceIsWhite(c+leftRight, r)) whiteMeet=true;
+             if (chessboard[c+leftRight][r]!=null && whiteMeet==false){
+              if (pieceIN(c+leftRight,r,"rq")) return true;
              }
-            leftRight--;     
+            leftRight--;
         }
         //test to the right
         leftRight=1;
-        while ((c+leftRight)<=7){
-             if (chessboard[c+leftRight][r]!=null){
-              if (pieceIN(c+leftRight,r,"rq")) return true;  
+        whiteMeet=false;
+        while ((c+leftRight)<=7 && whiteMeet==false){
+             if (pieceIsWhite(c+leftRight, r)) whiteMeet=true;
+             if (chessboard[c+leftRight][r]!=null && whiteMeet==false){
+              if (pieceIN(c+leftRight,r,"rq")) return true;
              }
-            leftRight++;     
+            leftRight++;
         }
         //test to the bottom
         upDown=-1;
-        while ((r+upDown)>=0){
-             if (chessboard[c][r+upDown]!=null){
-              if (pieceIN(c,r+upDown,"rq")) return true;  
+        whiteMeet=false;
+        while ((r+upDown)>=0 && whiteMeet==false){
+             if (pieceIsWhite(c, r+upDown)) whiteMeet=true;
+             if (chessboard[c][r+upDown]!=null && whiteMeet==false){
+              if (pieceIN(c,r+upDown,"rq")) return true;
              }
-            upDown--;     
+            upDown--;
         }
         //test to the top
         upDown=1;
-        while ((r+upDown)<=7){
-             if (chessboard[c][r+upDown]!=null){
-              if (pieceIN(c,r+upDown,"rq")) return true;  
+        whiteMeet=false;
+        while ((r+upDown)<=7 && whiteMeet==false){
+             if (pieceIsWhite(c, r+upDown)) whiteMeet=true;
+             if (chessboard[c][r+upDown]!=null && whiteMeet==false){
+              if (pieceIN(c,r+upDown,"rq")) return true;
              }
-            upDown++;     
+            upDown++;
         }
         //test to the left bottom
         leftRight=-1;
         upDown=-1;
-        while ((c+leftRight)>=0 && (r+upDown)>=0){
-             if (chessboard[c+leftRight][r+upDown]!=null){
-              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;  
+        whiteMeet=false;
+        while ((c+leftRight)>=0 && (r+upDown)>=0 && whiteMeet==false){
+             if (pieceIsWhite(c+leftRight, r+upDown)) whiteMeet=true;
+             if (chessboard[c+leftRight][r+upDown]!=null && whiteMeet==false){
+              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
              }
             leftRight--;
             upDown--;
@@ -1185,9 +1196,11 @@ return FEN;
         //test to the left top
         leftRight=-1;
         upDown=1;
-        while ((c+leftRight)>=0 && (r+upDown)<=7){
-             if (chessboard[c+leftRight][r+upDown]!=null){
-              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;  
+        whiteMeet=false;
+        while ((c+leftRight)>=0 && (r+upDown)<=7 && whiteMeet==false){
+            if (pieceIsWhite(c+leftRight, r+upDown)) whiteMeet=true;
+             if (chessboard[c+leftRight][r+upDown]!=null && whiteMeet==false){
+              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
              }
             leftRight--;
             upDown++;
@@ -1195,9 +1208,11 @@ return FEN;
         //test to the right bottom
         leftRight=1;
         upDown=-1;
-        while ((c+leftRight)<=7 && (r+upDown)>=0){
-             if (chessboard[c+leftRight][r+upDown]!=null){
-              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;  
+        whiteMeet=false;
+        while ((c+leftRight)<=7 && (r+upDown)>=0 && whiteMeet==false){
+            if (pieceIsWhite(c+leftRight, r+upDown)) whiteMeet=true;
+             if (chessboard[c+leftRight][r+upDown]!=null && whiteMeet==false){
+              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
              }
             leftRight++;
             upDown--;
@@ -1205,17 +1220,19 @@ return FEN;
         //test to the right top
         leftRight=1;
         upDown=1;
-        while ((c+leftRight)<=7 && (r+upDown)<=7){
-             if (chessboard[c+leftRight][r+upDown]!=null){
-              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;  
+        whiteMeet=false;
+        while ((c+leftRight)<=7 && (r+upDown)<=7 && whiteMeet==false){
+            if (pieceIsWhite(c+leftRight, r+upDown)) whiteMeet=true;
+             if (chessboard[c+leftRight][r+upDown]!=null && whiteMeet==false){
+              if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
              }
             leftRight++;
             upDown++;
         }
         return false;
     } //end whiteKingIsThreat
-    
-    
+
+
     /**
      * test if the square as a piece in pieces list.
      * @param c column value zero based
@@ -1227,28 +1244,29 @@ return FEN;
         if (chessboard[c][r]==null) return false;
         return pieces.contains(chessboard[c][r]);
     } //end pieceIN
-    
-    
+
+
     /**
-     * test if black King is Threated  
+     * test if black King is Threated
      * @param c column value zero based
      * @param r row value zero based
-     * @return a boolean value true if king is threated else false. 
+     * @return a boolean value true if king is threated else false.
      */
     public static boolean blackKingIsThreat(int c,int r){
         int leftRight;
         int upDown;
-        /* black king : move 
-                             (row+2,col-1)(N)                (row+2,col-1)(N)  
+        boolean blackMeet;
+        /* black king : move
+                             (row+2,col-1)(N)                (row+2,col-1)(N)
             (row+1,col-2)(n) (row+1,col-1)(K) (row+1,col)(K) (row+1,col+1)(K) (row+1,col+2)(N)
                              (row,col-1)(K)        k         (row,col+1)(K)
             (row-1,col-2)(n) (row-1,col-1)(PK)(row-1,col)(K) (row-1,col-1)(PK)(row-1,col-2)(N)
-                             (row-2,col-1)(N)                     (row-2,col-1)(N)        
-            */   
+                             (row-2,col-1)(N)                     (row-2,col-1)(N)
+            */
         //white pawn threat
         if ((c-1)>=0 && (r-1)>=0 && pieceIN(c-1, r+1, "P")) return true;
         if ((c+1)<=7 && (r-1)>=0 && pieceIN(c+1, r+1, "P")) return true;
-        //white king threat 
+        //white king threat
         if ((c-1)>=0 && pieceIN(c-1, r, "K")) return true;
         if ((c+1)<=7 && pieceIN(c+1, r, "K")) return true;
         if ((r-1)>=0 && pieceIN(c, r-1, "K")) return true;
@@ -1269,42 +1287,52 @@ return FEN;
         //white root threat
         //test to the left
         leftRight=-1;
-        while ((c+leftRight)>=0){
-             if (chessboard[c+leftRight][r]!=null){
-              if (pieceIN(c+leftRight,r,"RQ")) return true;  
+        blackMeet=false;
+        while ((c+leftRight)>=0 && blackMeet==false){
+            if (pieceIsBlack(c+leftRight, r)) blackMeet=true;
+             if (chessboard[c+leftRight][r]!=null && blackMeet==false){
+              if (pieceIN(c+leftRight,r,"RQ")) return true;
              }
-            leftRight--;     
+            leftRight--;
         }
         //test to the right
         leftRight=1;
-        while ((c+leftRight)<=7){
-             if (chessboard[c+leftRight][r]!=null){
-              if (pieceIN(c+leftRight,r,"RQ")) return true;  
+        blackMeet=false;
+        while ((c+leftRight)<=7 && blackMeet==false){
+            if (pieceIsBlack(c+leftRight, r)) blackMeet=true;
+             if (chessboard[c+leftRight][r]!=null && blackMeet==false){
+              if (pieceIN(c+leftRight,r,"RQ")) return true;
              }
-            leftRight++;     
+            leftRight++;
         }
         //test to the bottom
         upDown=-1;
-        while ((r+upDown)>=0){
-             if (chessboard[c][r+upDown]!=null){
-              if (pieceIN(c,r+upDown,"RQ")) return true;  
+        blackMeet=false;
+        while ((r+upDown)>=0 && blackMeet==false){
+            if (pieceIsBlack(c, r+upDown)) blackMeet=true;
+             if (chessboard[c][r+upDown]!=null && blackMeet==false){
+              if (pieceIN(c,r+upDown,"RQ")) return true;
              }
-            upDown--;     
+            upDown--;
         }
         //test to the top
         upDown=1;
-        while ((r+upDown)<=7){
-             if (chessboard[c][r+upDown]!=null){
-              if (pieceIN(c,r+upDown,"RQ")) return true;  
+        blackMeet=false;
+        while ((r+upDown)<=7 && blackMeet==false){
+            if (pieceIsBlack(c, r+upDown)) blackMeet=true;
+             if (chessboard[c][r+upDown]!=null && blackMeet==false){
+              if (pieceIN(c,r+upDown,"RQ")) return true;
              }
-            upDown++;     
+            upDown++;
         }
         //test to the left bottom
         leftRight=-1;
         upDown=-1;
-        while ((c+leftRight)>=0 && (r+upDown)>=0){
-             if (chessboard[c+leftRight][r+upDown]!=null){
-              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;  
+        blackMeet=false;
+        while ((c+leftRight)>=0 && (r+upDown)>=0 && blackMeet==false){
+            if (pieceIsBlack(c+leftRight, r+upDown)) blackMeet=true;
+             if (chessboard[c+leftRight][r+upDown]!=null && blackMeet==false){
+              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
              }
             leftRight--;
             upDown--;
@@ -1312,9 +1340,11 @@ return FEN;
         //test to the left top
         leftRight=-1;
         upDown=1;
-        while ((c+leftRight)>=0 && (r+upDown)<=7){
-             if (chessboard[c+leftRight][r+upDown]!=null){
-              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;  
+        blackMeet=false;
+        while ((c+leftRight)>=0 && (r+upDown)<=7 && blackMeet==false){
+            if (pieceIsBlack(c+leftRight, r+upDown)) blackMeet=true;
+             if (chessboard[c+leftRight][r+upDown]!=null && blackMeet==false){
+              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
              }
             leftRight--;
             upDown++;
@@ -1322,9 +1352,11 @@ return FEN;
         //test to the right bottom
         leftRight=1;
         upDown=-1;
-        while ((c+leftRight)<=7 && (r+upDown)>=0){
-             if (chessboard[c+leftRight][r+upDown]!=null){
-              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;  
+        blackMeet=false;
+        while ((c+leftRight)<=7 && (r+upDown)>=0 && blackMeet==false){
+            if (pieceIsBlack(c+leftRight, r+upDown)) blackMeet=true;
+             if (chessboard[c+leftRight][r+upDown]!=null && blackMeet==false){
+              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
              }
             leftRight++;
             upDown--;
@@ -1332,18 +1364,20 @@ return FEN;
         //test to the right top
         leftRight=1;
         upDown=1;
-        while ((c+leftRight)<=7 && (r+upDown)<=7){
-             if (chessboard[c+leftRight][r+upDown]!=null){
-              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;  
+        blackMeet=false;
+        while ((c+leftRight)<=7 && (r+upDown)<=7 && blackMeet==false){
+            if (pieceIsBlack(c+leftRight, r+upDown)) blackMeet=true;
+             if (chessboard[c+leftRight][r+upDown]!=null && blackMeet==false){
+              if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
              }
             leftRight++;
             upDown++;
         }
         return false;
     } //end blackKingIsThreat
-    
-    
- 
+
+
+
     /**
      * beans class for Square position dealing
      */
@@ -1363,8 +1397,8 @@ return FEN;
             this.col = col;
             this.row = row;
         }
-        
+
     } //end Position class
-    
-    
+
+
 } //end of ChessBoard class
