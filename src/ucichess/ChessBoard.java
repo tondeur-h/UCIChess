@@ -1109,9 +1109,10 @@ return FEN;
      * @return a boolean value true if king is threated else false.
      */
     public static boolean whiteKingIsThreat(int c,int r){
-        int leftRight;
-        int upDown;
-        boolean whiteMeet;
+        int leftRight; //check left an right
+        int upDown; //check up and down
+        boolean whiteMeet; //true if white piece is meet
+        boolean blackMeet; //true if black piece is meet
         /* white king : move
                              (row+2,col-1)(n)                     (row+2,col-1)(n)
             (row+1,col-2)(n) (row+1,col-1)(pk) (row+1,col)(k) (row+1,col+1)(pk) (row+1,col+2)(n)
@@ -1144,8 +1145,13 @@ return FEN;
         //test to the left
         leftRight=-1;
         whiteMeet=false;
-        while ((c+leftRight)>=0 && whiteMeet==false){
+        blackMeet=false;
+        while ((c+leftRight)>=0 && whiteMeet==false && blackMeet==false){
             if (pieceIsWhite(c+leftRight, r)) whiteMeet=true;
+            if (pieceIsBlack(c+leftRight, r)) {
+                if (pieceIN(c+leftRight,r,"rq")) return true;
+                blackMeet=true;
+            }
              if (chessboard[c+leftRight][r]!=null && whiteMeet==false){
               if (pieceIN(c+leftRight,r,"rq")) return true;
              }
@@ -1154,8 +1160,13 @@ return FEN;
         //test to the right
         leftRight=1;
         whiteMeet=false;
-        while ((c+leftRight)<=7 && whiteMeet==false){
+        blackMeet=false;
+        while ((c+leftRight)<=7 && whiteMeet==false && blackMeet==false){
              if (pieceIsWhite(c+leftRight, r)) whiteMeet=true;
+             if (pieceIsBlack(c+leftRight, r)) {
+                if (pieceIN(c+leftRight,r,"rq")) return true;
+                blackMeet=true;
+            }
              if (chessboard[c+leftRight][r]!=null && whiteMeet==false){
               if (pieceIN(c+leftRight,r,"rq")) return true;
              }
@@ -1164,8 +1175,13 @@ return FEN;
         //test to the bottom
         upDown=-1;
         whiteMeet=false;
-        while ((r+upDown)>=0 && whiteMeet==false){
+        blackMeet=false;
+        while ((r+upDown)>=0 && whiteMeet==false && blackMeet==false){
              if (pieceIsWhite(c, r+upDown)) whiteMeet=true;
+            if (pieceIsBlack(c, r+upDown)) {
+                if (pieceIN(c,r+upDown,"rq")) return true;
+                blackMeet=true;
+            }
              if (chessboard[c][r+upDown]!=null && whiteMeet==false){
               if (pieceIN(c,r+upDown,"rq")) return true;
              }
@@ -1174,8 +1190,13 @@ return FEN;
         //test to the top
         upDown=1;
         whiteMeet=false;
-        while ((r+upDown)<=7 && whiteMeet==false){
+        blackMeet=false;
+        while ((r+upDown)<=7 && whiteMeet==false && blackMeet==false){
              if (pieceIsWhite(c, r+upDown)) whiteMeet=true;
+             if (pieceIsBlack(c, r+upDown)) {
+                if (pieceIN(c,r+upDown,"rq")) return true;
+                blackMeet=true;
+            }
              if (chessboard[c][r+upDown]!=null && whiteMeet==false){
               if (pieceIN(c,r+upDown,"rq")) return true;
              }
@@ -1185,8 +1206,13 @@ return FEN;
         leftRight=-1;
         upDown=-1;
         whiteMeet=false;
-        while ((c+leftRight)>=0 && (r+upDown)>=0 && whiteMeet==false){
+        blackMeet=false;
+        while ((c+leftRight)>=0 && (r+upDown)>=0 && whiteMeet==false && blackMeet==false){
              if (pieceIsWhite(c+leftRight, r+upDown)) whiteMeet=true;
+             if (pieceIsBlack(c+leftRight, r+upDown)) {
+                if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
+                blackMeet=true;
+            }
              if (chessboard[c+leftRight][r+upDown]!=null && whiteMeet==false){
               if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
              }
@@ -1197,8 +1223,13 @@ return FEN;
         leftRight=-1;
         upDown=1;
         whiteMeet=false;
-        while ((c+leftRight)>=0 && (r+upDown)<=7 && whiteMeet==false){
+        blackMeet=false;
+        while ((c+leftRight)>=0 && (r+upDown)<=7 && whiteMeet==false && blackMeet==false){
             if (pieceIsWhite(c+leftRight, r+upDown)) whiteMeet=true;
+            if (pieceIsBlack(c+leftRight, r+upDown)) {
+                if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
+                blackMeet=true;
+            }
              if (chessboard[c+leftRight][r+upDown]!=null && whiteMeet==false){
               if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
              }
@@ -1209,8 +1240,13 @@ return FEN;
         leftRight=1;
         upDown=-1;
         whiteMeet=false;
-        while ((c+leftRight)<=7 && (r+upDown)>=0 && whiteMeet==false){
+        blackMeet=false;
+        while ((c+leftRight)<=7 && (r+upDown)>=0 && whiteMeet==false && blackMeet==false){
             if (pieceIsWhite(c+leftRight, r+upDown)) whiteMeet=true;
+            if (pieceIsBlack(c+leftRight, r+upDown)) {
+                if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
+                blackMeet=true;
+            }
              if (chessboard[c+leftRight][r+upDown]!=null && whiteMeet==false){
               if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
              }
@@ -1221,8 +1257,13 @@ return FEN;
         leftRight=1;
         upDown=1;
         whiteMeet=false;
-        while ((c+leftRight)<=7 && (r+upDown)<=7 && whiteMeet==false){
+        blackMeet=false;
+        while ((c+leftRight)<=7 && (r+upDown)<=7 && whiteMeet==false && blackMeet){
             if (pieceIsWhite(c+leftRight, r+upDown)) whiteMeet=true;
+            if (pieceIsBlack(c+leftRight, r+upDown)) {
+                if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
+                blackMeet=true;
+            }
              if (chessboard[c+leftRight][r+upDown]!=null && whiteMeet==false){
               if (pieceIN(c+leftRight,r+upDown,"bq")) return true;
              }
@@ -1256,6 +1297,7 @@ return FEN;
         int leftRight;
         int upDown;
         boolean blackMeet;
+        boolean whiteMeet;
         /* black king : move
                              (row+2,col-1)(N)                (row+2,col-1)(N)
             (row+1,col-2)(n) (row+1,col-1)(K) (row+1,col)(K) (row+1,col+1)(K) (row+1,col+2)(N)
@@ -1288,8 +1330,13 @@ return FEN;
         //test to the left
         leftRight=-1;
         blackMeet=false;
-        while ((c+leftRight)>=0 && blackMeet==false){
+        whiteMeet=false;
+        while ((c+leftRight)>=0 && blackMeet==false && whiteMeet==false){
             if (pieceIsBlack(c+leftRight, r)) blackMeet=true;
+            if (pieceIsWhite(c+leftRight, r)) {
+                if (pieceIN(c+leftRight,r,"RQ")) return true;
+                whiteMeet=true;
+            }
              if (chessboard[c+leftRight][r]!=null && blackMeet==false){
               if (pieceIN(c+leftRight,r,"RQ")) return true;
              }
@@ -1298,8 +1345,13 @@ return FEN;
         //test to the right
         leftRight=1;
         blackMeet=false;
-        while ((c+leftRight)<=7 && blackMeet==false){
+        whiteMeet=false;
+        while ((c+leftRight)<=7 && blackMeet==false && whiteMeet==false){
             if (pieceIsBlack(c+leftRight, r)) blackMeet=true;
+            if (pieceIsWhite(c+leftRight, r)) {
+                if (pieceIN(c+leftRight,r,"RQ")) return true;
+                whiteMeet=true;
+            }
              if (chessboard[c+leftRight][r]!=null && blackMeet==false){
               if (pieceIN(c+leftRight,r,"RQ")) return true;
              }
@@ -1308,8 +1360,13 @@ return FEN;
         //test to the bottom
         upDown=-1;
         blackMeet=false;
-        while ((r+upDown)>=0 && blackMeet==false){
+        whiteMeet=false;
+        while ((r+upDown)>=0 && blackMeet==false && whiteMeet==false){
             if (pieceIsBlack(c, r+upDown)) blackMeet=true;
+            if (pieceIsWhite(c, r+upDown)) {
+                if (pieceIN(c,r+upDown,"RQ")) return true;
+                whiteMeet=true;
+            }
              if (chessboard[c][r+upDown]!=null && blackMeet==false){
               if (pieceIN(c,r+upDown,"RQ")) return true;
              }
@@ -1318,8 +1375,13 @@ return FEN;
         //test to the top
         upDown=1;
         blackMeet=false;
-        while ((r+upDown)<=7 && blackMeet==false){
+        whiteMeet=false;
+        while ((r+upDown)<=7 && blackMeet==false && whiteMeet==false){
             if (pieceIsBlack(c, r+upDown)) blackMeet=true;
+            if (pieceIsWhite(c, r+upDown)) {
+                if (pieceIN(c,r+upDown,"RQ")) return true;
+                whiteMeet=true;
+            }
              if (chessboard[c][r+upDown]!=null && blackMeet==false){
               if (pieceIN(c,r+upDown,"RQ")) return true;
              }
@@ -1329,8 +1391,13 @@ return FEN;
         leftRight=-1;
         upDown=-1;
         blackMeet=false;
-        while ((c+leftRight)>=0 && (r+upDown)>=0 && blackMeet==false){
+        whiteMeet=false;
+        while ((c+leftRight)>=0 && (r+upDown)>=0 && blackMeet==false && whiteMeet==false){
             if (pieceIsBlack(c+leftRight, r+upDown)) blackMeet=true;
+            if (pieceIsWhite(c+leftRight, r+upDown)) {
+                if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
+                whiteMeet=true;
+            }
              if (chessboard[c+leftRight][r+upDown]!=null && blackMeet==false){
               if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
              }
@@ -1341,8 +1408,13 @@ return FEN;
         leftRight=-1;
         upDown=1;
         blackMeet=false;
-        while ((c+leftRight)>=0 && (r+upDown)<=7 && blackMeet==false){
+        whiteMeet=false;
+        while ((c+leftRight)>=0 && (r+upDown)<=7 && blackMeet==false && whiteMeet==false){
             if (pieceIsBlack(c+leftRight, r+upDown)) blackMeet=true;
+            if (pieceIsWhite(c+leftRight, r+upDown)) {
+                if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
+                whiteMeet=true;
+            }
              if (chessboard[c+leftRight][r+upDown]!=null && blackMeet==false){
               if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
              }
@@ -1353,8 +1425,13 @@ return FEN;
         leftRight=1;
         upDown=-1;
         blackMeet=false;
-        while ((c+leftRight)<=7 && (r+upDown)>=0 && blackMeet==false){
+        whiteMeet=false;
+        while ((c+leftRight)<=7 && (r+upDown)>=0 && blackMeet==false && whiteMeet==false){
             if (pieceIsBlack(c+leftRight, r+upDown)) blackMeet=true;
+            if (pieceIsWhite(c+leftRight, r+upDown)) {
+                if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
+                whiteMeet=true;
+            }
              if (chessboard[c+leftRight][r+upDown]!=null && blackMeet==false){
               if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
              }
@@ -1365,8 +1442,13 @@ return FEN;
         leftRight=1;
         upDown=1;
         blackMeet=false;
-        while ((c+leftRight)<=7 && (r+upDown)<=7 && blackMeet==false){
+        whiteMeet=false;
+        while ((c+leftRight)<=7 && (r+upDown)<=7 && blackMeet==false && whiteMeet==false){
             if (pieceIsBlack(c+leftRight, r+upDown)) blackMeet=true;
+            if (pieceIsWhite(c+leftRight, r+upDown)) {
+                if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
+                whiteMeet=true;
+            }
              if (chessboard[c+leftRight][r+upDown]!=null && blackMeet==false){
               if (pieceIN(c+leftRight,r+upDown,"BQ")) return true;
              }

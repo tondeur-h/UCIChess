@@ -30,6 +30,7 @@ public class TestAutoChess {
     final long timeThinking=100; //time thinking in miliseconds
     String fenPos="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
     
+    
     public TestAutoChess() {
     //run Engine1
     UCIChess engine1=new UCIChess("C:\\Arena\\Engines\\Protector_1_6_0\\bin\\Protector_Win64.exe");
@@ -45,7 +46,6 @@ public class TestAutoChess {
         System.out.println(nameEngine1+" is white player.");
         System.out.println(nameEngine2+" is black player.\n");
    
-        
         
    //play max 500 turns per tournament
    int turn=1;
@@ -63,7 +63,7 @@ public class TestAutoChess {
             else {moves=moves+" "+repw;} //incruise moves list
             System.out.println("\n"+nameEngine1+"=> White play (turn "+turn+") "+repw+"\n");
             fenPos=ChessBoard.moveFromFEN(fenPos, repw);
-            ChessBoard.show_chessboard();
+            ChessBoard.show_wide_chessboard();
             //if black is mate then white say "score mate 1" so test it
             if (engine1.is_opponent_Mated(traceMode)){System.out.println("\nturn("+turn+")"+nameEngine1+" playing WHITE WIN\n");moves=moves+" black is mate";break;}
             //apply moves to all engines
